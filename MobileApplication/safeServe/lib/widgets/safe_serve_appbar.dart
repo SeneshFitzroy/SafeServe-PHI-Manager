@@ -17,9 +17,11 @@ class SafeServeAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       toolbarHeight: height,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.white, // Ensures AppBar stays white always
+      elevation: 0, // Prevents shadow from affecting background color
+      scrolledUnderElevation: 0, // Prevents color change when scrolling
       titleSpacing: 0,
-      automaticallyImplyLeading: false, // no default leading
+      automaticallyImplyLeading: false, // No default leading
       title: Row(
         children: [
           const SizedBox(width: 20),
