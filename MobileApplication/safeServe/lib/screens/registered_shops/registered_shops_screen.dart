@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../../widgets/safe_serve_appbar.dart';
 import '../../../widgets/safe_serve_drawer.dart';
 import '../../../widgets/custom_nav_bar_icon.dart';
 import 'widgets/shop_card.dart';
 
 class RegisteredShopsScreen extends StatefulWidget {
-  const RegisteredShopsScreen({Key? key}) : super(key: key);
+  const RegisteredShopsScreen({super.key});
 
   @override
   State<RegisteredShopsScreen> createState() => _RegisteredShopsScreenState();
@@ -43,7 +42,6 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
     super.dispose();
   }
 
-  // Simulate fetching shop data
   Future<List<Map<String, dynamic>>> fetchShops() async {
     await Future.delayed(const Duration(seconds: 1));
     return [
@@ -77,7 +75,6 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
         userName: 'Kamal Rathanasighe',
         userPost: 'PHI',
       ),
-
       body: Stack(
         children: [
           // Background Gradient
@@ -86,15 +83,12 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFFE6F5FE),
-                  Color(0xFFF5ECF9),
-                ],
+                colors: [Color(0xFFE6F5FE), Color(0xFFF5ECF9)],
               ),
             ),
           ),
 
-          // ListView makes everything scroll (INCLUDING "Registered Shops" & Buttons)
+          // Body content with shops
           FutureBuilder<List<Map<String, dynamic>>>(
             future: fetchShops(),
             builder: (context, snapshot) {
@@ -103,17 +97,14 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
               }
               final shops = snapshot.data!;
               if (shops.isEmpty) {
-                return const Center(
-                  child: Text('No shops found'),
-                );
+                return const Center(child: Text('No shops found'));
               }
               return ListView.builder(
                 controller: _scrollController,
-                padding: const EdgeInsets.only(top: 15,), // Extra space for floating nav
-                itemCount: shops.length + 1, // Extra item for the header row
+                padding: const EdgeInsets.only(top: 15),
+                itemCount: shops.length + 1, // +1 for the header
                 itemBuilder: (context, index) {
                   if (index == 0) {
-                    // First item is the "Registered Shops" header row
                     return _buildBodyHeader();
                   }
                   final shop = shops[index - 1];
@@ -126,7 +117,8 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
                       grade: shop['grade'],
                       imagePath: shop['image'],
                       onDetailsTap: () {
-                        Navigator.pushNamed(context, '/detail');
+                        Navigator.pushNamed(context, '/shop_detail',
+                            arguments: shop['name']);
                       },
                     ),
                   );
@@ -142,7 +134,6 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
     );
   }
 
-  // Now part of ListView, so it scrolls with the rest of the content
   Widget _buildBodyHeader() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(25, 0, 15, 20),
@@ -160,13 +151,11 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
           IconButton(
             icon: const Icon(Icons.filter_list, color: Color(0xFF1F41BB)),
             onPressed: () {
-              // TODO: Implement Filter Action
             },
           ),
           IconButton(
             icon: const Icon(Icons.add, color: Color(0xFF1F41BB)),
             onPressed: () {
-              // TODO: Implement Add Action
             },
           ),
         ],
@@ -216,19 +205,16 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
               icon: Icons.dashboard,
               label: 'Dashboard',
               route: '/dashboard',
-              selected: false,
             ),
             CustomNavBarIcon(
               icon: Icons.description,
               label: 'Form',
               route: '/form',
-              selected: false,
             ),
             CustomNavBarIcon(
               icon: Icons.notifications,
               label: 'Notifications',
               route: '/notifications',
-              selected: false,
             ),
           ],
         ),

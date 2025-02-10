@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import '../../../widgets/grade_badge.dart';
 
 class ShopCard extends StatelessWidget {
   final String name;
@@ -10,26 +11,17 @@ class ShopCard extends StatelessWidget {
   final VoidCallback onDetailsTap;
 
   const ShopCard({
-    Key? key,
+    super.key,
     required this.name,
     required this.address,
     required this.lastInspectionDate,
     required this.grade,
     required this.imagePath,
     required this.onDetailsTap,
-  }) : super(key: key);
-
-  static const Map<String, Color> _gradeColors = {
-    'A': Color(0xFF3DB952),
-    'B': Color(0xFFF1D730),
-    'C': Color(0xFFFF8514),
-    'D': Color(0xFFBB1F22),
-  };
+  });
 
   @override
   Widget build(BuildContext context) {
-    final Color badgeColor = _gradeColors[grade] ?? Colors.grey;
-
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -44,10 +36,10 @@ class ShopCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // We'll add margin around the image
           Container(
             margin: const EdgeInsets.all(16),
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
             ),
             clipBehavior: Clip.hardEdge,
             child: Image.asset(
@@ -57,42 +49,27 @@ class ShopCard extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
+
           // Title Row + Grade Badge
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                // Shop Name
                 Expanded(
                   child: Text(
                     name,
                     style: const TextStyle(
-                      fontSize: 20, // updated to 20
+                      fontSize: 20,
                       fontWeight: FontWeight.w400,
                       color: Colors.black,
                     ),
                   ),
                 ),
-                Container(
-                  width: 40,
-                  height: 35,
-                  decoration: BoxDecoration(
-                    color: badgeColor,
-                    shape: BoxShape.circle,
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    grade,
-                    style: const TextStyle(
-                      fontSize: 25, // big grade text
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
+                GradeBadge(grade: grade, size: 40, fontSize: 25),
               ],
             ),
           ),
+
           // Address
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -100,27 +77,23 @@ class ShopCard extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 address,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.black,
-                ),
+                style: const TextStyle(fontSize: 12, color: Colors.black),
               ),
             ),
           ),
+
           // Last Inspection
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 'Last Inspection Date : $lastInspectionDate',
-                style: const TextStyle(
-                  fontSize: 12, // updated to 12
-                  color: Colors.black,
-                ),
+                style: const TextStyle(fontSize: 12, color: Colors.black),
               ),
             ),
           ),
+
           // Detail Button
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -134,7 +107,6 @@ class ShopCard extends StatelessWidget {
                     color: const Color(0xFF1F41BB),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  // Use the arrow icon from material_design_icons_flutter
                   child: Icon(
                     MdiIcons.arrowRightCircleOutline,
                     color: Colors.white,
