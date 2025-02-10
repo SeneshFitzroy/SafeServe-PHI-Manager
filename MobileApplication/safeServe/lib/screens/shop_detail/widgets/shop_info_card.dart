@@ -4,7 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 class ShopInfoCard extends StatelessWidget {
   final Map<String, dynamic> shopData;
 
-  const ShopInfoCard({Key? key, required this.shopData}) : super(key: key);
+  const ShopInfoCard({super.key, required this.shopData});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,6 @@ class ShopInfoCard extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // Details with increased spacing
             _buildDetailRow('Reference No', shopData['referenceNo']),
             _buildDetailRow('PHI Area', shopData['phiArea']),
             _buildDetailRow('Type of Trade', shopData['typeOfTrade']),
@@ -49,12 +48,12 @@ class ShopInfoCard extends StatelessWidget {
 
   Widget _buildDetailRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 15.0), // Increased spacing
+      padding: const EdgeInsets.only(bottom: 15.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black)),
-          const SizedBox(height: 6), // Additional spacing between label and value
+          const SizedBox(height: 6),
           Text(value, style: const TextStyle(fontSize: 18, color: Color(0xFF838383))),
         ],
       ),
@@ -71,11 +70,11 @@ class ShopInfoCard extends StatelessWidget {
           }
         },
         child: Container(
-          width: 35, // Button size
-          height: 35,
+          width: 32,
+          height: 32,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(6), // 5% rounded edges
+            borderRadius: BorderRadius.circular(5),
             border: Border.all(color: borderColor, width: 2),
           ),
           child: Icon(icon, color: borderColor, size: 22),

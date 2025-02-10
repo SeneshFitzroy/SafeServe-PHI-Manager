@@ -11,7 +11,7 @@ import 'widgets/form_buttons.dart';
 import 'widgets/inspection_history.dart';
 
 class ShopDetailScreen extends StatefulWidget {
-  final String shopId; // e.g. 'ABC Bakery & Cafe'
+  final String shopId;
 
   const ShopDetailScreen({Key? key, required this.shopId}) : super(key: key);
 
@@ -152,7 +152,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
           const SizedBox(height: 30),
           ShopInfoCard(shopData: shopData),
           const SizedBox(height: 30),
-          // Now show 'Forms' title & the 3 form buttons
+          // Now show 'Forms'
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 25),
             child: Text(

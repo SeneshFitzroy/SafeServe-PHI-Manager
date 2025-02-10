@@ -1,8 +1,7 @@
-// lib/widgets/grade_badge.dart
 import 'package:flutter/material.dart';
 
 class GradeBadge extends StatelessWidget {
-  final String grade; // 'A', 'B', 'C', 'D'
+  final String grade;
   final double size;
   final double fontSize;
 
@@ -14,11 +13,11 @@ class GradeBadge extends StatelessWidget {
   };
 
   const GradeBadge({
-    Key? key,
+    super.key,
     required this.grade,
     this.size = 40,
     this.fontSize = 25,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

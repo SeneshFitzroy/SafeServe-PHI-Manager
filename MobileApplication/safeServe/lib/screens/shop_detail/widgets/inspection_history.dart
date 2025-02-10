@@ -1,11 +1,10 @@
-// lib/screens/shop_detail/widgets/inspection_history.dart
 import 'package:flutter/material.dart';
 import '../../../../widgets/grade_badge.dart';
 
 class InspectionHistory extends StatelessWidget {
   final List<dynamic> inspectionData;
 
-  const InspectionHistory({Key? key, required this.inspectionData}) : super(key: key);
+  const InspectionHistory({super.key, required this.inspectionData});
 
   @override
   Widget build(BuildContext context) {

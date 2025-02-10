@@ -1,8 +1,7 @@
-// lib/screens/shop_detail/widgets/form_buttons.dart
 import 'package:flutter/material.dart';
 
 class FormButtons extends StatelessWidget {
-  const FormButtons({Key? key}) : super(key: key);
+  const FormButtons({super.key});
 
   @override
   Widget build(BuildContext context) {

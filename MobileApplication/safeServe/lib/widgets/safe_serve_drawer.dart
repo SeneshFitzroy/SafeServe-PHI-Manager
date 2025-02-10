@@ -2,16 +2,16 @@
 import 'package:flutter/material.dart';
 
 class SafeServeDrawer extends StatelessWidget {
-  final String profileImageUrl; // e.g. dynamic from DB
-  final String userName;        // e.g. 'Kamal Rathanasighe'
-  final String userPost;        // e.g. 'PHI'
+  final String profileImageUrl;
+  final String userName;
+  final String userPost;
 
   const SafeServeDrawer({
-    Key? key,
+    super.key,
     required this.profileImageUrl,
     required this.userName,
     required this.userPost,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

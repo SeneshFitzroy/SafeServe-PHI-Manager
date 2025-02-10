@@ -1,4 +1,3 @@
-// lib/screens/shop_detail/widgets/shop_detail_header.dart
 import 'package:flutter/material.dart';
 import '../../../../widgets/grade_badge.dart';
 
@@ -7,10 +6,10 @@ class ShopDetailHeader extends StatelessWidget {
   final String grade;
 
   const ShopDetailHeader({
-    Key? key,
+    super.key,
     required this.shopName,
     required this.grade,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

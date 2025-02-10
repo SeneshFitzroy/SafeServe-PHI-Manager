@@ -1,4 +1,3 @@
-// lib/screens/registered_shops/widgets/shop_card.dart
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../../widgets/grade_badge.dart';
@@ -12,14 +11,14 @@ class ShopCard extends StatelessWidget {
   final VoidCallback onDetailsTap;
 
   const ShopCard({
-    Key? key,
+    super.key,
     required this.name,
     required this.address,
     required this.lastInspectionDate,
     required this.grade,
     required this.imagePath,
     required this.onDetailsTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +36,6 @@ class ShopCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Image with correct margins and rounded corners
           Container(
             margin: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -67,7 +65,6 @@ class ShopCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Use GradeBadge widget
                 GradeBadge(grade: grade, size: 40, fontSize: 25),
               ],
             ),

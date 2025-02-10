@@ -1,4 +1,3 @@
-// lib/widgets/safe_serve_appbar.dart
 import 'package:flutter/material.dart';
 
 class SafeServeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -6,10 +5,10 @@ class SafeServeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onMenuPressed;
 
   const SafeServeAppBar({
-    Key? key,
+    super.key,
     required this.height,
     required this.onMenuPressed,
-  }) : super(key: key);
+  });
 
   @override
   Size get preferredSize => Size.fromHeight(height);

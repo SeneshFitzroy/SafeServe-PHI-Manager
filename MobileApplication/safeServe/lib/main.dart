@@ -16,17 +16,15 @@ class SafeServeApp extends StatelessWidget {
       title: 'SafeServe',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // Uses default Roboto font on Android
         fontFamily: 'Roboto',
       ),
       // Start at the RegisteredShopsScreen
       home: const RegisteredShopsScreen(),
 
-      // Placeholder or real routes
+      // Placeholder for nav
       routes: {
         '/search': (context) => const PlaceholderPage(title: 'Search'),
         '/menu': (context) => const PlaceholderPage(title: 'Menu'),
-        '/filter': (context) => const PlaceholderPage(title: 'Filter'),
         '/add': (context) => const PlaceholderPage(title: 'Add'),
         '/detail': (context) => const PlaceholderPage(title: 'Shop Detail'),
         '/calendar': (context) => const PlaceholderPage(title: 'Calendar'),
@@ -34,7 +32,7 @@ class SafeServeApp extends StatelessWidget {
         '/form': (context) => const PlaceholderPage(title: 'Form'),
         '/notifications': (context) => const PlaceholderPage(title: 'Notifications'),
 
-        // Named route for ShopDetailScreen (example):
+        // Named route for ShopDetailScreen
         '/shop_detail': (context) {
           final args = ModalRoute.of(context)?.settings.arguments as String?;
           return ShopDetailScreen(shopId: args ?? '');
@@ -44,7 +42,7 @@ class SafeServeApp extends StatelessWidget {
   }
 }
 
-// Just a placeholder page for routes not yet implemented
+// placeholder page for routes not yet implemented
 class PlaceholderPage extends StatelessWidget {
   final String title;
   const PlaceholderPage({Key? key, required this.title}) : super(key: key);

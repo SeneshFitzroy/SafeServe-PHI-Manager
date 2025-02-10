@@ -1,4 +1,3 @@
-// lib/widgets/custom_nav_bar_icon.dart
 import 'package:flutter/material.dart';
 
 class CustomNavBarIcon extends StatelessWidget {
@@ -8,12 +7,12 @@ class CustomNavBarIcon extends StatelessWidget {
   final bool selected;
 
   const CustomNavBarIcon({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.route,
     this.selected = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

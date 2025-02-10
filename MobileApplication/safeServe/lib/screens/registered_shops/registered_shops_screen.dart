@@ -1,14 +1,12 @@
-// lib/screens/registered_shops/registered_shops_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../../../widgets/safe_serve_appbar.dart';
 import '../../../widgets/safe_serve_drawer.dart';
 import '../../../widgets/custom_nav_bar_icon.dart';
 import 'widgets/shop_card.dart';
 
 class RegisteredShopsScreen extends StatefulWidget {
-  const RegisteredShopsScreen({Key? key}) : super(key: key);
+  const RegisteredShopsScreen({super.key});
 
   @override
   State<RegisteredShopsScreen> createState() => _RegisteredShopsScreenState();
@@ -44,7 +42,6 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
     super.dispose();
   }
 
-  // Simulate fetching shop data
   Future<List<Map<String, dynamic>>> fetchShops() async {
     await Future.delayed(const Duration(seconds: 1));
     return [
@@ -62,7 +59,6 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
         'grade': 'B',
         'image': 'assets/images/shop/shop2.png',
       },
-      // Add more shops if needed...
     ];
   }
 
@@ -109,7 +105,6 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
                 itemCount: shops.length + 1, // +1 for the header
                 itemBuilder: (context, index) {
                   if (index == 0) {
-                    // Build the header
                     return _buildBodyHeader();
                   }
                   final shop = shops[index - 1];
@@ -122,15 +117,6 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
                       grade: shop['grade'],
                       imagePath: shop['image'],
                       onDetailsTap: () {
-                        // MaterialPageRoute approach:
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => ShopDetailScreen(shopId: shop['name']),
-                        //   ),
-                        // );
-
-                        // or Named route approach:
                         Navigator.pushNamed(context, '/shop_detail',
                             arguments: shop['name']);
                       },
@@ -165,13 +151,11 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
           IconButton(
             icon: const Icon(Icons.filter_list, color: Color(0xFF1F41BB)),
             onPressed: () {
-              // Implement Filter Action
             },
           ),
           IconButton(
             icon: const Icon(Icons.add, color: Color(0xFF1F41BB)),
             onPressed: () {
-              // Implement Add Action
             },
           ),
         ],
