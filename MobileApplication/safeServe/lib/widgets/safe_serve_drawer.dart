@@ -1,9 +1,10 @@
+// lib/widgets/safe_serve_drawer.dart
 import 'package:flutter/material.dart';
 
 class SafeServeDrawer extends StatelessWidget {
-  final String profileImageUrl; // User's profile picture URL
-  final String userName;        // Example: "Kamal Rathanasighe"
-  final String userPost;        // Example: "PHI"
+  final String profileImageUrl; // e.g. dynamic from DB
+  final String userName;        // e.g. 'Kamal Rathanasighe'
+  final String userPost;        // e.g. 'PHI'
 
   const SafeServeDrawer({
     Key? key,
@@ -17,12 +18,12 @@ class SafeServeDrawer extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
 
     return SizedBox(
-      width: width * 0.7, // Drawer covers 70% of screen width
+      width: width * 0.7,
       child: Drawer(
         child: Column(
           children: [
-            _buildProfileHeader(context), // Profile section
-            Container(height: 2, color: const Color(0xFF1F41BB)), // Divider
+            _buildProfileHeader(context),
+            Container(height: 2, color: const Color(0xFF1F41BB)),
             Expanded(
               child: ListView(
                 padding: EdgeInsets.zero,
@@ -86,7 +87,11 @@ class SafeServeDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildDrawerItem({required IconData icon, required String label, required VoidCallback onTap}) {
+  Widget _buildDrawerItem({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
     return ListTile(
       leading: Icon(icon, color: Colors.black),
       title: Text(label, style: const TextStyle(fontSize: 16, color: Colors.black)),

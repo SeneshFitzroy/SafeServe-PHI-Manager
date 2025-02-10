@@ -1,3 +1,4 @@
+// lib/widgets/custom_nav_bar_icon.dart
 import 'package:flutter/material.dart';
 
 class CustomNavBarIcon extends StatelessWidget {
@@ -21,17 +22,14 @@ class CustomNavBarIcon extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        // If route == '/' we are already there
         if (route.isNotEmpty && route != '/') {
           Navigator.pushNamed(context, route);
         }
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 500),
-        // reduce horizontal padding so icons are closer
-        padding: EdgeInsets.symmetric(horizontal: selected ? 6: 6, vertical: 6),
+        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
         decoration: BoxDecoration(
-          // Bigger highlight circle
           color: selected ? const Color(0xFFCDE6FE) : Colors.transparent,
           shape: BoxShape.circle,
         ),
