@@ -1,4 +1,3 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
 import 'screens/registered_shops/registered_shops_screen.dart';
 import 'screens/shop_detail/shop_detail_screen.dart';

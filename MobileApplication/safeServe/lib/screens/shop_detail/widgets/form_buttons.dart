@@ -22,7 +22,6 @@ class FormButtons extends StatelessWidget {
   Widget _buildFormButton(String label) {
     return InkWell(
       onTap: () {
-        // Navigate to the form screen
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),

@@ -1,4 +1,3 @@
-// lib/widgets/safe_serve_drawer.dart
 import 'package:flutter/material.dart';
 
 class SafeServeDrawer extends StatelessWidget {

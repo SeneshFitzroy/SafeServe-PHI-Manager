@@ -1,4 +1,3 @@
-// lib/screens/shop_detail/shop_detail_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import '../../../widgets/safe_serve_appbar.dart';
@@ -24,11 +23,9 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _isNavVisible = true;
 
-  // Simulated DB
   Future<Map<String, dynamic>> fetchShopDetail() async {
     await Future.delayed(const Duration(seconds: 1));
 
-    // Example data set
     final shopData = <String, Map<String, dynamic>>{
       'ABC Bakery & Café': {
         'name': 'ABC Bakery & Café',
