@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:safeserve/screens/register_shop/register_shop_form_data.dart';
+import 'package:safeserve/screens/register_shop/screen_one/register_shop_screen_one.dart';
+import 'package:safeserve/screens/register_shop/screen_two/register_shop_screen_two.dart';
 import 'screens/registered_shops/registered_shops_screen.dart';
 import 'screens/shop_detail/shop_detail_screen.dart';
 
@@ -30,6 +33,15 @@ class SafeServeApp extends StatelessWidget {
         '/dashboard': (context) => const PlaceholderPage(title: 'Dashboard'),
         '/form': (context) => const PlaceholderPage(title: 'Form'),
         '/notifications': (context) => const PlaceholderPage(title: 'Notifications'),
+
+        '/register_shop_screen_one': (context) {
+          final formData = ModalRoute.of(context)?.settings.arguments as RegisterShopFormData?;
+          return RegisterShopScreenOne(formData: formData ?? RegisterShopFormData());
+        },
+        '/register_shop_screen_two': (context) {
+          final formData = ModalRoute.of(context)?.settings.arguments as RegisterShopFormData?;
+          return RegisterShopScreenTwo(formData: formData ?? RegisterShopFormData());
+        },
 
         // Named route for ShopDetailScreen
         '/shop_detail': (context) {
