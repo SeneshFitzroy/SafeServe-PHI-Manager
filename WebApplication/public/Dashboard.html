@@ -2,291 +2,12 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Dashboard</title>
+        <title>Safe Serve - Dashboard</title>
+
+        <link rel="stylesheet" href="StyleSheet1.css" />
 
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-        <style>
-            html, body {
-                height: 100%;
-                margin: 0;
-                padding: 0;
-                overflow: hidden;
-                overflow-x: hidden;
-                font-family: 'Roboto', sans-serif;
-                background: linear-gradient(to bottom, #E6F5FE 0%, #F5ECF9 100%);
-            }
-
-            .container {
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .header, .footer {
-                flex-shrink: 0;
-            }
-
-
-            /* navigation panel of Smart POS Dshboard*/
-            .navigation {
-                height: 100%;
-                background-color: white;
-                width: 315px;
-                margin: 0;
-                padding: 0;
-                font-family: Arial, Helvetica, sans-serif;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)
-            }
-
-            .Logo {
-                width: 40px;
-                height: 40px;
-                left:40px;
-                top: 12px;
-                position: absolute;
-                display:flex;
-            }
-
-            .logoname {
-                color: black;
-                font-size: 33px;
-                font-weight: 700;
-                word-wrap: break-word;
-                left: 95px;
-                top: 16px;
-                position: absolute;
-            }
-
-            .logoname a {
-                text-decoration: none; 
-                color: inherit;
-                cursor: pointer;
-            }
-
-            .nav-menu {
-                list-style-type: none;
-                padding: 0px 0;
-                width:80%;
-                margin-left: 10%;
-                margin-top:100px;
-            }
-
-            .nav-menu a {
-                text-decoration: none; 
-                color: inherit;
-                cursor: pointer;
-            }
-
-            .nav-item {
-                display: flex;
-                align-items: center;
-                color: black;
-                padding: 10px 20px;
-                cursor: pointer;
-                margin-bottom: 15px;
-            }
-
-            .nav-item span{
-                font-size: 18px;
-                font-weight: bold;
-                font-family: Arial, Helvetica, sans-serif;
-                color:black;
-            }
-
-            .nav-item img {
-                font-size: 20px;
-                margin-right: 50px;
-            }
-
-            .nav-item.active {
-                background-color: #1F41BB;
-                color: white;
-                font-weight: bold;
-                border-radius: 10px;
-            }
-
-            .nav-item.active span{
-                color: white;
-            }
-
-            .logout {
-                padding: 5px 20px;
-                display: flex;
-                cursor: pointer;
-                position: absolute;
-                top: 90%;
-                margin-left:80px;
-                background-color:#CDE6FE;
-                border:1px solid #3485DE;
-                height:35px;
-                border-radius: 10px;
-                width:150px;
-                cursor: pointer;
-            }
-
-            .logout img {
-                font-size: 18px;
-                margin-right: 15px;
-                height: 25px;
-            }
-
-            .logout span {
-                font-size: 18px;
-                color:black;
-                margin-left: 0px;
-                margin-top:4px;
-                font-weight: bold;
-            }
-
-            /*Notification icon*/
-            .notfication-icon{
-                position: absolute;
-                left: 81%;
-                top:20px;
-                color: #6c63ff; 
-                width:30px;
-                height:35px;
-                cursor: pointer;
-            }
-
-            /* user profile view Container styling */
-            .user-profile {
-                position: absolute;
-                left: 85%;
-                top:15px;
-                display: flex;
-                border: 2px solid #1F41BB; 
-                border-radius: 50px;
-                background-color: #ffffff;
-                font-family: Arial, sans-serif;
-                gap: 10px;
-                width:165px;
-                height:40px;
-            }
-
-            .user-avatar {
-                margin-left:10px;
-                margin-top:1px;
-            }
-
-            .user-info {
-                display: flex;
-                flex-direction: column;
-                margin-top:5px;
-            }
-
-            .user-name {
-                font-weight: bold;
-                color: #000;
-            }
-
-            .user-role {
-                font-size: 12px;
-                color: #808080; 
-            }
-
-            .main-header{
-                position: absolute;
-                top:50px;
-                left: 400px;
-                font-size:35px;
-                color:black;
-                font-weight: bold;
-            }
-
-            /*Styling of the system user webpage*/
-            .middle-container{
-                height: 82%;
-                width:1105px;
-                left:360px;
-                top:110px;
-                border-radius: 0px;
-                background-color: white;
-                position: absolute;
-            }
-
-            .dashboard {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
-            width: 80%;
-            max-width: 1000px;
-            margin-top:10px;
-           
-        }
-        
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: relative;
-            text-align: left;
-        }
-        .card h3 {
-            margin: 0;
-            position: absolute;
-            top: 10px;
-            left: 15px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .card p {
-            margin-top: 40px;
-            font-size: 18px;
-            text-align: center;
-        }
-        .chart-container {
-            grid-column: span 2;
-            background: white;
-            padding: 60px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            width:480px;
-            max-width:380px;
-            height:350px;
-            position: relative;
-    
-        
-        }
-        canvas {
-           width: 80% !important;
-           height: 80% !important;
-           margin-top: 40px;
-}
-        .chart-container h3 {
-            margin:0px;
-            position: absolute;
-            left: 25px;
-            font-size: 18px;
-            font-weight: bold;
-            top:25px;
-        }
-        .legend-container {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 25px;
-            font-size: 18px;
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-       
-
-        </style>
         
     </head>
     <body>
@@ -353,56 +74,174 @@
         </div>
         
         
-        <div class="main-header">Dashboard
-        <div class="dashboard">
-            <div class="card"><h3>Total Shops</h3><p>1500 Shops</p></div>
-            <div class="card"><h3>Total Inspections</h3><p>70 Inspections</p></div>
-            <div class="card"><h3>Pending Inspections</h3><p>05 Inspections</p></div>
-            <div class="card"><h3>High Risk Shops</h3><p>10 Shops</p></div>
-            <div class="chart-container">
-                <h3>Daily Inspection Rate</h3>
-                <canvas id="lineChart"></canvas>
+        <div class="main-header">Dashboard</div>
+
+        <div class="middle-container">
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <img src="images/Dashboard-icon1.png" style="top:3px">
+                    </div>
+                    <p>Total Shops</p>
+                    <h3>1500</h3>
+                    <span style="left:185px;">Shops</span>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <img src="images/Dashboard-icon2.png" >
+                    </div>
+                    <p>Total Inspections </p>
+                    <p class="text-1">This Month</p>
+                    <h3>70</h3>
+                    <span style="left:140px;">Inspections</span>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <img src="images/Dashboard-icon3.png">
+                    </div>
+                    <p>Pending Inspections</p>
+                    <p class="text-1">This Month</p>
+
+                    <h3>05</h3>
+                    <span style="left:140px;">Inspections</span>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <img src="images/Dashboard-icon4.png" style="top:3px">
+                    </div>
+                    <p>High Risk Shops </p>
+                    <h3>10</h3>
+                    <span style="left:185px;">Shops</span>
+                </div>
             </div>
-            <div class="chart-container">
-                <h3>Risk Levels by Shops</h3>
-                <canvas id="pieChart"></canvas>
-                <div class="legend-container">
-                    <div class="legend-item"><div class="legend-color" style="background: green;"></div> A Grade</div>
-                    <div class="legend-item"><div class="legend-color" style="background: yellow;"></div> B Grade</div>
-                    <div class="legend-item"><div class="legend-color" style="background: orange;"></div> C Grade</div>
-                    <div class="legend-item"><div class="legend-color" style="background: red;"></div> D Grade</div>
+
+            <div class="charts-container">
+                <div class="chart-card-1">
+                    <h3>Daily Inspection Rate</h3>
+                    <canvas id="dailyInspectionChart"></canvas>
+                </div>
+                <div class="chart-card-2">
+                    <h3>Risk Levels by Shops </h3>
+                    <canvas id="riskLevelsChart"></canvas>
                 </div>
             </div>
         </div>
-    
+
         <script>
-            const lineCtx = document.getElementById('lineChart').getContext('2d');
-            new Chart(lineCtx, {
-                type: 'line',
+            //Daily Inspection Chart 
+
+            document.addEventListener("DOMContentLoaded", function () {
+            const ctx = document.getElementById("dailyInspectionChart").getContext("2d");
+
+            // Sample Data: Inspection rates for 7 days
+            const labels = ["01", "02", "03", "04", "05", "06", "07"];
+            const inspectionRates = [45, 15, 80, 20, 10, 35, 30]; // Replace with actual data
+
+            const dailyInspectionChart = new Chart(ctx, {
+                type: "line",
                 data: {
-                    labels: ['01', '02', '03', '04', '05', '06', '07'],
+                    labels: labels,
                     datasets: [{
-                        data: [5, 10, 25, 40, 15, 10, 12],
-                        borderColor: 'blue',
-                        fill: false
+                        label: "Daily Inspection Rate",
+                        data: inspectionRates,
+                        borderColor: "#2B50FF",
+                        backgroundColor: "rgba(43, 80, 255, 0.2)",
+                        borderWidth: 2,
+                        pointRadius: 5,
+                        pointBackgroundColor: "#85C1E9",
+                        tension: 0.4, 
                     }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Day",
+                            },
+                            grid: {
+                                display: true,
+                                drawBorder: false
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: "Inspection Rate",
+                            },
+                            beginAtZero: true,
+                            grid: {
+                                drawBorder: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    }
                 }
             });
-    
-            const pieCtx = document.getElementById('pieChart').getContext('2d');
-            new Chart(pieCtx, {
-                type: 'doughnut',
+        });
+
+
+        // Pie Chart
+        document.addEventListener("DOMContentLoaded", function () {
+            const ctxPie = document.getElementById("riskLevelsChart").getContext("2d");
+
+            // Sample Data: Risk Levels Distribution
+            var catLabels = ["Grade A", "Grade B", "Grade C", "Grade D"];
+            var catData = [60, 20, 10, 10];
+
+            const salesPieChart = new Chart(ctxPie, {
+                type: "doughnut", 
                 data: {
-                     datasets: [{
-                        data: [50, 20, 15, 15],
-                        backgroundColor: ['green', 'yellow', 'orange', 'red']
+                    labels: catLabels,
+                    datasets: [{
+                        data: catData,
+                        backgroundColor: [
+                            'rgba(61, 185, 82, 1)',   // Green (A)
+                            'rgba(241, 215, 48, 1)',  // Yellow (B)
+                            'rgba(255, 133, 20, 1)',  // Orange (C)
+                            'rgba(187, 31, 34, 1)',   // Red (D)
+                        ],
+                        borderColor: [
+                            'rgba(61, 185, 82, 1)',  
+                            'rgba(241, 215, 48, 1)', 
+                            'rgba(255, 133, 20, 1)',  
+                            'rgba(187, 31, 34, 1)',  
+                        ],
+                        borderWidth: 1
                     }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: "45%", 
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: "bottom",
+                            labels: {
+                                usePointStyle: false,
+                                boxWidth: 15, 
+                                padding: 15,
+                            }
+                        },
+                        title: {
+                            display: true,
+                        }
+                    }
                 }
             });
-        </script>
-        </div>
-    
-            
+        });
+
+
+    </script>
 
 </body>
 </html>
