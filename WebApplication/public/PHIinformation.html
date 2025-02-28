@@ -1,820 +1,206 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Template</title>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Profile View</title>
 
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-
-        <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            overflow-x: hidden;
-            font-family: 'Roboto', sans-serif;
-            background: linear-gradient(to bottom, #E6F5FE 0%, #F5ECF9 100%);
-        }
-
-        .container {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .header, .footer {
-            flex-shrink: 0;
-        }
-
-        /* navigation panel of Smart POS Dashboard */
-        .navigation {
-            height: 100%;
-            background-color: white;
-            width: 315px;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-        }
-
-        .Logo {
-            width: 40px;
-            height: 40px;
-            left: 40px;
-            top: 12px;
-            position: absolute;
-            display: flex;
-        }
-
-        .logoname {
-            color: black;
-            font-size: 33px;
-            font-weight: 700;
-            word-wrap: break-word;
-            left: 95px;
-            top: 16px;
-            position: absolute;
-        }
-
-        .logoname a {
-            text-decoration: none; 
-            color: inherit;
-            cursor: pointer;
-        }
-
-        .nav-menu {
-            list-style-type: none;
-            padding: 0px 0;
-            width: 80%;
-            margin-left: 10%;
-            margin-top: 100px;
-        }
-
-        .nav-menu a {
-            text-decoration: none; 
-            color: inherit;
-            cursor: pointer;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            color: black;
-            padding: 10px 20px;
-            cursor: pointer;
-            margin-bottom: 15px;
-        }
-
-        .nav-item span{
-            font-size: 18px;
-            font-weight: bold;
-            font-family: Arial, Helvetica, sans-serif;
-            color: black;
-        }
-
-        .nav-item img {
-            font-size: 20px;
-            margin-right: 50px;
-        }
-
-        .nav-item.active {
-            background-color: #1F41BB;
-            color: white;
-            font-weight: bold;
-            border-radius: 10px;
-        }
-
-        .nav-item.active span{
-            color: white;
-        }
-
-        .logout {
-            padding: 5px 20px;
-            display: flex;
-            cursor: pointer;
-            position: absolute;
-            top: 90%;
-            margin-left: 80px;
-            background-color: #CDE6FE;
-            border: 1px solid #3485DE;
-            height: 35px;
-            border-radius: 10px;
-            width: 150px;
-            cursor: pointer;
-        }
-
-        .logout img {
-            font-size: 18px;
-            margin-right: 15px;
-            height: 25px;
-        }
-
-        .logout span {
-            font-size: 18px;
-            color: black;
-            margin-left: 0px;
-            margin-top: 4px;
-            font-weight: bold;
-        }
-
-        /* Notification icon */
-        .notfication-icon {
-            position: absolute;
-            left: 81%;
-            top: 20px;
-            color: #6c63ff; 
-            width: 30px;
-            height: 35px;
-            cursor: pointer;
-        }
-
-        /* user profile view Container styling */
-        .user-profile {
-            position: absolute;
-            left: 85%;
-            top: 15px;
-            display: flex;
-            border: 2px solid #1F41BB; 
-            border-radius: 50px;
-            background-color: #ffffff;
-            font-family: Arial, sans-serif;
-            gap: 10px;
-            width: 165px;
-            height: 40px;
-        }
-
-        .user-avatar {
-            margin-left: 10px;
-            margin-top: 1px;
-        }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            margin-top: 5px;
-        }
-
-        .user-name {
-            font-weight: bold;
-            color: #000;
-        }
-
-        .user-role {
-            font-size: 12px;
-            color: #808080; 
-        }
-
-        .main-header {
-            position: absolute;
-            top: 50px;
-            left: 360px;
-            font-size: 35px;
-            color: black;
-            font-weight: bold;
-        }
-
-        h2 {
-            font-size: 40px;
-            margin-left: 35px;
-        }
-
-        .profile-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .profile-header img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 2px solid #000000;
-            margin-bottom: 3px;
-            margin-left: 45px;
-        }
-
-        .info {
-            margin-top: 10px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 15px;
-            align-items: flex-start;
-            align-items: stretch;
-        }
-
-        h3 {
-            font-size: 22px;
-            margin-top: 5px;
-            color: black;
-        }
-
-        .info-card {
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            width: 48%; /* Ensures both cards have the same width and fit neatly */
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-            border: 1px solid #ddd;
-            margin-left: 50px;
-            margin-top: 15px;
-        }
-
-        .info-card p {
-            display: flex;
-            justify-content: space-between; /* Ensures left and right alignment */
-            align-items: center;
-            margin: 5px 30px; /* Keeps spacing consistent */
-            font-size: 16px;
-            color: #333; 
-            line-height: 1.5;
-            font-weight: 450;
-        }
-
-        .info-card p span:first-child {
-            text-align: left; /* Aligns the label to the right */
-            width: 50%; /* Ensures label and value have enough space */
-            margin-right:1px;
-        }
-
-        .info-card p span:last-child {
-            text-align: left; /* Aligns the value to the right */
-            width: 50%; /* Ensures value and label have enough space */
-            margin-left: 20px; /* Adds a gap between label and value */
-        }
+    <link rel="stylesheet" href="StyleSheet4.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="navigation">
+        <div class="Logo"><img src="images/logo.png" /></div>
+        <div class="logoname"><a href="Dashboard.jsp">Safe Serve</a></div>
         
-        .edit-button
-        {
-           position:relative;
-            background-color:yellow;
-            border: none;
-            padding: 8px 16px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 14px;
-            margin-top: 10px; /* Adjust margin as needed */
-            cursor: pointer;
-            border-radius: 5px; /* Rounded corners */
-            bottom:290px;
-            left:390px;
-        }
-        
-        .profile-section {
-        margin-bottom: 20px; /* Space below the section */
-        }
-
-       .division-list {
-        display: flex; /* Arrange divisions horizontally */
-        gap: 10px; /* Space between divisions */
-}
-
-        .division {
-        background-color:lightskyblue; /* Light background color */
-        border: 1px solid #ccc; /* Subtle border */
-        padding: 5px 10px; /* Padding inside each division */
-        border-radius: 5px; /* Rounded corners */
-        margin-left:28px;
-}
-
-        
-        .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      animation: fadeIn 0.3s ease-out;
-    }
-
-    .modal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      max-width: 500px;
-      width: 90%;
-      z-index: 1001;
-      animation: slideIn 0.3s ease-out;
-    }
-
-    .modal.active,
-    .modal-overlay.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes slideIn {
-      from { 
-        transform: translate(-50%, -60%);
-        opacity: 0;
-      }
-      to { 
-        transform: translate(-50%, -50%);
-        opacity: 1;
-      }
-    }
-
-    .container {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .header h2 {
-      font-size: 18px;
-      color: #333;
-      font-weight: 600;
-    }
-
-    .close-button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 8px;
-      border-radius: 50%;
-    }
-
-    .close-button:hover {
-      background-color: #f5f5f5;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: #666;
-    }
-
-    .form-group input {
-      width: 90%;
-      padding: 10px 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 14px;
-      background-color: #f8f9fa;
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: #4c6ef5;
-      background-color: white;
-    }
-
-    .update-button {
-      width: 100%;
-      padding: 12px;
-      background-color: #4c6ef5;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      margin-top: 8px;
-    }
-
-    .update-button:hover {
-      background-color: #4263eb;
-    }
-
-    .close-icon {
-      position: relative;
-      width: 16px;
-      height: 16px;
-    }
-
-    .close-icon::before,
-    .close-icon::after {
-      content: '';
-      position: absolute;
-      width: 16px;
-      height: 2px;
-      background-color: #666;
-      top: 50%;
-      left: 50%;
-    }
-
-    .close-icon::before {
-      transform: translate(-50%, -50%) rotate(45deg);
-    }
-
-    .close-icon::after {
-      transform: translate(-50%, -50%) rotate(-45deg);
-    }
-
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-
-    .info-label {
-      color: #666;
-      font-size: 14px;
-    }
-
-    .info-value {
-      color: #333;
-      font-size: 14px;
-    }
-    .pwd-change-button {
-        background: #1F41BB;
-        color: white;
-        padding: 10px 35px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        display:block;
-        margin-top: 20px;
-        margin-left: 940px;
-        font-size: 14px;
-    }
-
-    .pwd-change-button:hover {
-      background-color: #4263eb;
-    }
-
-    .pwd-modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1000;
-      animation: pwdFadeIn 0.3s ease-out;
-    }
-
-    .pwd-modal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 400px;
-      max-width: 90%;
-      z-index: 1001;
-      animation: pwdSlideIn 0.3s ease-out;
-    }
-
-    .pwd-modal.active,
-    .pwd-modal-overlay.active {
-      display: block;
-    }
-
-    @keyframes pwdFadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes pwdSlideIn {
-      from { 
-        transform: translate(-50%, -60%);
-        opacity: 0;
-      }
-      to { 
-        transform: translate(-50%, -50%);
-        opacity: 1;
-      }
-    }
-
-    .pwd-modal-content {
-      background: white;
-      padding: 24px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .pwd-modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 5px;  /* Add padding to create space between title and line */
-      border-bottom: 1px solid #1F41BB;  /* Add horizontal line */
-    }
-
-    .pwd-modal-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: #333;
-      margin-left:5px;
-    }
-
-    .pwd-close-button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color:black;
-      font-size: 20px;
-      padding: 4px;
-      border-radius: 50%;
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .pwd-close-button:hover {
-      background-color:#4263eb;
-    }
-
-    .pwd-form-group {
-      margin-bottom: 20px;
-    }
-
-    .pwd-form-group label {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: #666;
-    }
-
-    .pwd-form-group input {
-      width: 90%;
-      padding: 10px 12px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 14px;
-      background-color: #f8f9fa;
-    }
-
-    .pwd-form-group input:focus {
-      outline: none;
-      border-color: #4c6ef5;
-      background-color: white;
-    }
-
-    .pwd-submit-button {
-      width: 100%;
-      padding: 12px;
-      background-color: #4c6ef5;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-    }
-
-    .pwd-submit-button:hover {
-      background-color: #4263eb;
-    }
-    </style>
-     <script>
-        function openModal() {
-          document.getElementById('modalOverlay').classList.add('active');
-          document.getElementById('editModal').classList.add('active');
-        }
-    
-        function closeModal() {
-          document.getElementById('modalOverlay').classList.remove('active');
-          document.getElementById('editModal').classList.remove('active');
-        }
-    
-        function handleSubmit(event) {
-          event.preventDefault();
-          // Add your form submission logic here
-          closeModal();
-        }
-    
-        // Close modal when clicking overlay
-        document.getElementById('modalOverlay').addEventListener('click', closeModal);
-
-        function openPasswordModal() {
-      document.getElementById('pwdModalOverlay').classList.add('active');
-      document.getElementById('pwdModal').classList.add('active');
-    }
-
-    function closePasswordModal() {
-      document.getElementById('pwdModalOverlay').classList.remove('active');
-      document.getElementById('pwdModal').classList.remove('active');
-    }
-
-    function handlePasswordSubmit(event) {
-      event.preventDefault();
-      // Add password validation and submission logic here
-      closePasswordModal();
-    }
-
-    // Close modal when clicking overlay
-    document.getElementById('pwdModalOverlay').addEventListener('click', closePasswordModal);
-      </script>
-        
-    </head>
-    <body>
-        <div class="navigation">
-            <div class="Logo"><img src="images/logo.png" /></div>
-            <div class="logoname"><a href="Dashboard.jsp">Safe Serve</a></div>
-            
-            <ul class="nav-menu">
-                <a href="">
-                    <li class="nav-item">
-                        <img src="images/dashboard-icon-b.png" />
-                        <span>Dashboard</span>
-                    </li>
-                </a>
-                <a href="">
-                    <li class="nav-item">
-                        <img src="images/calendar-icon-b.png" />
-                        <span>Calendar</span>
-                    </li>
-                </a>
-                <a href="">
-                    <li class="nav-item">
-                        <img src="images/inspectionlog-icon-b.png" />
-                        <span>Inspection Log</span>
-                    </li>
-                </a>
-                <a href="">
-                    <li class="nav-item">
-                        <img src="images/analytics-icon-b.png" />
-                        <span>Analytics</span>
-                    </li>
-                </a>
-                <a href="">
-                    <li class="nav-item">
-                        <img src="images/registerphi-icon-b.png" />
-                        <span>Register PHI</span>
-                    </li>
-                </a>
-                <a href="">
-                    <li class="nav-item active">
-                        <img src="images/profile-icon-w.png" />
-                        <span>Profile</span>
-                    </li>
-                </a>
-            </ul>
-            <form method="post" action="">
-                <input type="hidden" name="action" value="logout" />
-                <button class="logout">
-                    <img src="images/logout-icon.png"/>
-                    <span>Logout</span>
-                </button>
-            </form>
-        </div>
-
-        <div class="user-profile">
-            <div class="user-avatar">
-                <img src="images/logged-user-icon.png">
-            </div>
-            <div class="user-info">
-                <span class="user-name">Leo Perera</span>
-                <span class="user-role">PHI</span>
-            </div>
-        </div>
-
-        <div class="main-header">
-            <h2>Profile Information</h2>
-            <div class="profile-header">
-                <img src="images/logged-user-icon.png" alt="User Icon">
-            </div>
-            <div class="info">
-                <div class="info-card">
-                    <h3>Personal Information</h3>
-                    <p><span>Full Name</span> <span>Leo Perera</span></p>
-                    <p><span>PHI ID</span> <span>12453778</span></p>
-                    <p><span>NIC</span> <span>74658936782v</span></p>
-                    <p><span>Role</span> <span>PHI</span></p>
-                    <p><span>Phone Number</span> <span>07210453678</span></p>
-                    <p><span>Email</span> <span>leoperera@gmail.com</span></p>
-                    <p><span>Personal Address</span> <span>67, Colombo North, Colombo</span></p>
-                    <button class="edit-button" onclick="openModal()">
-                        ✏️ Edit
-                      </button>
-                </div>
-                <div class="modal-overlay" id="modalOverlay"></div>
-
-            <!-- Modal -->
-            <div class="modal" id="editModal">
-            <div class="container">
-            <div class="header">
-            <h2>Edit Personal Information</h2>
-            <button class="close-button" onclick="closeModal()">
-            <div class="close-icon"></div>
+        <ul class="nav-menu">
+            <a href="">
+                <li class="nav-item">
+                    <img src="images/dashboard-icon-b.png" />
+                    <span>Dashboard</span>
+                </li>
+            </a>
+            <a href="">
+                <li class="nav-item">
+                    <img src="images/calendar-icon-b.png" />
+                    <span>Calendar</span>
+                </li>
+            </a>
+            <a href="">
+                <li class="nav-item">
+                    <img src="images/inspectionlog-icon-b.png" />
+                    <span>Inspection Log</span>
+                </li>
+            </a>
+            <a href="">
+                <li class="nav-item">
+                    <img src="images/analytics-icon-b.png" />
+                    <span>Analytics</span>
+                </li>
+            </a>
+            <a href="">
+                <li class="nav-item">
+                    <img src="images/registerphi-icon-b.png" />
+                    <span>Register PHI</span>
+                </li>
+            </a>
+            <a href="">
+                <li class="nav-item active">
+                    <img src="images/profile-icon-w.png" />
+                    <span>Profile</span>
+                </li>
+            </a>
+        </ul>
+        <form method="post" action="">
+            <input type="hidden" name="action" value="logout" />
+            <button class="logout">
+                <img src="images/logout-icon.png"/>
+                <span>Logout</span>
             </button>
-            </div>
-
-      <form onsubmit="handleSubmit(event)">
-        <div class="form-group">
-          <label for="fullName">Full Name</label>
-          <input type="text" id="fullName" name="fullName" value="Leo Perera">
-        </div>
-
-        <div class="form-group">
-          <label for="phoneNumber">Phone Number</label>
-          <input type="tel" id="phoneNumber" name="phoneNumber" value="0765940394">
-        </div>
-
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" value="leoperera@gmail.com">
-        </div>
-
-        <div class="form-group">
-          <label for="address">Personal Address</label>
-          <input type="text" id="address" name="address" value="67, Colombo north, colombo">
-        </div>
-
-        <button type="submit" class="update-button">Update</button>
-    </form>
+        </form>
     </div>
-    </div>
-    <div class="info-card">
-        <h3>Work Information</h3>
-        <p><span>District</span> <span>Colombo</span></p>
-        <p><span>Office Location</span> <span>456/A Colombo Rd, Kottawa</span></p>
-        <p>Assigned Grama Niladhari Divisions</p>
-        <div class="division-list">
-        <div class="division">Kadawatha</div>
-        <div class="division">Kottawa</div>
-        <div class="division">Biyagama</div>
-        </div>
-        </div>
-        </div>
-        <button class="pwd-change-button" onclick="openPasswordModal()">
-        Change Password
-        </button>
-        <div class="pwd-modal-overlay" id="pwdModalOverlay"></div>
 
-  <!-- Modal -->
-  <div class="pwd-modal" id="pwdModal">
-    <div class="pwd-modal-content">
-      <div class="pwd-modal-header">
-        <h2 class="pwd-modal-title">Change Password</h2>
-        <button class="pwd-close-button" onclick="closePasswordModal()">×</button>
+      <div class="user-profile">
+          <div class="user-avatar">
+              <img src="images/logged-user-icon.png">
+          </div>
+          <div class="user-info">
+              <span class="user-name">Leo Perera</span>
+              <span class="user-role">PHI</span>
+          </div>
       </div>
 
-      <form onsubmit="handlePasswordSubmit(event)">
-        <div class="pwd-form-group">
-          <label for="currentPassword">Enter your last password</label>
-          <input type="password" id="currentPassword" required>
+      <div class="main-header">
+        Profile Information
+      </div>
+
+      <div class="profile-header">
+          <img src="images/Profile-view-icon.png" alt="User Icon">
+      </div>
+
+      <div class="info">
+        <div class="info-card">
+          <h3>Personal Information</h3>
+          <p><span>PHI ID</span> <span>12453778</span></p>
+          <p><span>Full Name</span> <span>Leo Perera</span></p>
+          <p><span>NIC</span> <span>74658936782v</span></p>
+          <p><span>Role</span> <span>PHI</span></p>
+          <p><span>Phone Number</span> <span>07210453678</span></p>
+          <p><span>Email</span> <span>leoperera@gmail.com</span></p>
+          <p><span>Personal Address</span> <span>67, Colombo North, Colombo</span></p>
+          <button class="edit-button" onclick="showEditSlider()">
+              <img src="images/edit-icon.png">
+          </button>
         </div>
 
-        <div class="pwd-form-group">
-          <label for="newPassword">Enter New Password</label>
-          <input type="password" id="newPassword" required>
+        <div class="info-card">
+          <h3>Work Information</h3>
+          <p><span>District</span> <span>Colombo</span></p>
+          <p><span>Office Location</span> <span>456/A Colombo Rd, Kottawa</span></p>
+          <p>Assigned Grama Niladhari Divisions</p>
+          <div class="division-list">
+          <div class="division">Kadawatha</div>
+          <div class="division">Kottawa</div>
+          <div class="division">Biyagama</div>
         </div>
+      </div>
+      </div>
 
-        <div class="pwd-form-group">
-          <label for="confirmPassword">Re-Enter new Password</label>
-          <input type="password" id="confirmPassword" required>
+
+      <button class="pwd-change-button" onclick="openModal()">
+        Change Password
+      </button>
+
+
+
+      <!--Edit info Slider-->
+      <div class="edit-slider" id="editprofileSlider">
+        <div class="slider-container">
+            <div class="slider-header">
+                <div class="slider-title">Edit Personal Information</div>
+                <img class="close-slider" src="images/Cancelslide.png" onclick="hideEditSlider()" />
+                <div class="slider-hline">
+                    <hr size="2" color="#1F41BB" />
+                </div>
+            </div>
+
+            <div class="slider-form">
+                <form>
+                    <div class="edit-form">
+                        <div class="form-row">
+                            <label class="form-label">Full Name</label>
+                            <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                          <label class="form-label">Phone Number</label>
+                          <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                          <label class="form-label">Email</label>
+                          <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                          <label class="form-label">Personal Address</label>
+                          <input class="form-text" type="text" id="" />
+                        </div>
+                        <button class="form-save-but" style="margin-top:0px;" type="submit" onclick="hideEditSlider()">Update</button>
+                    </div>
+                </form>
+            </div>  
         </div>
-
-        <button type="submit" class="pwd-submit-button">Change Password</button>
-      </form>
     </div>
-  </div>
-            
-</div>
+
+
+
+      <!-- Update Password Modal -->
+      <div class="modal" id="updatePasswordModal">
+        <div class="modal-content">
+            <div class="slider-header">
+                <div class="slider-title">Change Password</div>
+                <img class="close-slider" src="images/Cancelslide.png" onclick="closeModal()" />
+                <div class="slider-hline">
+                    <hr size="2" color="#5F4AE7" />
+                </div>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="edit-form">
+                        <div class="form-row">
+                            <label class="form-label">Enter Your Last Password</label>
+                            <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Enter New Password</label>
+                            <input class="form-text" type="password" id="" />
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Re-Enter New Password</label>
+                            <input class="form-text" type="password" id="" />
+                        </div>
+                    </div>
+                    <button class="modal-but" type="submit" style="margin-bottom: 20px">Change Password</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+  <script>
+    function showEditSlider() {
+        document.getElementById('editprofileSlider').classList.add('active');
+    }
+
+    function hideEditSlider() {
+        document.getElementById('editprofileSlider').classList.remove('active');
+    }
+    
+    function openModal() {
+        document.getElementById("updatePasswordModal").style.display = "flex";
+    }
+
+    function closeModal() {
+        document.getElementById("updatePasswordModal").style.display = "none";
+    }
+  </script>
 
 </body>
 </html>
