@@ -64,7 +64,7 @@ class _LicensedYearFieldState extends State<LicensedYearField> {
     widget.isInvalid ? Colors.red : const Color(0xFF4289FC);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 9),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(widget.label, style: const TextStyle(fontSize: 18, color: Colors.black)),
         const SizedBox(height: 6),

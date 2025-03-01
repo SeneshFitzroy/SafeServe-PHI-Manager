@@ -28,7 +28,7 @@ class FormTextField extends StatelessWidget {
           Text(label, style: const TextStyle(fontSize: 18, color: Colors.black)),
           const SizedBox(height: 6), // Reduce space between label and input field
           SizedBox(
-            height: 42, // Reduced height of the text field
+            height: 42,
             child: TextField(
               controller: controller,
               keyboardType: inputType,
