@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHI Registration</title>
+    <link rel="stylesheet" href="StyleSheet2.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+</head>
+<body>
+    <div class="navigation">
+        <div class="Logo"><img src="images/logo.png" /></div>
+        <div class="logoname"><a href="Dashboard.html">Safe Serve</a></div>
+        
+        <ul class="nav-menu">
+            <a href="">
+                <li class="nav-item ">
+                    <img src="images/dashboard-icon-b.png" />
+                    <span>Dashboard</span>
+                </li>
+            </a>
+            <a href="">
+                <li class="nav-item">
+                    <img src="images/calendar-icon-b.png" />
+                    <span>Calendar</span>
+                </li>
+            </a>
+            <a href="">
+                <li class="nav-item">
+                    <img src="images/inspectionlog-icon-b.png" />
+                    <span>Inspection Log</span>
+                </li>
+            </a>
+            <a href="">
+                <li class="nav-item">
+                    <img src="images/analytics-icon-b.png" />
+                    <span>Analytics</span>
+                </li>
+            </a>
+            <a href="">
+                <li class="nav-item active">
+                    <img src="images/registerphi-icon-W.png" />
+                    <span>Register PHI</span>
+                </li>
+            </a>
+            <a href="">
+                <li class="nav-item">
+                    <img src="images/profile-icon-b.png" />
+                    <span>Profile</span>
+                </li>
+            </a>
+        </ul>
+        <form method="post" action="">
+            <input type="hidden" name="action" value="logout" />
+            <button class="logout">
+                <img src="images/logout-icon.png"/>
+                <span>Logout</span>
+            </button>
+        </form>
+    </div>
+
+    <div class="user-profile">
+        <div class="user-avatar">
+            <img src="images/logged-user-icon.png">
+        </div>
+        <div class="user-info">
+            <span class="user-name">Leo Perera</span>
+            <span class="user-role">PHI</span>
+        </div>
+    </div>
+    
+    
+    <div class="main-header">PHI Regsitration</div>
+
+    <!--Middle Container-->
+    <div class="middle-container">
+        <button class="add-button" style="font-size: 15px" onclick="showSlider()">
+            <div>+</div>
+            <p>Add PHI</p>
+        </button>
+
+        <div class="header-container" style="top:60px;">
+            <span class="header-top" style="margin-left:20px">PHI ID</span>
+            <span class="header-top" style="margin-left:200px">Full Name</span>
+            <div class="header-top" style="margin-left:770px">Status</div>
+            <div class="header-top" style="margin-left:570px">Phone No</div>                
+            <div class="header-top" style="margin-left:955px">Action</div>
+        </div>
+        
+        <div class="content-container" >
+            <div class="user">
+                <p class="user-id">13236</p>
+                <p class="user-s-name">Kasun Madhushanka Perera</p>
+                <p class="user-phone">0708905003</p>
+                <div class="status">
+                    <button class="toggle-btn Active" onclick="toggleLight(this)">Active</button>
+                </div>
+                <div class="user-actions">
+                    <!-- view button -->
+                    <div class="view" onclick="showViewSlider()">
+                        <i class="bi bi-eye-fill"></i>
+                    </div>
+                    <!-- EDIT button -->
+                    <div class="edit" onclick="showEditSlider()">
+                        <i class="bi bi-pencil-fill"></i>
+                    </div>
+                    <!-- DELETE button -->
+                    <div class="delete" onclick="confirmDelete()">
+                        <i class="bi bi-trash3-fill"></i>
+                    </div>
+                </div> 
+            </div>
+            
+        </div>
+    </div>
+
+
+
+
+
+    <!--ADD PHI Slider-->
+    <div class="slider" id="addPHISlider">
+        <div class="slider-container">
+            <div class="slider-header">
+                <div class="slider-title">Add New PHI</div>
+                <img class="close-slider" src="images/Cancelslide.png" onclick="hideSlider()" />
+                <div class="slider-hline">
+                    <hr size="2" color="#1F41BB" />
+                </div>
+            </div>
+
+            <div class="slider-form">
+                <form>
+                    <div class="edit-form">
+                        <div class="form-row">
+                            <label class="form-label">PHI ID</label>
+                            <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                          <label class="form-label">Full Name</label>
+                          <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                          <label class="form-label">NIC</label>
+                          <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Role</label>
+                            <div class="user-role-select">
+                                <select>
+                                    <option>PHI</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                          <label class="form-label">Phone Number</label>
+                          <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Email</label>
+                            <input class="form-text" type="email" id="" />
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Personal Address</label>
+                            <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Office Location</label>
+                            <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">District</label>
+                            <div class="user-role-select">
+                                <select>
+                                    <option>Colombo</option>
+                                    <option>Kalutara</option>
+                                    <option>Gampha</option>
+                                    <option>Polonnaruwa</option>
+                                    <option>Nuwara Eliya</option>
+                                    <option>Kandy</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Assigned Grama Niladhari Divisions</label>
+                            <div class="multi-select-container">
+                                <div id="selected-options" class="selected-options"></div>
+                                <select id="multiSelectDropdown">
+                                    <option value="Biyagama">Biyagama</option>
+                                    <option value="Kottwa">Kottwa</option>
+                                    <option value="Kadawatha">Kadawatha</option>
+                                    <option value="Gampaha">Gampaha</option>
+                                    <option value="Colombo">Colombo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Enter username</label>
+                            <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Enter new password</label>
+                            <input class="form-text" type="password" id="" />
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Confirm Password</label>
+                            <input class="form-text" type="password" id="" />
+                        </div>
+                        <button class="form-save-but" style="margin-top:0px;" type="submit" onclick="hideSlider()">Save</button>
+                    </div>
+                </form>
+            </div>  
+        </div>
+    </div>
+
+
+
+    <!--View PHI Details Slider-->
+    <div class="slider" id="viewPHISlider">
+        <div class="slider-container">
+            <div class="slider-header">
+                <div class="slider-title">View PHI Details</div>
+                <img class="close-slider" src="images/Cancelslide.png" onclick="hideViewSlider()" />
+                <div class="slider-hline">
+                    <hr size="2" color="#1F41BB" />
+                </div>
+            </div>
+
+            <div class="slider-form">
+                <form>
+                    <div class="edit-form">
+                        <div class="form-row">
+                            <label class="form-label">PHI ID</label>
+                            <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                          <label class="form-label">Full Name</label>
+                          <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                          <label class="form-label">NIC</label>
+                          <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Role</label>
+                            <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                          <label class="form-label">Phone Number</label>
+                          <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Email</label>
+                            <input class="form-text" type="email" id="" />
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Personal Address</label>
+                            <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Office Location</label>
+                            <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">District</label>
+                            <input class="form-text" type="text" id="" />
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Assigned Grama Niladhari Divisions</label>
+                            <div class="multi-select-container">
+                                <div id="selected-options" class="selected-options"></div>
+                            </div>
+                        </div>
+                        <button class="form-save-but" style="margin-top:0px;" type="submit" onclick="hideViewSlider()">Done</button>
+                    </div>
+                </form>
+            </div>  
+        </div>
+    </div>
+
+
+
+    <!--Edit PHI DetailsSlider-->
+    <div class="slider" id="editPHISlider">
+        <div class="slider-container">
+            <div class="slider-header">
+                <div class="slider-title">Edit PHI Details</div>
+                <img class="close-slider" src="images/Cancelslide.png" onclick="hideEditSlider()" />
+                <div class="slider-hline">
+                    <hr size="2" color="#1F41BB" />
+                </div>
+            </div>
+
+            <div class="slider-form">
+                <form>
+                    <div class="edit-form">
+                        <div class="form-row">
+                            <label class="form-label">District</label>
+                            <div class="user-role-select">
+                                <select>
+                                    <option>Colombo</option>
+                                    <option>Kalutara</option>
+                                    <option>Gampha</option>
+                                    <option>Polonnaruwa</option>
+                                    <option>Nuwara Eliya</option>
+                                    <option>Kandy</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label class="form-label">Assigned Grama Niladhari Divisions</label>
+                            <div class="multi-select-container">
+                                <div id="selected-options" class="selected-options"></div>
+                                <select id="multiSelectDropdown">
+                                    <option value="Biyagama">Biyagama</option>
+                                    <option value="Kottwa">Kottwa</option>
+                                    <option value="Kadawatha">Kadawatha</option>
+                                    <option value="Gampaha">Gampaha</option>
+                                    <option value="Colombo">Colombo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="form-save-but" style="margin-top:0px;" type="submit" onclick="hideEditSlider()">Update</button>
+                    </div>
+                </form>
+            </div>  
+        </div>
+    </div>
+
+
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <p id="modalText">Are you sure you want to deactivate this PHI account?</p>
+            <button id="cancelBtn" class="cancel-btn">Cancel</button>
+            <button id="confirmBtn" class="confirm-btn">Confirm</button>
+        </div>
+    </div>
+
+
+
+
+
+
+    <script>
+        let currentButton = null; // Store reference to the clicked button
+        let actionType = ""; // Store action type (Activate or Deactivate)
+    
+        function toggleLight(button) {
+            currentButton = button; // Store reference to the clicked button
+            if (button.classList.contains("Active")) {
+                actionType = "Deactivate";
+                document.getElementById("modalText").textContent = "Are you sure you want to deactivate this PHI account?";
+            } else {
+                actionType = "Activate";
+                document.getElementById("modalText").textContent = "Are you sure you want to activate this PHI account?";
+            }
+            document.getElementById("confirmModal").style.display = "flex"; // Show modal
+        }
+    
+        // Handle "Confirm" button in the modal
+        document.getElementById("confirmBtn").addEventListener("click", function () {
+            if (currentButton) {
+                if (actionType === "Deactivate") {
+                    currentButton.classList.remove("Active");
+                    currentButton.classList.add("Inactive");
+                    currentButton.textContent = "Inactive";
+                } else {
+                    currentButton.classList.remove("Inactive");
+                    currentButton.classList.add("Active");
+                    currentButton.textContent = "Active";
+                }
+            }
+            document.getElementById("confirmModal").style.display = "none"; // Hide modal
+        });
+    
+        // Handle "Cancel" button in the modal
+        document.getElementById("cancelBtn").addEventListener("click", function () {
+            document.getElementById("confirmModal").style.display = "none"; // Hide modal
+        });
+    
+        // Close modal if clicked outside content
+        window.onclick = function (event) {
+            let modal = document.getElementById("confirmModal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+
+        function showSlider() {
+            document.getElementById('addPHISlider').classList.add('active');
+        }
+
+        function hideSlider() {
+            document.getElementById('addPHISlider').classList.remove('active');
+        }
+
+        function showEditSlider() {
+            document.getElementById('editPHISlider').classList.add('active');
+        }
+
+        function hideEditSlider() {
+            document.getElementById('editPHISlider').classList.remove('active');
+        }
+
+        function showViewSlider() {
+            document.getElementById('viewPHISlider').classList.add('active');
+        }
+
+        function hideViewSlider() {
+            document.getElementById('viewPHISlider').classList.remove('active');
+        }
+        
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const select = document.getElementById("multiSelectDropdown");
+            const selectedOptionsContainer = document.getElementById("selected-options");
+
+            // Function to add selected option
+            select.addEventListener("change", function () {
+                const selectedValue = select.value;
+                if (selectedValue) {
+                    addSelectedOption(selectedValue);
+                    select.value = ""; // Reset dropdown
+                }
+            });
+
+            function addSelectedOption(value) {
+                // Prevent duplicate selections
+                if (document.querySelector(`[data-value="${value}"]`)) return;
+
+                // Create selected option element
+                const optionElement = document.createElement("div");
+                optionElement.classList.add("selected-option");
+                optionElement.setAttribute("data-value", value);
+                optionElement.innerHTML = `${value} <button class="remove-option">&times;</button>`;
+
+                // Append to container
+                selectedOptionsContainer.appendChild(optionElement);
+
+                // Remove option when clicked
+                optionElement.querySelector(".remove-option").addEventListener("click", function () {
+                    selectedOptionsContainer.removeChild(optionElement);
+                });
+            }
+        });
+    </script>
+    
+</body>
+</html>
