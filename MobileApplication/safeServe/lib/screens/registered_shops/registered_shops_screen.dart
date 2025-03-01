@@ -3,6 +3,8 @@ import 'package:flutter/rendering.dart';
 import '../../../widgets/safe_serve_appbar.dart';
 import '../../../widgets/safe_serve_drawer.dart';
 import '../../../widgets/custom_nav_bar_icon.dart';
+import '../register_shop/register_shop_form_data.dart';
+import '../register_shop/screen_one/register_shop_screen_one.dart';
 import 'widgets/shop_card.dart';
 
 class RegisteredShopsScreen extends StatefulWidget {
@@ -156,6 +158,15 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
           IconButton(
             icon: const Icon(Icons.add, color: Color(0xFF1F41BB)),
             onPressed: () {
+              // Create an empty formData and go to screen 1
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (ctx) => RegisterShopScreenOne(
+                    formData: RegisterShopFormData(),
+                  ),
+                ),
+              );
             },
           ),
         ],

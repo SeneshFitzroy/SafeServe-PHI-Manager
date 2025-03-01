@@ -12,8 +12,8 @@ class FormButtons extends StatelessWidget {
         runSpacing: 12,
         children: [
           _buildFormButton('HC 800'),
-          _buildFormButton('Form 1'),
-          _buildFormButton('Form 2'),
+          _buildFormButton('Sandeshaya'),
+          _buildFormButton('Bond Form'),
         ],
       ),
     );
