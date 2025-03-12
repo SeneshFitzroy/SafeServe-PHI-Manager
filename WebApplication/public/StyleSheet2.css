@@ -191,6 +191,42 @@ html, body {
     font-weight: bold;
 }
 
+/* Search Bar Styling */
+.search-bar-container {
+    position: absolute;
+    top: 15px; /* Aligns with user-profile */
+    left: 73%; /* Adjust to fit near user-profile */
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 2px solid #0057b3;
+    border-radius: 25px;
+    padding: 5px 15px;
+    width: 290px;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    padding: 5px;
+    background: transparent;
+}
+
+.search-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #0057b3;
+}
+
+.search-button:hover {
+    color: #003b80;
+}
+
 
 
 /*Styling of the system user webpage*/
