@@ -226,7 +226,105 @@
 
 
 
+
+        <!--View PHI Details Slider-->
+        <div class="slider" id="viewSlider">
+            <div class="slider-container">
+                <div class="slider-header">
+                    <div class="slider-title">View Shop Details</div>
+                    <img class="close-slider" src="images/Cancelslide.png" onclick="hideViewSlider()" />
+                    <div class="slider-hline">
+                        <hr size="2" color="#1F41BB" />
+                    </div>
+                </div>
+
+                <div class="slider-form">
+                    <form>
+                        <div class="edit-form">
+                            <div class="form-row">
+                                <label class="form-label">Reference No</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                            <label class="form-label">PHI Area</label>
+                            <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                            <label class="form-label">Type of Trade</label>
+                            <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Name of the Owner</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                            <label class="form-label">Private Addressr</label>
+                            <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">NIC Number</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Personal Address</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Telephone No</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Name of the Establishment</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Districtt</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Grama Niladhari Region</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Address of the Establishmentt</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">License Number</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Licensed Year</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Business Registration Number</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Number of Employees</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <button class="form-save-but" style="margin-top:0px;" type="submit" onclick="hideViewSlider()">Done</button>
+                        </div>
+                    </form>
+                </div>  
+            </div>
+        </div>
+
+
+
+
         <script>
+            function showViewSlider() {
+                document.getElementById('viewSlider').classList.add('active');
+            }
+
+            function hideViewSlider() {
+                document.getElementById('viewSlider').classList.remove('active');
+            }
+
+
             window.onload = function () {
               const rankings = document.querySelectorAll('.element-4');
           
@@ -269,9 +367,6 @@
             };
           </script>
           
-          
-       
-            
 
 </body>
 </html>
