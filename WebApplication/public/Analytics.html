@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Analytics</title>
+
+        <link rel="stylesheet" href="Navigation.css">
+        <link rel="stylesheet" href="StyleSheet5.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    </head>
+    <body>
+        <div class="navigation">
+            <div class="Logo"><img src="images/logo.png" /></div>
+            <div class="logoname"><a href="Dashboard.jsp">Safe Serve</a></div>
+            
+            
+            <ul class="nav-menu">
+                <a href="">
+                    <li class="nav-item ">
+                        <img src="images/dashboard-icon-b.png" />
+                        <span>Dashboard</span>
+                    </li>
+                </a>
+                <a href="">
+                    <li class="nav-item">
+                        <img src="images/calendar-icon-b.png" />
+                        <span>Calendar</span>
+                    </li>
+                </a>
+                <a href="">
+                    <li class="nav-item">
+                        <img src="images/inspectionlog-icon-b.png" />
+                        <span>Inspection Log</span>
+                    </li>
+                </a>
+                <a href="">
+                    <li class="nav-item active">
+                        <img src="images/analytics-icon-w.png" />
+                        <span>Analytics</span>
+                    </li>
+                </a>
+                <a href="">
+                    <li class="nav-item">
+                        <img src="images/registerphi-icon-b.png" />
+                        <span>Register PHI</span>
+                    </li>
+                </a>
+                <a href="">
+                    <li class="nav-item">
+                        <img src="images/profile-icon-b.png" />
+                        <span>Profile</span>
+                    </li>
+                </a>
+            </ul>
+            <form method="post" action="">
+                <input type="hidden" name="action" value="logout" />
+                <button class="logout">
+                    <img src="images/logout-icon.png"/>
+                    <span>Logout</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="user-profile">
+            <div class="user-avatar">
+                <img src="images/logged-user-icon.png">
+            </div>
+            <div class="user-info">
+                <span class="user-name">Leo Perera</span>
+                <span class="user-role">PHI</span>
+            </div>
+        </div>
+        
+        
+        <div class="main-header">Analytics</div>
+
+        <!--Middle Container for content-->
+        <div class="middle-container">
+            <nav class="report-nav">
+                <button data-target="Total Inspections this Year" class="active">Total Inspections this Year</button>
+                <button data-target="High-Risk Level Shops">High-Risk Level Shops</button>
+                <button data-target="Shop Category Based Analytics">Shop Category Based Analytics</button>
+            </nav>
+            <div class="report-slides">
+                
+
+                <!--High-Risk Level Shops-->
+                <div id="High-Risk Level Shops" class="report-slide ">
+                    <div class="header-container" >
+                        <span class="header-top" style="margin-left:20px">Reference No</span>
+                        <span class="header-top" style="margin-left:220px">Shop Name</span>
+                        <div class="header-top" style="margin-left:660px">GN Region</div>
+                        <div class="header-top" style="margin-left:800px">Last Inspection</div>
+                        <div class="header-top" style="margin-left:970px">New Inspection</div>
+                    </div>
+                    <div class="content-container" >
+                        <div class="content-row">
+                            <p class="element-1">13236</p>
+                            <p class="element-2">ABC Cafe & Bakery</p>
+                            <p class="element-3">Biyagama</p>
+                            <p class="element-4">2024-10-05</p>
+                            <p class="element-5">2025-01-04</p>
+                        </div>
+                        <div class="content-row">
+                            <p class="element-1">13236</p>
+                            <p class="element-2">ABC Cafe & Bakery</p>
+                            <p class="element-3">Biyagama</p>
+                            <p class="element-4">2024-10-05</p>
+                            <p class="element-5">2025-01-04</p>
+                        </div>
+                        <div class="content-row">
+                            <p class="element-1">13236</p>
+                            <p class="element-2">ABC Cafe & Bakery</p>
+                            <p class="element-3">Biyagama</p>
+                            <p class="element-4">2024-10-05</p>
+                            <p class="element-5">2025-01-04</p>
+                        </div>
+                        <div class="content-row">
+                            <p class="element-1">13236</p>
+                            <p class="element-2">ABC Cafe & Bakery</p>
+                            <p class="element-3">Biyagama</p>
+                            <p class="element-4">2024-10-05</p>
+                            <p class="element-5">2025-01-04</p>
+                        </div>
+                        <div class="content-row">
+                            <p class="element-1">13236</p>
+                            <p class="element-2">ABC Cafe & Bakery</p>
+                            <p class="element-3">Biyagama</p>
+                            <p class="element-4">2024-10-05</p>
+                            <p class="element-5">2025-01-04</p>
+                        </div>
+                    </div>
+                </div>
+                
+                
+                
+                <!--Total Inspections this Year-->
+                <div id="Total Inspections this Year" class="report-slide active">
+                    <div class="chart-container">
+                        <h2>Total Inspections:</h2>
+                        <div class="red-text">1500</div>
+                        <canvas id="YearlyInspections"></canvas>
+                    </div>
+                </div>
+
+
+
+                <!--Shop Category Based Analytics-->
+                <div id="Shop Category Based Analytics" class="report-slide">
+                    <div class="shop-analytics-container">
+                        
+                        <!-- Filter -->
+                        <div class="filter-row">
+                            <label for="shopCategory" class="filter-label">Select Shop Category</label>
+                            <select id="shopCategory" class="shop-category-select">
+                                <option>Super Market</option>
+                                <option>Bakery</option>
+                                <option>Restaurant</option>
+                                <option>Grocery</option>
+                            </select>
+                            <button class="search-button">Search</button>
+                        </div>
+                
+                        <!-- Main content area -->
+                        <div class="analytics-content">
+                            <!-- Left Table -->
+                            <div class="shop-table">
+                                <h3>Top A-Graded Shops by Category</h3>
+                                <!-- Custom Table Header -->
+                                <div class="shop-table-header">
+                                    <span class="shop-header-col col-1">Reference No</span>
+                                    <span class="shop-header-col col-2">Shop Name</span>
+                                    <span class="shop-header-col col-3">GN Region</span>
+                                </div>
+
+                                <!-- Table Rows Container -->
+                                <div class="shop-table-body">
+                                    <div class="shop-table-row">
+                                        <p class="col-1">13236</p>
+                                        <p class="col-2">ABC Cafe & Bakery</p>
+                                        <p class="col-3">Biyagama</p>
+                                    </div>
+                                    <div class="shop-table-row">
+                                        <p class="col-1">13237</p>
+                                        <p class="col-2">Super Mart</p>
+                                        <p class="col-3">Malabe</p>
+                                    </div>
+                                    <div class="shop-table-row">
+                                        <p class="col-1">13236</p>
+                                        <p class="col-2">ABC Cafe & Bakery</p>
+                                        <p class="col-3">Biyagama</p>
+                                    </div>
+                                    <div class="shop-table-row">
+                                        <p class="col-1">13237</p>
+                                        <p class="col-2">Super Mart</p>
+                                        <p class="col-3">Malabe</p>
+                                    </div>
+                                    <div class="shop-table-row">
+                                        <p class="col-1">13236</p>
+                                        <p class="col-2">ABC Cafe & Bakery</p>
+                                        <p class="col-3">Biyagama</p>
+                                    </div>
+                                    <div class="shop-table-row">
+                                        <p class="col-1">13237</p>
+                                        <p class="col-2">Super Mart</p>
+                                        <p class="col-3">Malabe</p>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <!-- Doughnut Chart -->
+                            <div class="shop-chart">
+                                <h3>Risk Levels by Shop Type</h3>
+                                <canvas id="riskLevelChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+                
+                
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const navButtons = document.querySelectorAll(".report-nav button");
+                const slides = document.querySelectorAll(".report-slide"); 
+
+                // Add click event to each navigation button
+                navButtons.forEach((button) => {
+                    button.addEventListener("click", () => {
+                        const targetId = button.getAttribute("data-target");
+
+                        navButtons.forEach((btn) => btn.classList.remove("active"));
+                        button.classList.add("active");
+
+                        slides.forEach((slide) => {
+                            slide.classList.remove("active");
+                            if (slide.id === targetId) {
+                                slide.classList.add("active");
+                            }
+                        });
+                    });
+                });
+            });
+
+
+
+            const ctx = document.getElementById('YearlyInspections').getContext('2d');
+
+            const monthlyInspectionsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+                    ],
+                    datasets: [{
+                        label: 'Inspections',
+                        data: [120, 135, 160, 145, 170, 130, 90, 110, 100, 125, 115, 100],
+                        backgroundColor: '#007bff',
+                        borderRadius: 5,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            },
+                            grid: {
+                                display: false 
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false 
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+
+            // Doughnut Chart for Shop Category Based Risk Levels
+            const doughnutCtx = document.getElementById('riskLevelChart').getContext('2d');
+
+            const riskLevelChart = new Chart(doughnutCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['A Grade', 'B Grade', 'C Grade', 'D Grade'],
+                    datasets: [{
+                        data: [40, 25, 20, 15],
+                        backgroundColor: ['#28a745', '#fd7e14', '#ffc107', '#dc3545'], 
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    family: 'Arial',
+                                    size: 14
+                                },
+                                boxWidth: 12,
+                                boxHeight: 12,
+                                borderRadius: 2,
+                                padding: 10
+                            }
+                        }
+                    }
+
+                }
+            });
+
+        </script>
+
+</body>
+</html>
