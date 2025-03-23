@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Inspection Log</title>
+
+        <link rel="stylesheet" href="Navigation.css" />
+        <link rel="stylesheet" href="StyleSheet6.css" />
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+        
+    </head>
+    <body>
+        <div class="navigation">
+            <div class="Logo"><img src="images/logo.png" /></div>
+            <div class="logoname"><a href="Dashboard.jsp">Safe Serve</a></div>
+            
+            
+            <ul class="nav-menu">
+                <a href="">
+                    <li class="nav-item ">
+                        <img src="images/dashboard-icon-b.png" />
+                        <span>Dashboard</span>
+                    </li>
+                </a>
+                <a href="">
+                    <li class="nav-item">
+                        <img src="images/calendar-icon-b.png" />
+                        <span>Calendar</span>
+                    </li>
+                </a>
+                <a href="">
+                    <li class="nav-item active">
+                        <img src="images/inspectionlog-icon-w.png" />
+                        <span>Inspection Log</span>
+                    </li>
+                </a>
+                <a href="">
+                    <li class="nav-item">
+                        <img src="images/analytics-icon-b.png" />
+                        <span>Analytics</span>
+                    </li>
+                </a>
+                <a href="">
+                    <li class="nav-item">
+                        <img src="images/registerphi-icon-b.png" />
+                        <span>Register PHI</span>
+                    </li>
+                </a>
+                <a href="">
+                    <li class="nav-item">
+                        <img src="images/profile-icon-b.png" />
+                        <span>Profile</span>
+                    </li>
+                </a>
+            </ul>
+            <form method="post" action="">
+                <input type="hidden" name="action" value="logout" />
+                <button class="logout">
+                    <img src="images/logout-icon.png"/>
+                    <span>Logout</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="user-profile">
+            <div class="user-avatar">
+                <img src="images/logged-user-icon.png">
+            </div>
+            <div class="user-info">
+                <span class="user-name">Leo Perera</span>
+                <span class="user-role">PHI</span>
+            </div>
+        </div>
+
+        <div class="search-bar-container">
+            <input type="text" class="search-input" placeholder="Type Here.....">
+            <button class="search-button">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+        
+        
+        <div class="main-header">Inspection Log</div>
+
+        <div class="middle-container">
+            <div class="header-container" ">
+                <span class="header-top" style="margin-left:20px">Reference ID</span>
+                <span class="header-top" style="margin-left:200px">Shop Name</span>
+                <div class="header-top" style="margin-left:570px">GN Region</div>                
+                <div class="header-top" style="margin-left:760px">Ranking</div>
+                <div class="header-top" style="margin-left:955px">Action</div>
+            </div>
+            
+            <div class="content-container" >
+                <div class="container-row">
+                    <p class="element-1">13236</p>
+                    <p class="element-2">ABC Cafe & Bakery</p>
+                    <p class="element-3">Biyagama</p>
+                    <p class="element-4">A</p>
+                    <div class="actions">
+                        <!-- view button -->
+                        <div class="view" onclick="showViewSlider()">
+                            <img src="images/view-icon.png">
+                        </div>
+                        <!-- EDIT button -->
+                        <a href="FormHistory.html">
+                            <div class="edit">
+                                <img src="images/log-icon.png" alt="Edit">
+                            </div>
+                        </a>
+                    </div> 
+                </div>
+                <div class="container-row">
+                    <p class="element-1">13236</p>
+                    <p class="element-2">ABC Cafe & Bakery</p>
+                    <p class="element-3">Biyagama</p>
+                    <p class="element-4">D</p>
+                    <div class="actions">
+                        <!-- view button -->
+                        <div class="view" onclick="showViewSlider()">
+                            <img src="images/view-icon.png">
+                        </div>
+                        <!-- EDIT button -->
+                        <a href="FormHistory.html">
+                            <div class="edit">
+                                <img src="images/log-icon.png" alt="Edit">
+                            </div>
+                        </a>
+                    </div> 
+                </div>
+                <div class="container-row">
+                    <p class="element-1">13236</p>
+                    <p class="element-2">ABC Cafe & Bakery</p>
+                    <p class="element-3">Biyagama</p>
+                    <p class="element-4">A</p>
+                    <div class="actions">
+                        <!-- view button -->
+                        <div class="view" onclick="showViewSlider()">
+                            <img src="images/view-icon.png">
+                        </div>
+                        <!-- EDIT button -->
+                        <a href="FormHistory.html">
+                            <div class="edit">
+                                <img src="images/log-icon.png" alt="Edit">
+                            </div>
+                        </a>
+                    </div> 
+                </div>
+                <div class="container-row">
+                    <p class="element-1">13236</p>
+                    <p class="element-2">ABC Cafe & Bakery</p>
+                    <p class="element-3">Biyagama</p>
+                    <p class="element-4">B</p>
+                    <div class="actions">
+                        <!-- view button -->
+                        <div class="view" onclick="showViewSlider()">
+                            <img src="images/view-icon.png">
+                        </div>
+                        <!-- EDIT button -->
+                        <a href="FormHistory.html">
+                            <div class="edit">
+                                <img src="images/log-icon.png" alt="Edit">
+                            </div>
+                        </a>
+                    </div> 
+                </div>
+                <div class="container-row">
+                    <p class="element-1">13236</p>
+                    <p class="element-2">ABC Cafe & Bakery</p>
+                    <p class="element-3">Biyagama</p>
+                    <p class="element-4">C</p>
+                    <div class="actions">
+                        <!-- view button -->
+                        <div class="view" onclick="showViewSlider()">
+                            <img src="images/view-icon.png">
+                        </div>
+                        <!-- EDIT button -->
+                        <a href="FormHistory.html">
+                            <div class="edit">
+                                <img src="images/log-icon.png" alt="Edit">
+                            </div>
+                        </a>
+                    </div> 
+                </div>
+                <div class="container-row">
+                    <p class="element-1">13236</p>
+                    <p class="element-2">ABC Cafe & Bakery</p>
+                    <p class="element-3">Biyagama</p>
+                    <p class="element-4">A</p>
+                    <div class="actions">
+                        <!-- view button -->
+                        <div class="view" onclick="showViewSlider()">
+                            <img src="images/view-icon.png">
+                        </div>
+                        <!-- EDIT button -->
+                        <a href="FormHistory.html">
+                            <div class="edit">
+                                <img src="images/log-icon.png" alt="Edit">
+                            </div>
+                        </a>
+                    </div> 
+                </div>
+                <div class="container-row">
+                    <p class="element-1">13236</p>
+                    <p class="element-2">ABC Cafe & Bakery</p>
+                    <p class="element-3">Biyagama</p>
+                    <p class="element-4">B</p>
+                    <div class="actions">
+                        <!-- view button -->
+                        <div class="view" onclick="showViewSlider()">
+                            <img src="images/view-icon.png">
+                        </div>
+                        <!-- EDIT button -->
+                        <a href="FormHistory.html">
+                            <div class="edit">
+                                <img src="images/log-icon.png" alt="Edit">
+                            </div>
+                        </a>
+                    </div> 
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <!--View PHI Details Slider-->
+        <div class="slider" id="viewSlider">
+            <div class="slider-container">
+                <div class="slider-header">
+                    <div class="slider-title">View Shop Details</div>
+                    <img class="close-slider" src="images/Cancelslide.png" onclick="hideViewSlider()" />
+                    <div class="slider-hline">
+                        <hr size="2" color="#1F41BB" />
+                    </div>
+                </div>
+
+                <div class="slider-form">
+                    <form>
+                        <div class="edit-form">
+                            <div class="form-row">
+                                <label class="form-label">Reference No</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                            <label class="form-label">PHI Area</label>
+                            <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                            <label class="form-label">Type of Trade</label>
+                            <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Name of the Owner</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                            <label class="form-label">Private Addressr</label>
+                            <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">NIC Number</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Personal Address</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Telephone No</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Name of the Establishment</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Districtt</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Grama Niladhari Region</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Address of the Establishmentt</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">License Number</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Licensed Year</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Business Registration Number</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <div class="form-row">
+                                <label class="form-label">Number of Employees</label>
+                                <input class="form-text" type="text" id="" />
+                            </div>
+                            <button class="form-save-but" style="margin-top:0px;" type="submit" onclick="hideViewSlider()">Done</button>
+                        </div>
+                    </form>
+                </div>  
+            </div>
+        </div>
+
+
+
+
+        <script>
+            function showViewSlider() {
+                document.getElementById('viewSlider').classList.add('active');
+            }
+
+            function hideViewSlider() {
+                document.getElementById('viewSlider').classList.remove('active');
+            }
+
+
+            window.onload = function () {
+              const rankings = document.querySelectorAll('.element-4');
+          
+              rankings.forEach(function (rankElement) {
+                const grade = rankElement.textContent.trim();
+          
+                // Common circle styles
+                rankElement.style.width = '30px';
+                rankElement.style.height = '30px';
+                rankElement.style.borderRadius = '50%';
+                rankElement.style.display = 'flex';
+                rankElement.style.alignItems = 'center';
+                rankElement.style.justifyContent = 'center';
+                rankElement.style.fontWeight = 'bold';
+                rankElement.style.fontFamily = 'Arial, sans-serif';
+          
+                // Grade-specific styles
+                switch (grade) {
+                  case 'A':
+                    rankElement.style.backgroundColor = '#3DB952'; // Green
+                    rankElement.style.color = 'black';
+                    break;
+                  case 'B':
+                    rankElement.style.backgroundColor = '#F1D730'; // Yellow
+                    rankElement.style.color = 'black';
+                    break;
+                  case 'C':
+                    rankElement.style.backgroundColor = '#FF8514'; // Orange
+                    rankElement.style.color = 'black';
+                    break;
+                  case 'D':
+                    rankElement.style.backgroundColor = '#BB1F22'; // Red
+                    rankElement.style.color = 'black';
+                    break;
+                  default:
+                    rankElement.style.backgroundColor = '#ccc';
+                    rankElement.style.color = 'black';
+                }
+              });
+            };
+          </script>
+          
+
+</body>
+</html>
