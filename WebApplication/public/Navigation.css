@@ -205,8 +205,8 @@ html, body {
 
 .search-bar-container {
     position: absolute;
-    top: 15px; /* Aligns with user-profile */
-    left: 73%; /* Adjust to fit near user-profile */
+    top: 15px; 
+    left: 73%; 
     transform: translateX(-50%);
     display: flex;
     align-items: center;

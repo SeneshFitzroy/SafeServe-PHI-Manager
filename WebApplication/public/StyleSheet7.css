@@ -1,0 +1,71 @@
+.header{
+    position: absolute;
+    top:50px;
+    left: 410px;
+    font-size:35px;
+    color:black;
+    font-weight: bold;
+}
+
+.back-button {
+    position: absolute;
+    top: 55px; 
+    left: 360px;
+    background-color: #CDE6FE;
+    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease;
+}
+
+.back-button img {
+    width:28px;
+    height:28px;
+}
+
+.back-button:hover {
+    background-color: #b6dbfc;
+}
+
+.inspection-container {
+    position: absolute;
+    top: 120px;
+    left: 350px;
+    right: 30px;
+    bottom: 0px;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #F4F8FF;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.inspection-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+.inspection-table th, .inspection-table td {
+    border: 1px solid #000000;
+    padding: 10px;
+    text-align: left;
+}
+
+.inspection-table th {
+    background-color: #ADC1ED;
+    text-align: center;
+    font-weight: bold;
+    border: 1px solid #1F41BB;
+
+}
+
+.section-header td {
+    background-color: #D9D9D9;
+    font-weight: bold;
+    font-size: 16px;
+}
