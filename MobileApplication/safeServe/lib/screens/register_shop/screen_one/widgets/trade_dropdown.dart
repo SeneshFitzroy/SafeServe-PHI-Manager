@@ -8,12 +8,12 @@ class TradeDropdown extends StatefulWidget {
   final ValueChanged<String> onChanged;
 
   const TradeDropdown({
-    Key? key,
+    super.key,
     required this.label,
     required this.isInvalid,
     required this.initialValue,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<TradeDropdown> createState() => _TradeDropdownState();

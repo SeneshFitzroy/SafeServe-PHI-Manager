@@ -10,7 +10,7 @@ void main() {
 }
 
 class SafeServeApp extends StatelessWidget {
-  const SafeServeApp({Key? key}) : super(key: key);
+  const SafeServeApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class SafeServeApp extends StatelessWidget {
 // placeholder page for routes not yet implemented
 class PlaceholderPage extends StatelessWidget {
   final String title;
-  const PlaceholderPage({Key? key, required this.title}) : super(key: key);
+  const PlaceholderPage({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

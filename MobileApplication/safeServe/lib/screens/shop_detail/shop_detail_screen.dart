@@ -12,7 +12,7 @@ import 'widgets/inspection_history.dart';
 class ShopDetailScreen extends StatefulWidget {
   final String shopId;
 
-  const ShopDetailScreen({Key? key, required this.shopId}) : super(key: key);
+  const ShopDetailScreen({super.key, required this.shopId});
 
   @override
   State<ShopDetailScreen> createState() => _ShopDetailScreenState();

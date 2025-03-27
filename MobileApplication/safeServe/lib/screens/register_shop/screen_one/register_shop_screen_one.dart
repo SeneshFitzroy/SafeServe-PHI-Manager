@@ -1,6 +1,5 @@
 // lib/screens/register_shop/screen_one/register_shop_screen_one.dart
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import '../../../widgets/safe_serve_appbar.dart';
 import 'widgets/register_shop_header.dart';
 import 'widgets/form_text_field.dart';
@@ -12,8 +11,7 @@ import '../register_shop_form_data.dart';
 class RegisterShopScreenOne extends StatefulWidget {
   final RegisterShopFormData formData;
 
-  const RegisterShopScreenOne({Key? key, required this.formData})
-      : super(key: key);
+  const RegisterShopScreenOne({super.key, required this.formData});
 
   @override
   State<RegisterShopScreenOne> createState() => _RegisterShopScreenOneState();
