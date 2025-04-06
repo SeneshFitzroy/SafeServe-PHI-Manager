@@ -5,6 +5,7 @@ import '../register_shop/screen_one/widgets/register_shop_header.dart';
 import 'widgets/generic_dropdown.dart';
 import 'widgets/radio_button_field.dart';
 import '../register_shop/screen_one/widgets/next_button.dart';
+import 'widgets/h800_form_button.dart';
 import 'h800_form_data.dart';
 
 class H800FormScreenTwo extends StatefulWidget {
@@ -78,6 +79,18 @@ class _H800FormScreenTwoState extends State<H800FormScreenTwo> {
                 ),
                 const SizedBox(height: 20),
 
+                // Progress Indicator (66% for Screen 2)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: LinearProgressIndicator(
+                    value: 0.66, // 2/3 of the form completed
+                    backgroundColor: Colors.grey[300],
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.blue),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
                 // Part 3: Area of Food Preparation/Serving/Display/Storage
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -94,7 +107,8 @@ class _H800FormScreenTwoState extends State<H800FormScreenTwo> {
                   initialValue: widget.formData.generalCleanlinessPart3,
                   isInvalid: isFieldInvalid('generalCleanlinessPart3'),
                   items: const ['Satisfactory', 'Unsatisfactory'],
-                  onChanged: (val) => widget.formData.generalCleanlinessPart3 = val,
+                  onChanged: (val) =>
+                      widget.formData.generalCleanlinessPart3 = val,
                 ),
 
                 // 3.2 Safety measures for cleanliness
@@ -103,7 +117,8 @@ class _H800FormScreenTwoState extends State<H800FormScreenTwo> {
                   initialValue: widget.formData.safetyMeasuresForCleanliness,
                   isInvalid: isFieldInvalid('safetyMeasuresForCleanliness'),
                   items: const ['Adequate', 'Inadequate'],
-                  onChanged: (val) => widget.formData.safetyMeasuresForCleanliness = val,
+                  onChanged: (val) =>
+                      widget.formData.safetyMeasuresForCleanliness = val,
                 ),
 
                 // 3.3 Flies
@@ -117,7 +132,8 @@ class _H800FormScreenTwoState extends State<H800FormScreenTwo> {
 
                 // 3.4 Ants/Cockroaches/Rodents and other disease carriers
                 RadioButtonField(
-                  label: '3.4 Ants/Cockroaches/Rodents and other disease carriers',
+                  label:
+                      '3.4 Ants/Cockroaches/Rodents and other disease carriers',
                   value: widget.formData.hasPests,
                   onChanged: (val) => setState(() {
                     widget.formData.hasPests = val;
@@ -148,7 +164,8 @@ class _H800FormScreenTwoState extends State<H800FormScreenTwo> {
                   initialValue: widget.formData.maintenanceOfCeilingPart3,
                   isInvalid: isFieldInvalid('maintenanceOfCeilingPart3'),
                   items: const ['Good', 'Poor'],
-                  onChanged: (val) => widget.formData.maintenanceOfCeilingPart3 = val,
+                  onChanged: (val) =>
+                      widget.formData.maintenanceOfCeilingPart3 = val,
                 ),
 
                 // 3.8 Space in the working area
@@ -180,7 +197,8 @@ class _H800FormScreenTwoState extends State<H800FormScreenTwo> {
 
                 // 3.11 Adequate number of bins with lids for waste disposal
                 RadioButtonField(
-                  label: '3.11 Adequate number of bins with lids for waste disposal',
+                  label:
+                      '3.11 Adequate number of bins with lids for waste disposal',
                   value: widget.formData.adequateBins,
                   onChanged: (val) => setState(() {
                     widget.formData.adequateBins = val;
@@ -189,7 +207,8 @@ class _H800FormScreenTwoState extends State<H800FormScreenTwo> {
 
                 // 3.12 Empty boxes/Gunny bags and other unnecessary items
                 RadioButtonField(
-                  label: '3.12 Empty boxes/Gunny bags and other unnecessary items',
+                  label:
+                      '3.12 Empty boxes/Gunny bags and other unnecessary items',
                   value: widget.formData.hasUnnecessaryItems,
                   onChanged: (val) => setState(() {
                     widget.formData.hasUnnecessaryItems = val;
@@ -198,7 +217,8 @@ class _H800FormScreenTwoState extends State<H800FormScreenTwo> {
 
                 // 3.13 Availability of cleaning tools/materials/serviettes etc.
                 RadioButtonField(
-                  label: '3.13 Availability of cleaning tools/materials/serviettes etc.',
+                  label:
+                      '3.13 Availability of cleaning tools/materials/serviettes etc.',
                   value: widget.formData.cleaningToolsAvailable,
                   onChanged: (val) => setState(() {
                     widget.formData.cleaningToolsAvailable = val;
@@ -225,7 +245,8 @@ class _H800FormScreenTwoState extends State<H800FormScreenTwo> {
 
                 // 3.16 Area used for sleeping or any other unrelated activities
                 RadioButtonField(
-                  label: '3.16 Area used for sleeping or any other unrelated activities',
+                  label:
+                      '3.16 Area used for sleeping or any other unrelated activities',
                   value: widget.formData.areaUsedForSleeping,
                   onChanged: (val) => setState(() {
                     widget.formData.areaUsedForSleeping = val;
@@ -252,7 +273,8 @@ class _H800FormScreenTwoState extends State<H800FormScreenTwo> {
 
                 // 3.19 Suitability of the layout of the area for the process
                 RadioButtonField(
-                  label: '3.19 Suitability of the layout of the area for the process',
+                  label:
+                      '3.19 Suitability of the layout of the area for the process',
                   value: widget.formData.suitabilityOfLayout,
                   onChanged: (val) => setState(() {
                     widget.formData.suitabilityOfLayout = val;
@@ -265,7 +287,8 @@ class _H800FormScreenTwoState extends State<H800FormScreenTwo> {
                   initialValue: widget.formData.lightAndVentilationPart3,
                   isInvalid: isFieldInvalid('lightAndVentilationPart3'),
                   items: const ['Good', 'Poor'],
-                  onChanged: (val) => widget.formData.lightAndVentilationPart3 = val,
+                  onChanged: (val) =>
+                      widget.formData.lightAndVentilationPart3 = val,
                 ),
 
                 // 3.21 House keeping
@@ -279,7 +302,8 @@ class _H800FormScreenTwoState extends State<H800FormScreenTwo> {
 
                 // 3.22 Water supplied for different tasks in a suitable manner
                 RadioButtonField(
-                  label: '3.22 Water supplied for different tasks in a suitable manner',
+                  label:
+                      '3.22 Water supplied for different tasks in a suitable manner',
                   value: widget.formData.waterSupplySuitable,
                   onChanged: (val) => setState(() {
                     widget.formData.waterSupplySuitable = val;
@@ -292,28 +316,21 @@ class _H800FormScreenTwoState extends State<H800FormScreenTwo> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey,
-                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                        ),
-                        child: const Text(
-                          'Previous',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
+                    H800FormButton(
+                      label: 'Previous',
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                     ),
-                    NextButton(
+                    H800FormButton(
+                      label: 'Next',
                       onPressed: () {
                         if (validateFields()) {
-                          // Navigate to the next screen (if exists) or handle form submission
-                          // For now, we'll just pop back as a placeholder
-                          Navigator.pop(context);
+                          Navigator.pushNamed(
+                            context,
+                            '/h800_form_screen_three',
+                            arguments: widget.formData,
+                          );
                         }
                       },
                     ),

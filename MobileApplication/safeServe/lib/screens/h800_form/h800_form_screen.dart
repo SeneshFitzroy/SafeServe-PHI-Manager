@@ -1,10 +1,11 @@
 // lib/screens/h800_form/h800_form_screen.dart - for my reference
 import 'package:flutter/material.dart';
 import '../../widgets/safe_serve_appbar.dart';
-import '../register_shop/screen_one/widgets/register_shop_header.dart'; 
+import '../register_shop/screen_one/widgets/register_shop_header.dart';
 import 'widgets/generic_dropdown.dart';
 import 'widgets/radio_button_field.dart';
-import '../register_shop/screen_one/widgets/next_button.dart'; 
+import '../register_shop/screen_one/widgets/next_button.dart';
+import 'widgets/h800_form_button.dart';
 import 'h800_form_data.dart';
 
 class H800FormScreen extends StatefulWidget {
@@ -83,6 +84,18 @@ class _H800FormScreenState extends State<H800FormScreen> {
                 ),
                 const SizedBox(height: 20),
 
+                // Progress Indicator (33% for Screen 1)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: LinearProgressIndicator(
+                    value: 0.33, // 1/3 of the form completed
+                    backgroundColor: Colors.grey[300],
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.blue),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
                 // Part 1: Location & Environment
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -99,7 +112,8 @@ class _H800FormScreenState extends State<H800FormScreen> {
                   initialValue: widget.formData.suitabilityForBusiness,
                   isInvalid: isFieldInvalid('suitabilityForBusiness'),
                   items: const ['Suitable', 'Not Suitable'],
-                  onChanged: (val) => widget.formData.suitabilityForBusiness = val,
+                  onChanged: (val) =>
+                      widget.formData.suitabilityForBusiness = val,
                 ),
 
                 // 1.2 General cleanliness & tidiness
@@ -215,8 +229,9 @@ class _H800FormScreenState extends State<H800FormScreen> {
 
                 const SizedBox(height: 30),
 
-                // Next Button
-                NextButton(
+                // Next Button (using H800FormButton)
+                H800FormButton(
+                  label: 'Next',
                   onPressed: () {
                     if (validateFields()) {
                       Navigator.pushNamed(
