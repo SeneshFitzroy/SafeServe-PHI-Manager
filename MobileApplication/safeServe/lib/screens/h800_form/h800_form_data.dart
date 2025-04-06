@@ -42,7 +42,13 @@ class H800FormData {
   bool houseKeeping = false;
   bool waterSupplySuitable = false;
 
-  // Constructor (optional, for initializing with default values or from JSON)
+  // Part 10: Display of Health Instructions, Record Keeping & Certification
+  bool displayHealthInstructions = false; // 10.1
+  bool entertainsComplaints = false; // 10.2
+  bool preventSmoking = false; // 10.3
+  bool issuingBills = false; // 10.4
+  bool foodSafetyCertification = false; // 10.5
+
   H800FormData({
     this.id,
     this.suitabilityForBusiness = '',
@@ -79,9 +85,13 @@ class H800FormData {
     this.lightAndVentilationPart3 = '',
     this.houseKeeping = false,
     this.waterSupplySuitable = false,
+    this.displayHealthInstructions = false,
+    this.entertainsComplaints = false,
+    this.preventSmoking = false,
+    this.issuingBills = false,
+    this.foodSafetyCertification = false,
   });
 
-  // Optional: Add methods for serialization if needed (e.g., to JSON)
   Map<String, dynamic> toJson() => {
         'id': id,
         'suitabilityForBusiness': suitabilityForBusiness,
@@ -118,6 +128,11 @@ class H800FormData {
         'lightAndVentilationPart3': lightAndVentilationPart3,
         'houseKeeping': houseKeeping,
         'waterSupplySuitable': waterSupplySuitable,
+        'displayHealthInstructions': displayHealthInstructions,
+        'entertainsComplaints': entertainsComplaints,
+        'preventSmoking': preventSmoking,
+        'issuingBills': issuingBills,
+        'foodSafetyCertification': foodSafetyCertification,
       };
 
   factory H800FormData.fromJson(Map<String, dynamic> json) => H800FormData(
@@ -156,5 +171,10 @@ class H800FormData {
         lightAndVentilationPart3: json['lightAndVentilationPart3'] ?? '',
         houseKeeping: json['houseKeeping'] ?? false,
         waterSupplySuitable: json['waterSupplySuitable'] ?? false,
+        displayHealthInstructions: json['displayHealthInstructions'] ?? false,
+        entertainsComplaints: json['entertainsComplaints'] ?? false,
+        preventSmoking: json['preventSmoking'] ?? false,
+        issuingBills: json['issuingBills'] ?? false,
+        foodSafetyCertification: json['foodSafetyCertification'] ?? false,
       );
 }
