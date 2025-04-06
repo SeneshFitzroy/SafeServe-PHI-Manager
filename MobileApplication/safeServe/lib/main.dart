@@ -6,6 +6,7 @@ import 'screens/registered_shops/registered_shops_screen.dart';
 import 'screens/shop_detail/shop_detail_screen.dart';
 import 'screens/h800_form/h800_form_screen.dart'; // Import H800FormScreen
 import 'screens/h800_form/h800_form_screen_two.dart'; // Import H800FormScreenTwo
+import 'screens/h800_form/h800_form_screen_three.dart'; // Import H800FormScreenThree
 import 'screens/h800_form/h800_form_data.dart'; // Import H800FormData
 import 'screens/form_selection/form_selection_screen.dart'; // Import FormSelectionScreen
 
@@ -70,6 +71,12 @@ class SafeServeApp extends StatelessWidget {
           final formData =
               ModalRoute.of(context)?.settings.arguments as H800FormData?;
           return H800FormScreenTwo(formData: formData ?? H800FormData());
+        },
+
+        // Named route for H800FormScreenThree (Screen 3)
+        '/h800_form_screen_three': (context) {
+          final formData = ModalRoute.of(context)?.settings.arguments as H800FormData?;
+          return H800FormScreenThree(formData: formData ?? H800FormData());
         },
 
         // New route for FormSelectionScreen
