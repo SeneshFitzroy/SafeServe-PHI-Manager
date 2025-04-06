@@ -11,7 +11,7 @@ import '../register_shop_form_data.dart';
 class RegisterShopScreenTwo extends StatefulWidget {
   final RegisterShopFormData formData;
 
-  const RegisterShopScreenTwo({Key? key, required this.formData}) : super(key: key);
+  const RegisterShopScreenTwo({super.key, required this.formData});
 
   @override
   State<RegisterShopScreenTwo> createState() => _RegisterShopScreenTwoState();
@@ -41,7 +41,8 @@ class _RegisterShopScreenTwoState extends State<RegisterShopScreenTwo> {
                 // Photo header
                 PhotoHeader(
                   title: 'Photo Upload',
-                  onArrowPressed: () => Navigator.pop(context), // back to screen 1
+                  onArrowPressed: () =>
+                      Navigator.pop(context), // back to screen 1
                 ),
                 const SizedBox(height: 20),
                 // Photo preview
@@ -54,7 +55,8 @@ class _RegisterShopScreenTwoState extends State<RegisterShopScreenTwo> {
                 // Bottom buttons (Previous / Submit), aligned right
                 BottomButtons(
                   onPrevious: () {
-                    FocusScope.of(context).unfocus(); // Close keyboard before navigating back
+                    FocusScope.of(context)
+                        .unfocus(); // Close keyboard before navigating back
                     Navigator.pop(context);
                   },
                   onSubmit: () {
@@ -83,7 +85,8 @@ class _RegisterShopScreenTwoState extends State<RegisterShopScreenTwo> {
 
   Future<void> _takePhoto() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(source: ImageSource.camera);
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
       setState(() {

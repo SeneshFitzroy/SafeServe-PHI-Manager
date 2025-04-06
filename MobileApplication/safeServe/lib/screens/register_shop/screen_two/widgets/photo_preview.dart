@@ -8,11 +8,11 @@ class PhotoPreview extends StatelessWidget {
   final VoidCallback onTap;
 
   const PhotoPreview({
-    Key? key,
+    super.key,
     required this.photoPath,
     required this.isMissing,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,18 +32,18 @@ class PhotoPreview extends StatelessWidget {
           ),
           child: (photoPath == null)
               ? const Center(
-            child: Text(
-              'Tap to take photo',
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
-          )
+                  child: Text(
+                    'Tap to take photo',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                )
               : ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.file(
-              File(photoPath!),
-              fit: BoxFit.cover,
-            ),
-          ),
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.file(
+                    File(photoPath!),
+                    fit: BoxFit.cover,
+                  ),
+                ),
         ),
       ),
     );

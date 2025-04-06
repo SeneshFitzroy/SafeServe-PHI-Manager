@@ -12,7 +12,7 @@ import 'widgets/inspection_history.dart';
 class ShopDetailScreen extends StatefulWidget {
   final String shopId;
 
-  const ShopDetailScreen({Key? key, required this.shopId}) : super(key: key);
+  const ShopDetailScreen({super.key, required this.shopId});
 
   @override
   State<ShopDetailScreen> createState() => _ShopDetailScreenState();
@@ -60,18 +60,19 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
       },
     };
 
-    return shopData[widget.shopId] ?? {
-      'name': widget.shopId,
-      'grade': 'A',
-      'image': 'assets/images/shop/shop1.png',
-      'referenceNo': '------',
-      'phiArea': 'Unknown',
-      'typeOfTrade': 'Unknown',
-      'address': 'Unknown',
-      'ownerName': 'Unknown',
-      'telephone': '-----',
-      'inspectionHistory': [],
-    };
+    return shopData[widget.shopId] ??
+        {
+          'name': widget.shopId,
+          'grade': 'A',
+          'image': 'assets/images/shop/shop1.png',
+          'referenceNo': '------',
+          'phiArea': 'Unknown',
+          'typeOfTrade': 'Unknown',
+          'address': 'Unknown',
+          'ownerName': 'Unknown',
+          'telephone': '-----',
+          'inspectionHistory': [],
+        };
   }
 
   @override
@@ -81,9 +82,11 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
   }
 
   void _scrollListener() {
-    if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
+    if (_scrollController.position.userScrollDirection ==
+        ScrollDirection.reverse) {
       if (_isNavVisible) setState(() => _isNavVisible = false);
-    } else if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
+    } else if (_scrollController.position.userScrollDirection ==
+        ScrollDirection.forward) {
       if (!_isNavVisible) setState(() => _isNavVisible = true);
     }
   }
@@ -143,7 +146,8 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 30),
-          ShopDetailHeader(shopName: shopData['name'], grade: shopData['grade']),
+          ShopDetailHeader(
+              shopName: shopData['name'], grade: shopData['grade']),
           const SizedBox(height: 30),
           ShopImage(imagePath: shopData['image']),
           const SizedBox(height: 30),
@@ -154,7 +158,10 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
             padding: EdgeInsets.symmetric(horizontal: 25),
             child: Text(
               'Forms',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
             ),
           ),
           const SizedBox(height: 15),
@@ -183,17 +190,30 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.15), offset: const Offset(0, 2), blurRadius: 6),
+            BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                offset: const Offset(0, 2),
+                blurRadius: 6),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            CustomNavBarIcon(icon: Icons.event, label: 'Calendar', route: '/calendar', selected: false),
-            CustomNavBarIcon(icon: Icons.store, label: 'Shops', route: '/', selected: true),
-            CustomNavBarIcon(icon: Icons.dashboard, label: 'Dashboard', route: '/dashboard'),
-            CustomNavBarIcon(icon: Icons.description, label: 'Form', route: '/form'),
-            CustomNavBarIcon(icon: Icons.notifications, label: 'Notifications', route: '/notifications'),
+            CustomNavBarIcon(
+                icon: Icons.event,
+                label: 'Calendar',
+                route: '/calendar',
+                selected: false),
+            CustomNavBarIcon(
+                icon: Icons.store, label: 'Shops', route: '/', selected: true),
+            CustomNavBarIcon(
+                icon: Icons.dashboard, label: 'Dashboard', route: '/dashboard'),
+            CustomNavBarIcon(
+                icon: Icons.description, label: 'Form', route: '/form'),
+            CustomNavBarIcon(
+                icon: Icons.notifications,
+                label: 'Notifications',
+                route: '/notifications'),
           ],
         ),
       ),

@@ -6,10 +6,10 @@ class PhotoHeader extends StatelessWidget {
   final VoidCallback onArrowPressed;
 
   const PhotoHeader({
-    Key? key,
+    super.key,
     required this.title,
     required this.onArrowPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +25,15 @@ class PhotoHeader extends StatelessWidget {
                 color: const Color(0xFFCDE6FE),
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: const Icon(Icons.arrow_back_rounded, color: Color(0xFF1F41BB)),
+              child: const Icon(Icons.arrow_back_rounded,
+                  color: Color(0xFF1F41BB)),
             ),
           ),
           const SizedBox(width: 12),
           Text(
             title,
-            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+            style: const TextStyle(
+                fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
           ),
         ],
       ),

@@ -9,12 +9,12 @@ class LicensedYearField extends StatefulWidget {
   final ValueChanged<String> onDatePicked;
 
   const LicensedYearField({
-    Key? key,
+    super.key,
     required this.label,
     required this.isInvalid,
     required this.initialValue,
     required this.onDatePicked,
-  }) : super(key: key);
+  });
 
   @override
   State<LicensedYearField> createState() => _LicensedYearFieldState();
@@ -60,13 +60,13 @@ class _LicensedYearFieldState extends State<LicensedYearField> {
 
   @override
   Widget build(BuildContext context) {
-    final borderColor =
-    widget.isInvalid ? Colors.red : const Color(0xFF4289FC);
+    final borderColor = widget.isInvalid ? Colors.red : const Color(0xFF4289FC);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 9),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(widget.label, style: const TextStyle(fontSize: 18, color: Colors.black)),
+        Text(widget.label,
+            style: const TextStyle(fontSize: 18, color: Colors.black)),
         const SizedBox(height: 6),
         GestureDetector(
           onTap: _pickDate,

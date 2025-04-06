@@ -10,7 +10,7 @@ void main() {
 }
 
 class SafeServeApp extends StatelessWidget {
-  const SafeServeApp({Key? key}) : super(key: key);
+  const SafeServeApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,15 +32,20 @@ class SafeServeApp extends StatelessWidget {
         '/calendar': (context) => const PlaceholderPage(title: 'Calendar'),
         '/dashboard': (context) => const PlaceholderPage(title: 'Dashboard'),
         '/form': (context) => const PlaceholderPage(title: 'Form'),
-        '/notifications': (context) => const PlaceholderPage(title: 'Notifications'),
+        '/notifications': (context) =>
+            const PlaceholderPage(title: 'Notifications'),
 
         '/register_shop_screen_one': (context) {
-          final formData = ModalRoute.of(context)?.settings.arguments as RegisterShopFormData?;
-          return RegisterShopScreenOne(formData: formData ?? RegisterShopFormData());
+          final formData = ModalRoute.of(context)?.settings.arguments
+              as RegisterShopFormData?;
+          return RegisterShopScreenOne(
+              formData: formData ?? RegisterShopFormData());
         },
         '/register_shop_screen_two': (context) {
-          final formData = ModalRoute.of(context)?.settings.arguments as RegisterShopFormData?;
-          return RegisterShopScreenTwo(formData: formData ?? RegisterShopFormData());
+          final formData = ModalRoute.of(context)?.settings.arguments
+              as RegisterShopFormData?;
+          return RegisterShopScreenTwo(
+              formData: formData ?? RegisterShopFormData());
         },
 
         // Named route for ShopDetailScreen
@@ -56,7 +61,7 @@ class SafeServeApp extends StatelessWidget {
 // placeholder page for routes not yet implemented
 class PlaceholderPage extends StatelessWidget {
   final String title;
-  const PlaceholderPage({Key? key, required this.title}) : super(key: key);
+  const PlaceholderPage({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {

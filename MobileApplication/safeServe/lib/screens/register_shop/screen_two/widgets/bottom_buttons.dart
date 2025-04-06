@@ -6,10 +6,10 @@ class BottomButtons extends StatelessWidget {
   final VoidCallback onSubmit;
 
   const BottomButtons({
-    Key? key,
+    super.key,
     required this.onPrevious,
     required this.onSubmit,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,10 @@ class BottomButtons extends StatelessWidget {
               ),
               child: const Text(
                 'Previous',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1F41BB)),
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF1F41BB)),
               ),
             ),
           ),
@@ -44,7 +47,10 @@ class BottomButtons extends StatelessWidget {
               ),
               child: const Text(
                 'Submit',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
             ),
           ),

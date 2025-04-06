@@ -12,8 +12,7 @@ import '../register_shop_form_data.dart';
 class RegisterShopScreenOne extends StatefulWidget {
   final RegisterShopFormData formData;
 
-  const RegisterShopScreenOne({Key? key, required this.formData})
-      : super(key: key);
+  const RegisterShopScreenOne({super.key, required this.formData});
 
   @override
   State<RegisterShopScreenOne> createState() => _RegisterShopScreenOneState();
@@ -174,7 +173,7 @@ class _RegisterShopScreenOneState extends State<RegisterShopScreenOne> {
                   isInvalid: isFieldInvalid('establishmentAddress'),
                   initialValue: widget.formData.establishmentAddress,
                   onChanged: (val) =>
-                  widget.formData.establishmentAddress = val,
+                      widget.formData.establishmentAddress = val,
                 ),
                 // 10. License Number
                 FormTextField(
@@ -211,7 +210,8 @@ class _RegisterShopScreenOneState extends State<RegisterShopScreenOne> {
                 // Next Button on the right
                 NextButton(
                   onPressed: () {
-                    if (validateFields()) {  // Ensure all fields are filled
+                    if (validateFields()) {
+                      // Ensure all fields are filled
                       Navigator.pushNamed(
                         context,
                         '/register_shop_screen_two',

@@ -6,10 +6,10 @@ class RegisterShopHeader extends StatelessWidget {
   final VoidCallback onArrowPressed;
 
   const RegisterShopHeader({
-    Key? key,
+    super.key,
     required this.title,
     required this.onArrowPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,8 @@ class RegisterShopHeader extends StatelessWidget {
                 color: const Color(0xFFCDE6FE),
                 borderRadius: BorderRadius.circular(6),
               ),
-              child:
-              const Icon(Icons.arrow_back_rounded, color: Color(0xFF1F41BB)),
+              child: const Icon(Icons.arrow_back_rounded,
+                  color: Color(0xFF1F41BB)),
             ),
           ),
           const SizedBox(width: 12),
