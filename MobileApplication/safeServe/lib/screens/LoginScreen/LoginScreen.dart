@@ -43,8 +43,8 @@ class LoginScreen extends StatelessWidget {
                         height: 86,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: NetworkImage("https://placehold.co/85x86"),
-                            fit: BoxFit.fill,
+                            image: AssetImage("assets/images/logo.png"),
+                            fit: BoxFit.contain,
                           ),
                         ),
                       ),
