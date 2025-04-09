@@ -24,16 +24,31 @@ class ShopInfoCard extends StatelessWidget {
               children: [
                 const Text(
                   'Shop Details',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+                  style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
                 ),
                 const Spacer(),
-                _buildIconButton(MdiIcons.eyeOutline, const Color(0xFF34AC33)), // View
-                _buildIconButton(MdiIcons.pencilOutline, const Color(0xFFF1D730)), // Edit
-                _buildIconButton(MdiIcons.trashCanOutline, const Color(0xFFBB1F22), isDelete: true, context: context), // Delete
+                _buildIconButton(
+                  MdiIcons.eyeOutline,
+                  const Color(0xFF34AC33),
+                  context: context,
+                  onTap: () {
+                    // Navigate to the ViewShopDetailScreen and pass shopData
+                    Navigator.pushNamed(
+                      context,
+                      '/view_shop_detail',
+                      arguments: shopData,
+                    );
+                  },
+                ), // View
+                _buildIconButton(MdiIcons.pencilOutline, const Color(0xFFF1D730)),
+                _buildIconButton(MdiIcons.trashCanOutline, const Color(0xFFBB1F22),
+                    isDelete: true, context: context), // Delete
               ],
             ),
             const SizedBox(height: 20),
-
             _buildDetailRow('Reference No', shopData['referenceNo']),
             _buildDetailRow('PHI Area', shopData['phiArea']),
             _buildDetailRow('Type of Trade', shopData['typeOfTrade']),
@@ -52,21 +67,32 @@ class ShopInfoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black)),
+          Text(label,
+              style: const TextStyle(
+                  fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black)),
           const SizedBox(height: 6),
-          Text(value, style: const TextStyle(fontSize: 18, color: Color(0xFF838383))),
+          Text(value,
+              style: const TextStyle(fontSize: 18, color: Color(0xFF838383))),
         ],
       ),
     );
   }
 
-  Widget _buildIconButton(IconData icon, Color borderColor, {bool isDelete = false, BuildContext? context}) {
+  Widget _buildIconButton(
+      IconData icon,
+      Color borderColor, {
+        bool isDelete = false,
+        BuildContext? context,
+        VoidCallback? onTap,
+      }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: InkWell(
         onTap: () {
           if (isDelete && context != null) {
             _showDeleteConfirmation(context);
+          } else if (onTap != null) {
+            onTap();
           }
         },
         child: Container(
@@ -98,7 +124,7 @@ class ShopInfoCard extends StatelessWidget {
               ),
               onPressed: () {
                 Navigator.of(ctx).pop();
-                // perform delete
+                // perform delete operation
               },
               child: const Text('Yes'),
             ),
