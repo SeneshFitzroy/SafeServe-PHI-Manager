@@ -23,35 +23,41 @@ class ViewTradeDropdown extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(label, style: const TextStyle(fontSize: 18, color: Colors.black)),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: const Color(0xFF4289FC),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(fontSize: 18, color: Colors.black),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: const Color(0xFF4289FC),
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _tradeOptions.contains(value) ? value : null,
+                isExpanded: true,
+                items: _tradeOptions.map((option) {
+                  return DropdownMenuItem<String>(
+                    value: option,
+                    child: Text(option),
+                  );
+                }).toList(),
+                onChanged: null, // Disabled because this is view-only.
+                hint: Text(value.isEmpty ? 'Not specified' : value),
+                iconDisabledColor: Colors.grey,
+              ),
             ),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: _tradeOptions.contains(value) ? value : null,
-              isExpanded: true,
-              items: _tradeOptions.map((option) {
-                return DropdownMenuItem<String>(
-                  value: option,
-                  child: Text(option),
-                );
-              }).toList(),
-              onChanged: null, // disabled
-              hint: Text(value.isEmpty ? 'Not specified' : value),
-              iconDisabledColor: Colors.grey,
-            ),
-          ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }
