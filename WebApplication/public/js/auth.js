@@ -55,6 +55,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const userData = userDoc.data();
       const role = userData.role;
 
+      // ✅ Save session info
+      sessionStorage.setItem("userRole", role);
+      sessionStorage.setItem("userUID", user.uid);
+
+      // Redirect based on role
       if (role === "SPHI") {
         window.location.href = "Registration.html";
       } else if (role === "PHI") {

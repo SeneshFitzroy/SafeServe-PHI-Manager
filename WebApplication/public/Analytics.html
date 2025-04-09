@@ -7,6 +7,10 @@
         <link rel="stylesheet" href="Navigation.css">
         <link rel="stylesheet" href="StyleSheet5.css">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script type="module" src="js/session-guard.js"></script>
+        <script type="module" src="js/nav-access.js"></script>
+
+
 
     </head>
     <body>
@@ -16,37 +20,37 @@
             
             
             <ul class="nav-menu">
-                <a href="Dashboard.html">
+                <a href="Dashboard.html" data-page="Dashboard.html" data-icon="dashboard-icon-b.png">
                     <li class="nav-item ">
                         <img src="images/dashboard-icon-b.png" />
                         <span>Dashboard</span>
                     </li>
                 </a>
-                <a href="Calendar.html">
+                <a href="Calendar.html" data-page="Calendar.html" data-icon="calendar-icon-b.png">
                     <li class="nav-item">
                         <img src="images/calendar-icon-b.png" />
                         <span>Calendar</span>
                     </li>
                 </a>
-                <a href="InspectionLog.html">
+                <a href="InspectionLog.html" data-page="InspectionLog.html" data-icon="inspectionlog-icon-b.png">
                     <li class="nav-item">
                         <img src="images/inspectionlog-icon-b.png" />
                         <span>Inspection Log</span>
                     </li>
                 </a>
                 <a href="">
-                    <li class="nav-item active">
+                    <li class="nav-item active" data-page="Analytics.html" data-icon="dashboard-icon-b.png">
                         <img src="images/analytics-icon-w.png" />
                         <span>Analytics</span>
                     </li>
                 </a>
-                <a href="Registration.html">
+                <a href="Registration.html" data-page="Registration.html" data-icon="registerphi-icon-b.png">
                     <li class="nav-item">
                         <img src="images/registerphi-icon-b.png" />
                         <span>Register PHI</span>
                     </li>
                 </a>
-                <a href="PHIinformation.html">
+                <a href="PHIinformation.html" data-page="PHIinformation.html" data-icon="profile-icon-b.png">
                     <li class="nav-item">
                         <img src="images/profile-icon-b.png" />
                         <span>Profile</span>
@@ -55,7 +59,7 @@
             </ul>
             <form method="post" action="">
                 <input type="hidden" name="action" value="logout" />
-                <button class="logout">
+                <button class="logout" onclick="logoutUser(event)">
                     <img src="images/logout-icon.png"/>
                     <span>Logout</span>
                 </button>
