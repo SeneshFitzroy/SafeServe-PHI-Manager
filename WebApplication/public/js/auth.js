@@ -11,12 +11,34 @@ import {
 document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.querySelector("#login-form form");
   const messageDiv = document.getElementById("message");
+  const emailError = document.getElementById("email-error");
+  const passwordError = document.getElementById("password-error");
 
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const email = document.getElementById("username").value;
+    const email = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value;
+
+    // Reset error messages
+    emailError.innerText = "";
+    passwordError.innerText = "";
+    messageDiv.innerText = "";
+
+    // Simple Validation
+    let hasError = false;
+
+    if (!email.includes("@") || !email.includes(".")) {
+      emailError.innerText = "Please enter a valid email address.";
+      hasError = true;
+    }
+
+    if (password.length < 6) {
+      passwordError.innerText = "Password must be at least 6 characters.";
+      hasError = true;
+    }
+
+    if (hasError) return;
 
     try {
       // Firebase login
