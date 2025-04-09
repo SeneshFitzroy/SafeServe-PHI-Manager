@@ -6,8 +6,11 @@
 
     <link rel="stylesheet" href="Navigation.css">
     <link rel="stylesheet" href="StyleSheet4.css">
+    
+    <script type="module" src="js/firebase-config.js"></script>
     <script type="module" src="js/session-guard.js"></script>
     <script type="module" src="js/nav-access.js"></script>
+    <script type="module" src="js/user-info.js"></script>
 
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -69,8 +72,8 @@
               <img src="images/logged-user-icon.png">
           </div>
           <div class="user-info">
-              <span class="user-name">Leo Perera</span>
-              <span class="user-role">PHI</span>
+              <span class="user-name"></span>
+              <span class="user-role"></span>
           </div>
       </div>
 
@@ -198,7 +201,7 @@
     }
 
 
-    
+
     function showEditSlider() {
         document.getElementById('editprofileSlider').classList.add('active');
     }
