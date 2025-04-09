@@ -45,6 +45,7 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
   }
 
   Future<List<Map<String, dynamic>>> fetchShops() async {
+    // Simulating an async data call
     await Future.delayed(const Duration(seconds: 1));
     return [
       {
@@ -90,7 +91,6 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
             ),
           ),
 
-          // Body content with shops
           FutureBuilder<List<Map<String, dynamic>>>(
             future: fetchShops(),
             builder: (context, snapshot) {
@@ -104,7 +104,7 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
               return ListView.builder(
                 controller: _scrollController,
                 padding: const EdgeInsets.only(top: 15),
-                itemCount: shops.length + 1, // +1 for the header
+                itemCount: shops.length + 1,
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     return _buildBodyHeader();
@@ -119,8 +119,11 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
                       grade: shop['grade'],
                       imagePath: shop['image'],
                       onDetailsTap: () {
-                        Navigator.pushNamed(context, '/shop_detail',
-                            arguments: shop['name']);
+                        Navigator.pushNamed(
+                          context,
+                          '/shop_detail',
+                          arguments: shop['name'],
+                        );
                       },
                     ),
                   );
@@ -203,29 +206,32 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
             CustomNavBarIcon(
               icon: Icons.event,
               label: 'Calendar',
-              route: '/calendar',
+              navItem: NavItem.calendar,
               selected: false,
             ),
             CustomNavBarIcon(
               icon: Icons.store,
               label: 'Shops',
-              route: '/',
+              navItem: NavItem.shops,
               selected: true,
             ),
             CustomNavBarIcon(
               icon: Icons.dashboard,
               label: 'Dashboard',
-              route: '/dashboard',
+              navItem: NavItem.dashboard,
+              selected: false,
             ),
             CustomNavBarIcon(
               icon: Icons.description,
               label: 'Form',
-              route: '/form',
+              navItem: NavItem.form,
+              selected: false,
             ),
             CustomNavBarIcon(
               icon: Icons.notifications,
               label: 'Notifications',
-              route: '/notifications',
+              navItem: NavItem.notifications,
+              selected: false,
             ),
           ],
         ),
