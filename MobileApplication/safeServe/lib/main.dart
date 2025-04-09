@@ -8,6 +8,7 @@ import 'package:safeserve/screens/h800_form/h800_form_screen.dart';
 import 'package:safeserve/screens/h800_form/h800_form_screen_two.dart';
 import 'package:safeserve/screens/h800_form/h800_form_data.dart';
 import 'package:safeserve/screens/view_shop_detail/view_shop_detail_screen.dart';
+import 'package:safeserve/screens/edit_shop_detail/edit_shop_detail_screen.dart';
 
 void main() {
   runApp(const SafeServeApp());
@@ -25,8 +26,6 @@ class SafeServeApp extends StatelessWidget {
         fontFamily: 'Roboto',
       ),
       home: const LoginScreen(),
-
-      // Named routes for various screens
       routes: {
         '/search': (context) => const PlaceholderPage(title: 'Search'),
         '/menu': (context) => const PlaceholderPage(title: 'Menu'),
@@ -37,7 +36,6 @@ class SafeServeApp extends StatelessWidget {
         '/form': (context) => const PlaceholderPage(title: 'Form'),
         '/notifications': (context) =>
         const PlaceholderPage(title: 'Notifications'),
-
         '/register_shop_screen_one': (context) {
           final formData = ModalRoute.of(context)?.settings.arguments
           as RegisterShopFormData?;
@@ -50,35 +48,27 @@ class SafeServeApp extends StatelessWidget {
           return RegisterShopScreenTwo(
               formData: formData ?? RegisterShopFormData());
         },
-
-        // Named route for ShopDetailScreen, expects a String shopId as argument
         '/shop_detail': (context) {
           final args = ModalRoute.of(context)?.settings.arguments as String?;
           return ShopDetailScreen(shopId: args ?? '');
         },
-
-        // Named route for H800FormScreen
         '/h800_form_screen': (context) {
           final formData =
           ModalRoute.of(context)?.settings.arguments as H800FormData?;
           return H800FormScreen(formData: formData ?? H800FormData());
         },
-
-        // Named route for H800FormScreenTwo
         '/h800_form_screen_two': (context) {
           final formData =
           ModalRoute.of(context)?.settings.arguments as H800FormData?;
           return H800FormScreenTwo(formData: formData ?? H800FormData());
         },
-
-        // NEW: Named route for ViewShopDetailScreen, receiving shopData as arguments
         '/view_shop_detail': (context) => const ViewShopDetailScreen(),
+        '/edit_shop_detail': (context) => const EditShopDetailScreen(),
       },
     );
   }
 }
 
-// Placeholder page for routes not yet implemented
 class PlaceholderPage extends StatelessWidget {
   final String title;
   const PlaceholderPage({super.key, required this.title});
