@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../map-view-page/map-view-page.dart';
 import '../registered_shops/registered_shops_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -194,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const RegisteredShopsScreen(),
+                            builder: (_) => const MapViewPage(),
                           ),
                         );
                       },

@@ -1,23 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const SafeServeApp());
-}
-
-class SafeServeApp extends StatelessWidget {
-  const SafeServeApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: const Color.fromARGB(255, 18, 32, 47),
-      ),
-      home: const MapViewPage(),
-    );
-  }
-}
-
 class MapViewPage extends StatelessWidget {
   const MapViewPage({super.key});
 
