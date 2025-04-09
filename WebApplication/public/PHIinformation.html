@@ -6,6 +6,13 @@
 
     <link rel="stylesheet" href="Navigation.css">
     <link rel="stylesheet" href="StyleSheet4.css">
+    
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/session-guard.js"></script>
+    <script type="module" src="js/nav-access.js"></script>
+    <script type="module" src="js/user-info.js"></script>
+
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   </head>
   <body>
@@ -14,37 +21,37 @@
         <div class="logoname">Safe Serve</div>
         
         <ul class="nav-menu">
-            <a href="Dashboard.html">
+            <a href="Dashboard.html" data-page="Dashboard.html" data-icon="dashboard-icon-b.png">
                 <li class="nav-item">
                     <img src="images/dashboard-icon-b.png" />
                     <span>Dashboard</span>
                 </li>
             </a>
-            <a href="Calendar.html">
+            <a href="Calendar.html" data-page="Calendar.html" data-icon="calendar-icon-b.png">
                 <li class="nav-item">
                     <img src="images/calendar-icon-b.png" />
                     <span>Calendar</span>
                 </li>
             </a>
-            <a href="InspectionLog.html">
+            <a href="InspectionLog.html" data-page="InspectionLog.html" data-icon="inspectionlog-icon-b.png">
                 <li class="nav-item">
                     <img src="images/inspectionlog-icon-b.png" />
                     <span>Inspection Log</span>
                 </li>
             </a>
-            <a href="Analytics.html">
+            <a href="Analytics.html" data-page="Analytics.html" data-icon="analytics-icon-b.png">
                 <li class="nav-item">
                     <img src="images/analytics-icon-b.png" />
                     <span>Analytics</span>
                 </li>
             </a>
-            <a href="Registration.html">
+            <a href="Registration.html" data-page="Registration.html" data-icon="registerphi-icon-b.png">
                 <li class="nav-item">
                     <img src="images/registerphi-icon-b.png" />
                     <span>Register PHI</span>
                 </li>
             </a>
-            <a href="">
+            <a href="" data-page="PHIinformation.html" data-icon="profile-icon-b.png">
                 <li class="nav-item active">
                     <img src="images/profile-icon-w.png" />
                     <span>Profile</span>
@@ -53,7 +60,7 @@
         </ul>
         <form method="post" action="">
             <input type="hidden" name="action" value="logout" />
-            <button class="logout">
+            <button class="logout" onclick="logoutUser(event)">
                 <img src="images/logout-icon.png"/>
                 <span>Logout</span>
             </button>
@@ -65,8 +72,8 @@
               <img src="images/logged-user-icon.png">
           </div>
           <div class="user-info">
-              <span class="user-name">Leo Perera</span>
-              <span class="user-role">PHI</span>
+              <span class="user-name"></span>
+              <span class="user-role"></span>
           </div>
       </div>
 
@@ -186,6 +193,15 @@
 
 
   <script>
+
+    function logoutUser(e) {
+        e.preventDefault(); // prevent form reload
+        sessionStorage.clear();
+        window.location.href = "login.html"; // or your login page name
+    }
+
+
+
     function showEditSlider() {
         document.getElementById('editprofileSlider').classList.add('active');
     }

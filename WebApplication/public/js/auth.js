@@ -54,7 +54,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const userData = userDoc.data();
       const role = userData.role;
+      const fullName = userData.full_name || "Unknown User"; // ✅ Make sure 'fullName' exists in Firestore
 
+      // Save session info
+      sessionStorage.setItem("userRole", role);
+      sessionStorage.setItem("userUID", user.uid);
+      sessionStorage.setItem("userFullName", fullName); // ✅ NEW
+
+
+      // Redirect based on role
       if (role === "SPHI") {
         window.location.href = "Registration.html";
       } else if (role === "PHI") {
