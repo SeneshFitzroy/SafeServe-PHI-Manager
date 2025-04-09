@@ -9,6 +9,9 @@ class H800FormSummary extends StatelessWidget {
 
   const H800FormSummary({super.key, required this.formData});
 
+  // Total possible score
+  static const int totalPossibleScore = 100; 
+
   // Method to determine the grade based on percentage
   String getGrade(double percentage) {
     if (percentage >= 75 && percentage <= 100) {
@@ -25,8 +28,8 @@ class H800FormSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final totalScore = formData.calculateTotalScore();
-    final percentage = formData.calculatePercentage();
-    final grade = getGrade(percentage); // Calculate the grade
+    final percentage = (totalScore / totalPossibleScore) * 100; 
+    final grade = getGrade(percentage);
 
     return Scaffold(
       appBar: SafeServeAppBar(
@@ -37,7 +40,7 @@ class H800FormSummary extends StatelessWidget {
         children: [
           _buildGradientBackground(),
           SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 60),
+            padding: const EdgeInsets.only(top: 60), 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -47,7 +50,6 @@ class H800FormSummary extends StatelessWidget {
                   onArrowPressed: () => Navigator.pop(context),
                 ),
                 const SizedBox(height: 20),
-
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
@@ -69,7 +71,7 @@ class H800FormSummary extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(
-                                'Total Score: $totalScore / 100',
+                                'Total Score: $totalScore / $totalPossibleScore',
                                 style: const TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold),
                               ),
@@ -96,7 +98,6 @@ class H800FormSummary extends StatelessWidget {
                       H800FormButton(
                         label: 'Finish',
                         onPressed: () {
-                          // Navigate back to the registered shops screen
                           Navigator.pushNamedAndRemoveUntil(
                             context,
                             '/registered_shops_screen',
