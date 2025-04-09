@@ -49,7 +49,8 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
     super.initState();
     // Initialize values from formData
     _generalCleanlinessPart3 = widget.formData.generalCleanlinessPart3;
-    _safetyMeasuresForCleanliness = widget.formData.safetyMeasuresForCleanliness;
+    _safetyMeasuresForCleanliness =
+        widget.formData.safetyMeasuresForCleanliness;
     _hasFlies = widget.formData.hasFlies;
     _hasPests = widget.formData.hasPests;
     _hasFloor = widget.formData.hasFloor;
@@ -57,7 +58,8 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
     _maintenanceOfCeilingPart3 = widget.formData.maintenanceOfCeilingPart3;
     _spaceInWorkingArea = widget.formData.spaceInWorkingArea;
     _dailyCleaning = widget.formData.dailyCleaning;
-    _riskOfContaminationFromToilets = widget.formData.riskOfContaminationFromToilets;
+    _riskOfContaminationFromToilets =
+        widget.formData.riskOfContaminationFromToilets;
     _adequateBins = widget.formData.adequateBins;
     _hasUnnecessaryItems = widget.formData.hasUnnecessaryItems;
     _cleaningToolsAvailable = widget.formData.cleaningToolsAvailable;
@@ -104,15 +106,18 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
     bool isValid = true;
     setState(() {
       _isInvalid['generalCleanlinessPart3'] = _generalCleanlinessPart3 == null;
-      _isInvalid['safetyMeasuresForCleanliness'] = _safetyMeasuresForCleanliness == null;
+      _isInvalid['safetyMeasuresForCleanliness'] =
+          _safetyMeasuresForCleanliness == null;
       _isInvalid['hasFlies'] = _hasFlies == null;
       _isInvalid['hasPests'] = _hasPests == null;
       _isInvalid['hasFloor'] = _hasFloor == null;
       _isInvalid['maintenanceOfWalls'] = _maintenanceOfWalls == null;
-      _isInvalid['maintenanceOfCeilingPart3'] = _maintenanceOfCeilingPart3 == null;
+      _isInvalid['maintenanceOfCeilingPart3'] =
+          _maintenanceOfCeilingPart3 == null;
       _isInvalid['spaceInWorkingArea'] = _spaceInWorkingArea == null;
       _isInvalid['dailyCleaning'] = _dailyCleaning == null;
-      _isInvalid['riskOfContaminationFromToilets'] = _riskOfContaminationFromToilets == null;
+      _isInvalid['riskOfContaminationFromToilets'] =
+          _riskOfContaminationFromToilets == null;
       _isInvalid['adequateBins'] = _adequateBins == null;
       _isInvalid['hasUnnecessaryItems'] = _hasUnnecessaryItems == null;
       _isInvalid['cleaningToolsAvailable'] = _cleaningToolsAvailable == null;
@@ -122,7 +127,8 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
       _isInvalid['separateChoppingBoards'] = _separateChoppingBoards == null;
       _isInvalid['cleanlinessOfEquipment'] = _cleanlinessOfEquipment == null;
       _isInvalid['suitabilityOfLayout'] = _suitabilityOfLayout == null;
-      _isInvalid['lightAndVentilationPart3'] = _lightAndVentilationPart3 == null;
+      _isInvalid['lightAndVentilationPart3'] =
+          _lightAndVentilationPart3 == null;
       _isInvalid['houseKeeping'] = _houseKeeping == null;
       _isInvalid['waterSupplySuitable'] = _waterSupplySuitable == null;
       _isInvalid['safeFoodHandling'] = _safeFoodHandling == null;
@@ -134,7 +140,8 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
 
   void _updateFormData() {
     widget.formData.generalCleanlinessPart3 = _generalCleanlinessPart3;
-    widget.formData.safetyMeasuresForCleanliness = _safetyMeasuresForCleanliness;
+    widget.formData.safetyMeasuresForCleanliness =
+        _safetyMeasuresForCleanliness;
     widget.formData.hasFlies = _hasFlies;
     widget.formData.hasPests = _hasPests;
     widget.formData.hasFloor = _hasFloor;
@@ -142,7 +149,8 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
     widget.formData.maintenanceOfCeilingPart3 = _maintenanceOfCeilingPart3;
     widget.formData.spaceInWorkingArea = _spaceInWorkingArea;
     widget.formData.dailyCleaning = _dailyCleaning;
-    widget.formData.riskOfContaminationFromToilets = _riskOfContaminationFromToilets;
+    widget.formData.riskOfContaminationFromToilets =
+        _riskOfContaminationFromToilets;
     widget.formData.adequateBins = _adequateBins;
     widget.formData.hasUnnecessaryItems = _hasUnnecessaryItems;
     widget.formData.cleaningToolsAvailable = _cleaningToolsAvailable;
@@ -175,7 +183,7 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
               children: [
                 const SizedBox(height: 20),
                 RegisterShopHeader(
-                  title: 'H800 Form - Screen 2',
+                  title: 'H800 Form',
                   onArrowPressed: () => Navigator.pop(context),
                 ),
                 const SizedBox(height: 20),
@@ -184,7 +192,8 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                   child: LinearProgressIndicator(
                     value: 0.5, // 2/4 of the form completed
                     backgroundColor: Colors.grey[300],
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -195,35 +204,38 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                     children: [
                       const Text(
                         'Part 3: Area of Food Preparation/Serving/Display/Storage (30 Marks)',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
-                        label: '3.1 General cleanliness (2 marks)',
+                        label: '3.1 General cleanliness',
                         initialValue: _generalCleanlinessPart3,
                         isInvalid: _isInvalid['generalCleanlinessPart3']!,
-                        items: const ['Satisfactory', 'Unsatisfactory'],
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _generalCleanlinessPart3 = value;
-                            _isInvalid['generalCleanlinessPart3'] = value == null;
+                            _isInvalid['generalCleanlinessPart3'] =
+                                value == null;
                           });
                         },
                       ),
                       GenericDropdown(
-                        label: '3.2 Safety measures for cleanliness (2 marks)',
+                        label: '3.2 Safety measures for cleanliness',
                         initialValue: _safetyMeasuresForCleanliness,
                         isInvalid: _isInvalid['safetyMeasuresForCleanliness']!,
-                        items: const ['Adequate', 'Inadequate'],
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _safetyMeasuresForCleanliness = value;
-                            _isInvalid['safetyMeasuresForCleanliness'] = value == null;
+                            _isInvalid['safetyMeasuresForCleanliness'] =
+                                value == null;
                           });
                         },
                       ),
                       RadioButtonField(
-                        label: '3.3 Presence of flies (1 mark)',
+                        label: '3.3 Presence of flies',
                         value: _hasFlies,
                         isInvalid: _isInvalid['hasFlies']!,
                         onChanged: (value) {
@@ -234,7 +246,7 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                         },
                       ),
                       RadioButtonField(
-                        label: '3.4 Presence of pests (1 mark)',
+                        label: '3.4 Presence of pests',
                         value: _hasPests,
                         isInvalid: _isInvalid['hasPests']!,
                         onChanged: (value) {
@@ -244,10 +256,11 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                           });
                         },
                       ),
-                      RadioButtonField(
-                        label: '3.5 Floor availability (1 mark)',
-                        value: _hasFloor,
+                      GenericDropdown(
+                        label: '3.5 Floor availability',
+                        initialValue: _hasFloor,
                         isInvalid: _isInvalid['hasFloor']!,
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _hasFloor = value;
@@ -256,10 +269,10 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                         },
                       ),
                       GenericDropdown(
-                        label: '3.6 Maintenance of walls (2 marks)',
+                        label: '3.6 Maintenance of walls',
                         initialValue: _maintenanceOfWalls,
                         isInvalid: _isInvalid['maintenanceOfWalls']!,
-                        items: const ['Good', 'Poor'],
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _maintenanceOfWalls = value;
@@ -268,19 +281,20 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                         },
                       ),
                       GenericDropdown(
-                        label: '3.7 Maintenance of ceiling (2 marks)',
+                        label: '3.7 Maintenance of ceiling',
                         initialValue: _maintenanceOfCeilingPart3,
                         isInvalid: _isInvalid['maintenanceOfCeilingPart3']!,
-                        items: const ['Good', 'Poor'],
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _maintenanceOfCeilingPart3 = value;
-                            _isInvalid['maintenanceOfCeilingPart3'] = value == null;
+                            _isInvalid['maintenanceOfCeilingPart3'] =
+                                value == null;
                           });
                         },
                       ),
                       GenericDropdown(
-                        label: '3.8 Space in working area (1 mark)',
+                        label: '3.8 Space in working area',
                         initialValue: _spaceInWorkingArea,
                         isInvalid: _isInvalid['spaceInWorkingArea']!,
                         items: const ['Adequate', 'Inadequate'],
@@ -292,7 +306,7 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                         },
                       ),
                       RadioButtonField(
-                        label: '3.9 Daily cleaning (1 mark)',
+                        label: '3.9 Daily cleaning ',
                         value: _dailyCleaning,
                         isInvalid: _isInvalid['dailyCleaning']!,
                         onChanged: (value) {
@@ -303,18 +317,22 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                         },
                       ),
                       RadioButtonField(
-                        label: '3.10 Risk of contamination from toilets (1 mark)',
+                        label:
+                            '3.10 Risk of contamination from toilets',
                         value: _riskOfContaminationFromToilets,
-                        isInvalid: _isInvalid['riskOfContaminationFromToilets']!,
+                        isInvalid:
+                            _isInvalid['riskOfContaminationFromToilets']!,
                         onChanged: (value) {
                           setState(() {
                             _riskOfContaminationFromToilets = value;
-                            _isInvalid['riskOfContaminationFromToilets'] = value == null;
+                            _isInvalid['riskOfContaminationFromToilets'] =
+                                value == null;
                           });
                         },
                       ),
                       RadioButtonField(
-                        label: '3.11 Adequate bins (1 mark)',
+                        label:
+                            '3.11 Adequate bins with lids for waste disposal',
                         value: _adequateBins,
                         isInvalid: _isInvalid['adequateBins']!,
                         onChanged: (value) {
@@ -325,7 +343,8 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                         },
                       ),
                       RadioButtonField(
-                        label: '3.12 Unnecessary items (1 mark)',
+                        label:
+                            '3.12 Empty boxes/Gunny bags and other unnecessary items',
                         value: _hasUnnecessaryItems,
                         isInvalid: _isInvalid['hasUnnecessaryItems']!,
                         onChanged: (value) {
@@ -336,18 +355,20 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                         },
                       ),
                       RadioButtonField(
-                        label: '3.13 Cleaning tools available (1 mark)',
+                        label:
+                            '3.13 Availability of cleaning tools/materials/serviettes',
                         value: _cleaningToolsAvailable,
                         isInvalid: _isInvalid['cleaningToolsAvailable']!,
                         onChanged: (value) {
                           setState(() {
                             _cleaningToolsAvailable = value;
-                            _isInvalid['cleaningToolsAvailable'] = value == null;
+                            _isInvalid['cleaningToolsAvailable'] =
+                                value == null;
                           });
                         },
                       ),
                       RadioButtonField(
-                        label: '3.14 Objectionable odor (1 mark)',
+                        label: '3.14 Objectionable odor',
                         value: _hasObjectionableOdor,
                         isInvalid: _isInvalid['hasObjectionableOdor']!,
                         onChanged: (value) {
@@ -358,7 +379,8 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                         },
                       ),
                       RadioButtonField(
-                        label: '3.15 Open drains (1 mark)',
+                        label:
+                            '3.15 Open drains & stagnated waste water',
                         value: _hasOpenDrains,
                         isInvalid: _isInvalid['hasOpenDrains']!,
                         onChanged: (value) {
@@ -369,7 +391,8 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                         },
                       ),
                       RadioButtonField(
-                        label: '3.16 Area used for sleeping (1 mark)',
+                        label:
+                            '3.16 Area used for sleeping or any other unrelated activities',
                         value: _areaUsedForSleeping,
                         isInvalid: _isInvalid['areaUsedForSleeping']!,
                         onChanged: (value) {
@@ -380,29 +403,34 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                         },
                       ),
                       RadioButtonField(
-                        label: '3.17 Separate chopping boards (1 mark)',
+                        label:
+                            '3.17 Use of separate chopping boards/knives etc.',
                         value: _separateChoppingBoards,
                         isInvalid: _isInvalid['separateChoppingBoards']!,
                         onChanged: (value) {
                           setState(() {
                             _separateChoppingBoards = value;
-                            _isInvalid['separateChoppingBoards'] = value == null;
+                            _isInvalid['separateChoppingBoards'] =
+                                value == null;
                           });
                         },
                       ),
                       RadioButtonField(
-                        label: '3.18 Cleanliness of equipment (1 mark)',
+                        label:
+                            '3.18 Cleanliness of equipment/utensils',
                         value: _cleanlinessOfEquipment,
                         isInvalid: _isInvalid['cleanlinessOfEquipment']!,
                         onChanged: (value) {
                           setState(() {
                             _cleanlinessOfEquipment = value;
-                            _isInvalid['cleanlinessOfEquipment'] = value == null;
+                            _isInvalid['cleanlinessOfEquipment'] =
+                                value == null;
                           });
                         },
                       ),
                       RadioButtonField(
-                        label: '3.19 Suitability of layout (1 mark)',
+                        label:
+                            '3.19 Suitability of layout of the area for the process',
                         value: _suitabilityOfLayout,
                         isInvalid: _isInvalid['suitabilityOfLayout']!,
                         onChanged: (value) {
@@ -413,21 +441,23 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                         },
                       ),
                       GenericDropdown(
-                        label: '3.20 Light and ventilation (1 mark)',
+                        label: '3.20 Light and ventilation',
                         initialValue: _lightAndVentilationPart3,
                         isInvalid: _isInvalid['lightAndVentilationPart3']!,
-                        items: const ['Good', 'Poor'],
+                        items: const ['Adequate', 'Inadequate'],
                         onChanged: (value) {
                           setState(() {
                             _lightAndVentilationPart3 = value;
-                            _isInvalid['lightAndVentilationPart3'] = value == null;
+                            _isInvalid['lightAndVentilationPart3'] =
+                                value == null;
                           });
                         },
                       ),
-                      RadioButtonField(
-                        label: '3.21 Housekeeping (1 mark)',
-                        value: _houseKeeping,
+                      GenericDropdown(
+                        label: '3.21 Housekeeping ',
+                        initialValue: _houseKeeping,
                         isInvalid: _isInvalid['houseKeeping']!,
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _houseKeeping = value;
@@ -436,7 +466,8 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                         },
                       ),
                       RadioButtonField(
-                        label: '3.22 Water supply suitable (2 marks)',
+                        label:
+                            '3.22 Water supply suitable for different task ',
                         value: _waterSupplySuitable,
                         isInvalid: _isInvalid['waterSupplySuitable']!,
                         onChanged: (value) {
@@ -446,14 +477,16 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                           });
                         },
                       ),
-                      RadioButtonField(
-                        label: '3.23 Safe food handling (2 marks)',
-                        value: _safeFoodHandling,
+                      GenericDropdown(
+                        label:'3.23 Safe food handling practices',
+                        initialValue: _safeFoodHandling,
                         isInvalid: _isInvalid['safeFoodHandling']!,
+                        items: const ['Good', 'Satisfactory','Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _safeFoodHandling = value;
-                            _isInvalid['safeFoodHandling'] = value == null;
+                            _isInvalid['safeFoodHandling'] =
+                                value == null;
                           });
                         },
                       ),
