@@ -125,7 +125,7 @@ class H800FormScreenState extends State<H800FormScreen> {
               children: [
                 const SizedBox(height: 20),
                 RegisterShopHeader(
-                  title: 'H800 Form - Screen 1',
+                  title: 'H800 Form',
                   onArrowPressed: () => Navigator.pop(context),
                 ),
                 const SizedBox(height: 20),
@@ -151,7 +151,7 @@ class H800FormScreenState extends State<H800FormScreen> {
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
-                        label: '1.1 Suitability for business (1 mark)',
+                        label: '1.1 Suitability for business',
                         initialValue: _suitabilityForBusiness,
                         isInvalid: _isInvalid['suitabilityForBusiness']!,
                         items: const ['Suitable', 'Unsuitable'],
@@ -164,7 +164,7 @@ class H800FormScreenState extends State<H800FormScreen> {
                         },
                       ),
                       GenericDropdown(
-                        label: '1.2 General cleanliness (1 mark)',
+                        label: '1.2 General cleanliness & tidiness',
                         initialValue: _generalCleanliness,
                         isInvalid: _isInvalid['generalCleanliness']!,
                         items: const ['Satisfactory', 'Unsatisfactory'],
@@ -176,7 +176,7 @@ class H800FormScreenState extends State<H800FormScreen> {
                         },
                       ),
                       RadioButtonField(
-                        label: '1.3 Polluting conditions (1 mark)',
+                        label: '1.3 Polluting conditions',
                         value: _hasPollutingConditions,
                         isInvalid: _isInvalid['hasPollutingConditions']!,
                         onChanged: (value) {
@@ -188,7 +188,7 @@ class H800FormScreenState extends State<H800FormScreen> {
                         },
                       ),
                       RadioButtonField(
-                        label: '1.4 Presence of animals (1 mark)',
+                        label: '1.4 Dogs/Cats/Other animals',
                         value: _hasAnimals,
                         isInvalid: _isInvalid['hasAnimals']!,
                         onChanged: (value) {
@@ -199,7 +199,7 @@ class H800FormScreenState extends State<H800FormScreen> {
                         },
                       ),
                       RadioButtonField(
-                        label: '1.5 Smoke or adverse effects (1 mark)',
+                        label: '1.5 Smoke or other adverse effects',
                         value: _hasSmokeOrAdverseEffects,
                         isInvalid: _isInvalid['hasSmokeOrAdverseEffects']!,
                         onChanged: (value) {
@@ -218,7 +218,7 @@ class H800FormScreenState extends State<H800FormScreen> {
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
-                        label: '2.1 Nature of building (1 mark)',
+                        label: '2.1 Nature of the building',
                         initialValue: _natureOfBuilding,
                         isInvalid: _isInvalid['natureOfBuilding']!,
                         items: const ['Permanent', 'Temporary'],
@@ -230,7 +230,7 @@ class H800FormScreenState extends State<H800FormScreen> {
                         },
                       ),
                       GenericDropdown(
-                        label: '2.2 Space (1 mark)',
+                        label: '2.2 Space ',
                         initialValue: _space,
                         isInvalid: _isInvalid['space']!,
                         items: const ['Adequate', 'Inadequate'],
@@ -242,10 +242,10 @@ class H800FormScreenState extends State<H800FormScreen> {
                         },
                       ),
                       GenericDropdown(
-                        label: '2.3 Light and ventilation (1 mark)',
+                        label: '2.3 Light and ventilation',
                         initialValue: _lightAndVentilation,
                         isInvalid: _isInvalid['lightAndVentilation']!,
-                        items: const ['Good', 'Poor'],
+                        items: const ['Adequate', 'Inadequate'],
                         onChanged: (value) {
                           setState(() {
                             _lightAndVentilation = value;
@@ -254,10 +254,10 @@ class H800FormScreenState extends State<H800FormScreen> {
                         },
                       ),
                       GenericDropdown(
-                        label: '2.4 Condition of floor (2 marks)',
+                        label: '2.4 Condition of the floor',
                         initialValue: _conditionOfFloor,
                         isInvalid: _isInvalid['conditionOfFloor']!,
-                        items: const ['Good', 'Poor'],
+                        items: const ['Good', 'Satisfactory','Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _conditionOfFloor = value;
@@ -266,10 +266,10 @@ class H800FormScreenState extends State<H800FormScreen> {
                         },
                       ),
                       GenericDropdown(
-                        label: '2.5 Condition of wall (2 marks)',
+                        label: '2.5 Condition of the wall',
                         initialValue: _conditionOfWall,
                         isInvalid: _isInvalid['conditionOfWall']!,
-                        items: const ['Good', 'Poor'],
+                        items: const ['Good', 'Satisfactory','Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _conditionOfWall = value;
@@ -278,10 +278,10 @@ class H800FormScreenState extends State<H800FormScreen> {
                         },
                       ),
                       GenericDropdown(
-                        label: '2.6 Condition of ceiling (2 marks)',
+                        label: '2.6 Condition of the ceiling',
                         initialValue: _conditionOfCeiling,
                         isInvalid: _isInvalid['conditionOfCeiling']!,
-                        items: const ['Good', 'Poor'],
+                        items: const ['Good', 'Satisfactory','Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _conditionOfCeiling = value;
@@ -290,7 +290,7 @@ class H800FormScreenState extends State<H800FormScreen> {
                         },
                       ),
                       RadioButtonField(
-                        label: '2.7 Presence of hazards (1 mark)',
+                        label: '2.7 Hazards to employees/customers',
                         value: _hasHazards,
                         isInvalid: _isInvalid['hasHazards']!,
                         onChanged: (value) {
