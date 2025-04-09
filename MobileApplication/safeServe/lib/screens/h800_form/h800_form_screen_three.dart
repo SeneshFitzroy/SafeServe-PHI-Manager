@@ -19,20 +19,26 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
   // Part 4: Equipment & Furniture
   String? _equipmentForFoodHandling;
   String? _conditionOfEquipment;
+  String? _cleanOfEquipment;
   String? _foodTongsAvailable;
+  String? _storageCleanEquip;
+  String? _suitableSafetyofFurniture;
   String? _furnitureCondition;
   String? _cleaningAndMaintenanceOfFurniture;
   String? _maintenanceOfRefrigerators;
+  String? _cleanandMaintenanceOfRefrigerators;
 
   // Part 5: Storage
   String? _storageFacilities;
   String? _storageOfRawMaterials;
   String? _storageOfCookedFood;
+  String? _foodStoredTemp;
   String? _storageInRefrigerator;
   String? _measuresToPreventContamination;
 
   // Part 6: Water Supply
   String? _waterSource;
+  String? _waterStorageMethod;
   String? _waterDispensedThroughTaps;
   String? _waterSafetyCertified;
 
@@ -45,18 +51,24 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
     // Initialize values from formData
     _equipmentForFoodHandling = widget.formData.equipmentForFoodHandling;
     _conditionOfEquipment = widget.formData.conditionOfEquipment;
+    _cleanOfEquipment = widget.formData.cleanOfEquipment;
     _foodTongsAvailable = widget.formData.foodTongsAvailable;
+    _storageCleanEquip = widget.formData.storageCleanEquip;
+    _suitableSafetyofFurniture = widget.formData.suitableSafetyofFurniture;
     _furnitureCondition = widget.formData.furnitureCondition;
     _cleaningAndMaintenanceOfFurniture = widget.formData.cleaningAndMaintenanceOfFurniture;
     _maintenanceOfRefrigerators = widget.formData.maintenanceOfRefrigerators;
+    _cleanandMaintenanceOfRefrigerators = widget.formData.cleanandMaintenanceOfRefrigerators;
 
     _storageFacilities = widget.formData.storageFacilities;
     _storageOfRawMaterials = widget.formData.storageOfRawMaterials;
     _storageOfCookedFood = widget.formData.storageOfCookedFood;
+    _foodStoredTemp = widget.formData.foodStoredTemp;
     _storageInRefrigerator = widget.formData.storageInRefrigerator;
     _measuresToPreventContamination = widget.formData.measuresToPreventContamination;
 
     _waterSource = widget.formData.waterSource;
+    _waterStorageMethod = widget.formData.waterStorageMethod;
     _waterDispensedThroughTaps = widget.formData.waterDispensedThroughTaps;
     _waterSafetyCertified = widget.formData.waterSafetyCertified;
 
@@ -64,16 +76,22 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
     _isInvalid = {
       'equipmentForFoodHandling': false,
       'conditionOfEquipment': false,
+      'cleanOfEquipment':false,
       'foodTongsAvailable': false,
+      'storageCleanEquip':false,
+      'suitableSafetyofFurniture': false,
       'furnitureCondition': false,
       'cleaningAndMaintenanceOfFurniture': false,
       'maintenanceOfRefrigerators': false,
+      'cleanandMaintenanceOfRefrigerators': false,
       'storageFacilities': false,
       'storageOfRawMaterials': false,
       'storageOfCookedFood': false,
+      'foodStoredTemp':false,
       'storageInRefrigerator': false,
       'measuresToPreventContamination': false,
       'waterSource': false,
+      'waterStorageMethod':false,
       'waterDispensedThroughTaps': false,
       'waterSafetyCertified': false,
     };
@@ -84,16 +102,22 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
     setState(() {
       _isInvalid['equipmentForFoodHandling'] = _equipmentForFoodHandling == null;
       _isInvalid['conditionOfEquipment'] = _conditionOfEquipment == null;
+       _isInvalid['cleanOfEquipment'] = _cleanOfEquipment == null;
       _isInvalid['foodTongsAvailable'] = _foodTongsAvailable == null;
+      _isInvalid['storageCleanEquip'] = _storageCleanEquip == null;
+      _isInvalid['suitableSafetyofFurniture'] =_suitableSafetyofFurniture == null;
       _isInvalid['furnitureCondition'] = _furnitureCondition == null;
       _isInvalid['cleaningAndMaintenanceOfFurniture'] = _cleaningAndMaintenanceOfFurniture == null;
       _isInvalid['maintenanceOfRefrigerators'] = _maintenanceOfRefrigerators == null;
+      _isInvalid ['cleanandMaintenanceOfRefrigerators']= _cleanandMaintenanceOfRefrigerators == null;
       _isInvalid['storageFacilities'] = _storageFacilities == null;
       _isInvalid['storageOfRawMaterials'] = _storageOfRawMaterials == null;
       _isInvalid['storageOfCookedFood'] = _storageOfCookedFood == null;
+      _isInvalid['foodStoredTemp']=_foodStoredTemp ==null;
       _isInvalid['storageInRefrigerator'] = _storageInRefrigerator == null;
       _isInvalid['measuresToPreventContamination'] = _measuresToPreventContamination == null;
       _isInvalid['waterSource'] = _waterSource == null;
+      _isInvalid['waterStorageMethod']= _waterStorageMethod ==null;
       _isInvalid['waterDispensedThroughTaps'] = _waterDispensedThroughTaps == null;
       _isInvalid['waterSafetyCertified'] = _waterSafetyCertified == null;
     });
@@ -105,10 +129,14 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
   void _updateFormData() {
     widget.formData.equipmentForFoodHandling = _equipmentForFoodHandling;
     widget.formData.conditionOfEquipment = _conditionOfEquipment;
+    widget.formData.cleanOfEquipment= _cleanOfEquipment;
     widget.formData.foodTongsAvailable = _foodTongsAvailable;
+    widget.formData.storageCleanEquip = _storageCleanEquip;
+    widget.formData.suitableSafetyofFurniture = _suitableSafetyofFurniture;
     widget.formData.furnitureCondition = _furnitureCondition;
     widget.formData.cleaningAndMaintenanceOfFurniture = _cleaningAndMaintenanceOfFurniture;
     widget.formData.maintenanceOfRefrigerators = _maintenanceOfRefrigerators;
+    widget.formData.cleanandMaintenanceOfRefrigerators = _cleanandMaintenanceOfRefrigerators;
 
     widget.formData.storageFacilities = _storageFacilities;
     widget.formData.storageOfRawMaterials = _storageOfRawMaterials;
@@ -117,6 +145,7 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
     widget.formData.measuresToPreventContamination = _measuresToPreventContamination;
 
     widget.formData.waterSource = _waterSource;
+    widget.formData.waterStorageMethod = _waterStorageMethod;
     widget.formData.waterDispensedThroughTaps = _waterDispensedThroughTaps;
     widget.formData.waterSafetyCertified = _waterSafetyCertified;
   }
@@ -138,7 +167,7 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
               children: [
                 const SizedBox(height: 20),
                 RegisterShopHeader(
-                  title: 'H800 Form - Screen 3',
+                  title: 'H800 Form',
                   onArrowPressed: () => Navigator.pop(context),
                 ),
                 const SizedBox(height: 20),
@@ -162,7 +191,7 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
-                        label: '4.1 Equipment for food handling (1 mark)',
+                        label: '4.1 Equipment/utensils for food handling',
                         initialValue: _equipmentForFoodHandling,
                         isInvalid: _isInvalid['equipmentForFoodHandling']!,
                         items: const ['Adequate', 'Inadequate'],
@@ -174,7 +203,7 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                         },
                       ),
                       GenericDropdown(
-                        label: '4.2 Condition of equipment (1 mark)',
+                        label: '4.2 Condition of equipment/utensils',
                         initialValue: _conditionOfEquipment,
                         isInvalid: _isInvalid['conditionOfEquipment']!,
                         items: const ['Satisfactory', 'Unsatisfactory'],
@@ -185,8 +214,20 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                           });
                         },
                       ),
+                      GenericDropdown(
+                        label: '4.3 Cleanliness of equipment/utensils',
+                        initialValue: _cleanOfEquipment,
+                        isInvalid: _isInvalid['cleanOfEquipment']!,
+                        items: const ['Satisfactory', 'Unsatisfactory'],
+                        onChanged: (value) {
+                          setState(() {
+                            _cleanOfEquipment = value;
+                            _isInvalid['cleanOfEquipment'] = value == null;
+                          });
+                        },
+                      ),
                       RadioButtonField(
-                        label: '4.3 Food tongs available (1 mark)',
+                        label: '4.4 Availability of food tongs/spoons to serve food items',
                         value: _foodTongsAvailable,
                         isInvalid: _isInvalid['foodTongsAvailable']!,
                         onChanged: (value) {
@@ -196,8 +237,19 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                           });
                         },
                       ),
+                      RadioButtonField(//new
+                        label: '4.5 Storage facilities for cleaned equipment',
+                        value: _storageCleanEquip,
+                        isInvalid: _isInvalid['storageCleanEquip']!,
+                        onChanged: (value) {
+                          setState(() {
+                            _storageCleanEquip = value;
+                            _isInvalid['storageCleanEquip'] = value == null;
+                          });
+                        },
+                      ),
                       GenericDropdown(
-                        label: '4.4 Furniture condition (1 mark)',
+                        label: '4.6 Furniture- Tables/Chairs/Cupboards/Racks etc.',
                         initialValue: _furnitureCondition,
                         isInvalid: _isInvalid['furnitureCondition']!,
                         items: const ['Adequate', 'Inadequate'],
@@ -208,8 +260,20 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                           });
                         },
                       ),
+                      GenericDropdown(//new
+                        label: '4.7 Suitability for required purpose and safety of furniture',
+                        initialValue: _suitableSafetyofFurniture,
+                        isInvalid: _isInvalid['suitableSafetyofFurniture']!,
+                        items: const ['Satisfactory', 'Unsatisfactory'],
+                        onChanged: (value) {
+                          setState(() {
+                            _suitableSafetyofFurniture = value;
+                            _isInvalid['suitableSafetyofFurniture'] = value == null;
+                          });
+                        },
+                      ),
                       GenericDropdown(
-                        label: '4.5 Cleaning and maintenance of furniture (1 mark)',
+                        label: '4.8 Cleaning and maintenance of furniture',
                         initialValue: _cleaningAndMaintenanceOfFurniture,
                         isInvalid: _isInvalid['cleaningAndMaintenanceOfFurniture']!,
                         items: const ['Satisfactory', 'Unsatisfactory'],
@@ -221,7 +285,7 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                         },
                       ),
                       GenericDropdown(
-                        label: '4.6 Maintenance of refrigerators (1 mark)',
+                        label: '4.9 Maintenance of temperature in refrigerators/deep freezers',
                         initialValue: _maintenanceOfRefrigerators,
                         isInvalid: _isInvalid['maintenanceOfRefrigerators']!,
                         items: const ['Satisfactory', 'Unsatisfactory'],
@@ -232,6 +296,18 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                           });
                         },
                       ),
+                      GenericDropdown(//new
+                        label: '4.10 Cleanliness & maintenance of refrigerators/deep freezers',
+                        initialValue: _cleanandMaintenanceOfRefrigerators,
+                        isInvalid: _isInvalid['cleanandMaintenanceOfRefrigerators']!,
+                        items: const ['Satisfactory', 'Unsatisfactory'],
+                        onChanged: (value) {
+                          setState(() {
+                            _cleanandMaintenanceOfRefrigerators = value;
+                            _isInvalid['cleanandMaintenanceOfRefrigerators'] = value == null;
+                          });
+                        },
+                      ),
                       const SizedBox(height: 30),
                       const Text(
                         'Part 5: Storage (10 Marks)',
@@ -239,10 +315,10 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
-                        label: '5.1 Storage facilities (2 marks)',
+                        label: '5.1 Storage facilities and housekeeping',
                         initialValue: _storageFacilities,
                         isInvalid: _isInvalid['storageFacilities']!,
-                        items: const ['Good', 'Poor'],
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _storageFacilities = value;
@@ -251,10 +327,10 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                         },
                       ),
                       GenericDropdown(
-                        label: '5.2 Storage of raw materials (2 marks)',
+                        label: '5.2 Storage of raw materials',
                         initialValue: _storageOfRawMaterials,
                         isInvalid: _isInvalid['storageOfRawMaterials']!,
-                        items: const ['Good', 'Poor'],
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _storageOfRawMaterials = value;
@@ -263,10 +339,10 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                         },
                       ),
                       GenericDropdown(
-                        label: '5.3 Storage of cooked food (2 marks)',
+                        label: '5.3 Storage of cooked/partially cooked/prepared food',
                         initialValue: _storageOfCookedFood,
                         isInvalid: _isInvalid['storageOfCookedFood']!,
-                        items: const ['Good', 'Poor'],
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _storageOfCookedFood = value;
@@ -274,8 +350,19 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                           });
                         },
                       ),
+                      RadioButtonField(//new
+                        label: '5.4 Food stored under suitable temperature',
+                        value: _foodStoredTemp,
+                        isInvalid: _isInvalid['foodStoredTemp']!,
+                        onChanged: (value) {
+                          setState(() {
+                            _foodStoredTemp = value;
+                            _isInvalid['foodStoredTemp'] = value == null;
+                          });
+                        },
+                      ),
                       GenericDropdown(
-                        label: '5.4 Storage in refrigerator (1 mark)',
+                        label: '5.5 Storage of food in refrigerator/deep freezer',
                         initialValue: _storageInRefrigerator,
                         isInvalid: _isInvalid['storageInRefrigerator']!,
                         items: const ['Satisfactory', 'Unsatisfactory'],
@@ -287,10 +374,10 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                         },
                       ),
                       GenericDropdown(
-                        label: '5.5 Measures to prevent contamination (2 marks)',
+                        label: '5.6 Measures taken to prevent contamination during food storage',
                         initialValue: _measuresToPreventContamination,
                         isInvalid: _isInvalid['measuresToPreventContamination']!,
-                        items: const ['Good', 'Poor'],
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _measuresToPreventContamination = value;
@@ -305,7 +392,7 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
-                        label: '6.1 Water source (1 mark)',
+                        label: '6.1 Water source',
                         initialValue: _waterSource,
                         isInvalid: _isInvalid['waterSource']!,
                         items: const ['Safe', 'Unsafe'],
@@ -316,8 +403,20 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                           });
                         },
                       ),
+                       GenericDropdown(
+                        label: '6.2 Water storage method',
+                        initialValue: _waterStorageMethod,
+                        isInvalid: _isInvalid['waterStorageMethod']!,
+                        items: const ['Satisfactory', 'Unsatisfactory'],
+                        onChanged: (value) {
+                          setState(() {
+                            _waterStorageMethod = value;
+                            _isInvalid['waterStorageMethod'] = value == null;
+                          });
+                        },
+                      ),
                       RadioButtonField(
-                        label: '6.2 Water dispensed through taps (1 mark)',
+                        label: '6.3 Water dispensed through taps',
                         value: _waterDispensedThroughTaps,
                         isInvalid: _isInvalid['waterDispensedThroughTaps']!,
                         onChanged: (value) {
@@ -328,7 +427,7 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                         },
                       ),
                       RadioButtonField(
-                        label: '6.3 Water safety certified (2 marks)',
+                        label: '6.4 Safety of water certified by analytical reports (Bacteriology - 01, Chemical - 01)',
                         value: _waterSafetyCertified,
                         isInvalid: _isInvalid['waterSafetyCertified']!,
                         onChanged: (value) {
