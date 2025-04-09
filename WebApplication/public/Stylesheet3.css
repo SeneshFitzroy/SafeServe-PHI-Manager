@@ -201,6 +201,12 @@ html, body {
     color: white; 
 } 
 
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-left: 5%;
+    margin-top: 5px;
+}
 
 
 

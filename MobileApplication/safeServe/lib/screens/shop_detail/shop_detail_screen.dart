@@ -149,7 +149,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
           const SizedBox(height: 30),
           ShopInfoCard(shopData: shopData),
           const SizedBox(height: 30),
-          // Now show 'Forms'
+          // "Forms" Title
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 25),
             child: Text(
@@ -160,7 +160,6 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
           const SizedBox(height: 15),
           const FormButtons(),
           const SizedBox(height: 40),
-          // Inspection History
           InspectionHistory(inspectionData: shopData['inspectionHistory']),
         ],
       ),
@@ -183,17 +182,46 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.15), offset: const Offset(0, 2), blurRadius: 6),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.15),
+              offset: const Offset(0, 2),
+              blurRadius: 6,
+            ),
           ],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            CustomNavBarIcon(icon: Icons.event, label: 'Calendar', route: '/calendar', selected: false),
-            CustomNavBarIcon(icon: Icons.store, label: 'Shops', route: '/', selected: true),
-            CustomNavBarIcon(icon: Icons.dashboard, label: 'Dashboard', route: '/dashboard'),
-            CustomNavBarIcon(icon: Icons.description, label: 'Form', route: '/form'),
-            CustomNavBarIcon(icon: Icons.notifications, label: 'Notifications', route: '/notifications'),
+            CustomNavBarIcon(
+              icon: Icons.event,
+              label: 'Calendar',
+              navItem: NavItem.calendar,
+              selected: false,
+            ),
+            CustomNavBarIcon(
+              icon: Icons.store,
+              label: 'Shops',
+              navItem: NavItem.shops,
+              selected: true,
+            ),
+            CustomNavBarIcon(
+              icon: Icons.dashboard,
+              label: 'Dashboard',
+              navItem: NavItem.dashboard,
+              selected: false,
+            ),
+            CustomNavBarIcon(
+              icon: Icons.description,
+              label: 'Form',
+              navItem: NavItem.form,
+              selected: false,
+            ),
+            CustomNavBarIcon(
+              icon: Icons.notifications,
+              label: 'Notifications',
+              navItem: NavItem.notifications,
+              selected: false,
+            ),
           ],
         ),
       ),
