@@ -19,15 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
   
         // 2. Add visual style
         link.style.pointerEvents = "none";
-        link.style.opacity = "0.5";
+        link.style.opacity = "0.6";
   
-        // 3. Replace icon with grey version
-        const greyIcon = icon.replace(".png", "-grey.png");
-        if (img) {
-          img.src = `images/${greyIcon}`;
-          img.style.width = "25px";
-          img.style.height = "25px";
-        }
+        
       }
     });
   });

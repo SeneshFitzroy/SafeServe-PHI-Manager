@@ -358,6 +358,14 @@
 
 
     <script>
+        function logoutUser(e) {
+            e.preventDefault(); // prevent form reload
+            sessionStorage.clear();
+            window.location.href = "login.html"; // or your login page name
+        }
+
+
+
         let currentButton = null; // Store reference to the clicked button
         let actionType = ""; // Store action type (Activate or Deactivate)
     
