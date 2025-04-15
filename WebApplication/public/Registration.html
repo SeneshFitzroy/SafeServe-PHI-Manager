@@ -11,6 +11,8 @@
     <script type="module" src="js/session-guard.js"></script>
     <script type="module" src="js/nav-access.js"></script>
     <script type="module" src="js/user-info.js"></script>
+    <script type="module" src="js/phi-registration.js"></script>
+
 
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -147,85 +149,63 @@
             </div>
 
             <div class="slider-form">
-                <form>
                     <div class="edit-form">
-                        <div class="form-row">
+                        <!-- Inside your Add PHI Slider form -->
+                        <form id="phi-registration-form">
+                            <div class="form-row">
                             <label class="form-label">PHI ID</label>
-                            <input class="form-text" type="text" id="" />
-                        </div>
-                        <div class="form-row">
-                          <label class="form-label">Full Name</label>
-                          <input class="form-text" type="text" id="" />
-                        </div>
-                        <div class="form-row">
-                          <label class="form-label">NIC</label>
-                          <input class="form-text" type="text" id="" />
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Role</label>
-                            <div class="user-role-select">
-                                <select>
-                                    <option>PHI</option>
-                                </select>
+                            <input class="form-text" type="text" id="phi-id" placeholder="Enter 6-digit PHI ID" required />
+                            <div class="error-message" id="phiid-error"></div>
                             </div>
-                        </div>
-                        <div class="form-row">
-                          <label class="form-label">Phone Number</label>
-                          <input class="form-text" type="text" id="" />
-                        </div>
-                        <div class="form-row">
+                            <div class="form-row">
+                            <label class="form-label">Full Name</label>
+                            <input class="form-text" type="text" id="full-name" placeholder="Enter full name" required />
+                            </div>
+                            <div class="form-row">
+                            <label class="form-label">NIC</label>
+                            <input class="form-text" type="text" id="nic" placeholder="Enter NIC" required />
+                            </div>
+                            <div class="form-row">
+                            <label class="form-label">Phone Number</label>
+                            <input class="form-text" type="text" id="phone" placeholder="Enter phone number" required />
+                            </div>
+                            <div class="form-row">
                             <label class="form-label">Email</label>
-                            <input class="form-text" type="email" id="" />
-                        </div>
-                        <div class="form-row">
+                            <input class="form-text" type="email" id="phi-email" placeholder="Enter email" required />
+                            </div>
+                            <div class="form-row">
                             <label class="form-label">Personal Address</label>
-                            <input class="form-text" type="text" id="" />
-                        </div>
-                        <div class="form-row">
+                            <input class="form-text" type="text" id="personal-address" placeholder="Enter address" required />
+                            </div>
+                            <div class="form-row">
                             <label class="form-label">Office Location</label>
-                            <input class="form-text" type="text" id="" />
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">District</label>
-                            <div class="user-role-select">
-                                <select>
-                                    <option>Colombo</option>
-                                    <option>Kalutara</option>
-                                    <option>Gampha</option>
-                                    <option>Polonnaruwa</option>
-                                    <option>Nuwara Eliya</option>
-                                    <option>Kandy</option>
-                                </select>
+                            <input class="form-text" type="text" id="office-location" placeholder="Enter office location" required />
                             </div>
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Assigned Grama Niladhari Divisions</label>
-                            <div class="multi-select-container">
-                                <div id="selected-options" class="selected-options"></div>
-                                <select id="multiSelectDropdown">
-                                    <option value="Biyagama">Biyagama</option>
-                                    <option value="Kottwa">Kottwa</option>
-                                    <option value="Kadawatha">Kadawatha</option>
-                                    <option value="Gampaha">Gampaha</option>
-                                    <option value="Colombo">Colombo</option>
-                                </select>
+                            <div class="form-row">
+                                <label class="form-label">District</label>
+                                <input class="form-text" type="text" id="district" readonly />
                             </div>
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Enter username</label>
-                            <input class="form-text" type="text" id="" />
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Enter new password</label>
-                            <input class="form-text" type="password" id="" />
-                        </div>
-                        <div class="form-row">
+                            <div class="form-row">
+                                <label class="form-label">Assigned Grama Niladhari Divisions</label>
+                                <div class="multi-select-container">
+                                  <div id="selected-options" class="selected-options"></div>
+                                  <select id="multiSelectDropdown">
+                                    <!-- Options can be static initially or will be replaced/populated by JS -->
+                                  </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                            <label class="form-label">Enter New Password</label>
+                            <input class="form-text" type="password" id="new-password" placeholder="Enter new password" required />
+                            </div>
+                            <div class="form-row">
                             <label class="form-label">Confirm Password</label>
-                            <input class="form-text" type="password" id="" />
-                        </div>
-                        <button class="form-save-but" style="margin-top:0px;" type="submit" onclick="hideSlider()">Save</button>
+                            <input class="form-text" type="password" id="confirm-password" placeholder="Confirm password" required />
+                            <div class="error-message" id="password-match-error"></div>
+                            </div>
+                            <button class="form-save-but" type="submit">Save</button>
+                        </form>
                     </div>
-                </form>
             </div>  
         </div>
     </div>
