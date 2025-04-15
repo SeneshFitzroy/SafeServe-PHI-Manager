@@ -142,7 +142,6 @@ form.addEventListener('submit', async (e) => {
       throw new Error(result.error || 'Failed to register PHI.');
     }
 
-    alert('PHI registered successfully!');
     form.reset();
     selectedOptionsContainer.innerHTML = '';
     hideSlider(); // Ensure hideSlider() is defined somewhere in your global scripts.
