@@ -5,7 +5,7 @@
  * and writes the new PHI's data to the "users" collection in Firestore.
  */
 
-const {onRequest} = require("firebase-functions/v2/https");
+const { onRequest } = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 const admin = require("firebase-admin");
 
@@ -13,19 +13,44 @@ admin.initializeApp();
 const db = admin.firestore();
 
 exports.createPHIUser = onRequest(async (req, res) => {
-  // Allow only POST requests.
-  if (req.method !== "POST") {
-    res.status(405).send({error: "Method Not Allowed"});
+  // === CORS Handling ===
+  // Handle preflight OPTIONS request
+  if (req.method === 'OPTIONS') {
+    res.set('Access-Control-Allow-Origin', '*');  // Allow all origins; replace '*' with your domain if needed
+    res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.status(204).send('');
     return;
   }
 
+  // Enforce POST requests only.
+  if (req.method !== "POST") {
+    res.set('Access-Control-Allow-Origin', '*');
+    res.status(405).send({ error: "Method Not Allowed" });
+    return;
+  }
+
+  // For the actual POST request, ensure the CORS header is set.
+  res.set('Access-Control-Allow-Origin', '*');
+
   try {
     // Extract fields from the request body.
-    const {phiId, fullName, nic, phone, email, personalAddress, officeLocation, district, gnDivisions, password} = req.body;
+    const {
+      phiId,
+      fullName,
+      nic,
+      phone,
+      email,
+      personalAddress,
+      officeLocation,
+      district,
+      gnDivisions,
+      password
+    } = req.body;
 
     // Validate PHI ID: must be exactly 6 digits.
     if (!/^\d{6}$/.test(phiId)) {
-      res.status(400).send({error: "PHI ID must be exactly 6 digits."});
+      res.status(400).send({ error: "PHI ID must be exactly 6 digits." });
       return;
     }
 
@@ -35,7 +60,7 @@ exports.createPHIUser = onRequest(async (req, res) => {
       .get();
 
     if (!querySnapshot.empty) {
-      res.status(400).send({error: "PHI ID already exists."});
+      res.status(400).send({ error: "PHI ID already exists." });
       return;
     }
 
@@ -64,9 +89,9 @@ exports.createPHIUser = onRequest(async (req, res) => {
     // Write the new user's data to the "users" collection.
     await db.collection("users").doc(newUser.uid).set(userData);
 
-    res.status(200).send({success: true, uid: newUser.uid});
+    res.status(200).send({ success: true, uid: newUser.uid });
   } catch (error) {
     logger.error("Error creating PHI user:", error);
-    res.status(500).send({error: error.message});
+    res.status(500).send({ error: error.message });
   }
 });

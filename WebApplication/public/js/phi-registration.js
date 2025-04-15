@@ -1,258 +1,153 @@
-document.addEventListener("DOMContentLoaded", () => {
-    //
-    // === Multi-Select Dropdown Functionality ===
-    //
-    const select = document.getElementById("multiSelectDropdown");
-    const selectedOptionsContainer = document.getElementById("selected-options");
-  
-    // When an option is selected, add it to the container.
-    select.addEventListener("change", function () {
-      const selectedValue = select.value;
-      if (selectedValue) {
-        addSelectedOption(selectedValue);
-        select.value = ""; // Reset dropdown
-      }
-    });
-  
-    // Function to add a selected option element (preserving your CSS classes)
-    function addSelectedOption(value) {
-      // Prevent duplicate selections
-      if (document.querySelector(`[data-value="${value}"]`)) return;
-  
-      // Create the element with the same class as before for styling
-      const optionElement = document.createElement("div");
-      optionElement.classList.add("selected-option");
-      optionElement.setAttribute("data-value", value);
-      optionElement.innerHTML = `${value} <button class="remove-option">&times;</button>`;
-  
-      // Append the element to the container
-      selectedOptionsContainer.appendChild(optionElement);
-  
-      // Remove the option when the remove button is clicked
-      optionElement.querySelector(".remove-option").addEventListener("click", function () {
-        selectedOptionsContainer.removeChild(optionElement);
-      });
-    }
-  
-    //
-    // === PHI Registration Form Submission ===
-    //
-    const phiForm = document.getElementById("phi-registration-form");
-    const phiIdError = document.getElementById("phiid-error");
-    const passwordMatchError = document.getElementById("password-match-error");
-  
-    // Listen for form submission
-    phiForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-  
-      // Clear previous error messages
-      phiIdError.innerText = "";
-      passwordMatchError.innerText = "";
-  
-      // Gather form field values
-      const phiId = document.getElementById("phi-id").value.trim();
-      const fullName = document.getElementById("full-name").value.trim();
-      const nic = document.getElementById("nic").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const personalAddress = document.getElementById("address").value.trim();
-      const officeLocation = document.getElementById("office-location").value.trim();
-      const district = document.getElementById("district").value.trim();
-  
-      // Collect all selected multi-select options for GN Divisions
-      const selectedDivisionsElements = document.querySelectorAll("#selected-options .selected-option");
-      let gnDivisions = [];
-      selectedDivisionsElements.forEach(el => {
-        const value = el.getAttribute("data-value");
-        if (value) {
-          gnDivisions.push(value);
-        }
-      });
-  
-      // Get passwords
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirm-password").value;
-  
-      // Validate PHI ID: Must be exactly 6 digits.
-      if (!/^\d{6}$/.test(phiId)) {
-        phiIdError.innerText = "PHI ID must be exactly 6 digits.";
-        return;
-      }
-  
-      // Validate that the password and confirm password match.
-      if (password !== confirmPassword) {
-        passwordMatchError.innerText = "Passwords do not match.";
-        return;
-      }
-  
-      // Prepare the payload to send to the Cloud Function
-      const payload = {
-        phiId: phiId,
-        fullName: fullName,
-        nic: nic,
-        phone: phone,
-        email: email,
-        personalAddress: personalAddress,
-        officeLocation: officeLocation,
-        district: district,
-        gnDivisions: gnDivisions,
-        password: password
-      };
-  
-      try {
-        // Replace the URL below with your deployed Cloud Function's endpoint URL.
-        const functionUrl = "https://us-central1-safe-serve-8de99.cloudfunctions.net/createPHIUser";
-        const response = await fetch(functionUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
+// js/phi-registration.js
+
+import { auth, db } from './firebase-config.js';
+import {
+  collection,
+  getDoc,
+  doc,
+  query,
+  where,
+  getDocs
+} from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
+
+// DOM Elements (IDs must be unique in your HTML)
+const districtField = document.getElementById('district');
+const gnDropdown = document.getElementById('add-multiSelectDropdown');
+const selectedOptionsContainer = document.getElementById('add-selected-options');
+const phiIdInput = document.getElementById('phi-id');
+const phiIdError = document.getElementById('phiid-error');
+const form = document.getElementById('phi-registration-form');
+const passwordError = document.getElementById('password-match-error');
+
+// 1️⃣ Autofill District + Populate GN Divisions
+auth.onAuthStateChanged(async (user) => {
+  console.log("onAuthStateChanged -> user:", user);
+  if (user) {
+    try {
+      const userDocSnap = await getDoc(doc(db, 'users', user.uid));
+      if (userDocSnap.exists()) {
+        const data = userDocSnap.data();
+        console.log("Logged-in SPHI data:", data);
+
+        // Populate District
+        districtField.value = data.district || '';
+
+        // Populate GN Divisions
+        const gnList = data.gn_divisions || [];
+        gnDropdown.innerHTML = '';
+        gnList.forEach((gn) => {
+          const option = document.createElement('option');
+          option.value = gn;
+          option.textContent = gn;
+          gnDropdown.appendChild(option);
         });
-        const data = await response.json();
-        if (response.ok) {
-          alert("PHI registered successfully!");document.addEventListener("DOMContentLoaded", () => {
-  //
-  // === Multi-Select Dropdown Functionality ===
-  //
-  const select = document.getElementById("multiSelectDropdown");
-  const selectedOptionsContainer = document.getElementById("selected-options");
-
-  // When an option is selected, add it to the container.
-  select.addEventListener("change", function () {
-    const selectedValue = select.value;
-    if (selectedValue) {
-      addSelectedOption(selectedValue);
-      select.value = ""; // Reset dropdown
+      } else {
+        console.warn("No SPHI document found for user UID:", user.uid);
+      }
+    } catch (err) {
+      console.error("Error getting SPHI document:", err);
     }
+  } else {
+    console.warn("No user is signed in.");
+  }
+});
+
+// 2️⃣ Validate PHI ID in Real-Time
+phiIdInput.addEventListener('input', async () => {
+  const enteredId = phiIdInput.value.trim();
+  if (!enteredId) {
+    phiIdError.textContent = '';
+    return;
+  }
+  // If your Firestore document uses "phiId" as the field name:
+  const q = query(collection(db, 'users'), where('phiId', '==', enteredId));
+  const snap = await getDocs(q);
+  phiIdError.textContent = snap.empty ? '' : 'PHI ID already exists.';
+});
+
+// 3️⃣ Handle GN multi-select
+gnDropdown.addEventListener('change', () => {
+  const value = gnDropdown.value;
+  if (!value || document.querySelector(`[data-value="${value}"]`)) return;
+  const chip = document.createElement('div');
+  chip.classList.add('selected-option');
+  chip.setAttribute('data-value', value);
+  chip.innerHTML = `${value} <button class="remove-option">&times;</button>`;
+  selectedOptionsContainer.appendChild(chip);
+  chip.querySelector('.remove-option').addEventListener('click', () => {
+    selectedOptionsContainer.removeChild(chip);
   });
+  gnDropdown.value = '';
+});
 
-  // Function to add a selected option element (preserving your CSS classes)
-  function addSelectedOption(value) {
-    // Prevent duplicate selections
-    if (document.querySelector(`[data-value="${value}"]`)) return;
+// 4️⃣ Form Submission -> Call Cloud Function
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-    // Create the element with the same class as before for styling
-    const optionElement = document.createElement("div");
-    optionElement.classList.add("selected-option");
-    optionElement.setAttribute("data-value", value);
-    optionElement.innerHTML = `${value} <button class="remove-option">&times;</button>`;
+  const phiId = phiIdInput.value.trim();
+  const fullName = document.getElementById('full-name').value.trim();
+  const nic = document.getElementById('nic').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const email = document.getElementById('phi-email').value.trim();
+  const personalAddress = document.getElementById('personal-address').value.trim();
+  const officeLocation = document.getElementById('office-location').value.trim();
+  const district = districtField.value;
+  const password = document.getElementById('new-password').value;
+  const confirmPassword = document.getElementById('confirm-password').value;
 
-    // Append the element to the container
-    selectedOptionsContainer.appendChild(optionElement);
+  const selectedGNs = Array.from(document.querySelectorAll('.selected-option'))
+    .map((el) => el.getAttribute('data-value'));
 
-    // Remove the option when the remove button is clicked
-    optionElement.querySelector(".remove-option").addEventListener("click", function () {
-      selectedOptionsContainer.removeChild(optionElement);
-    });
+  if (password !== confirmPassword) {
+    passwordError.textContent = 'Passwords do not match.';
+    return;
+  } else {
+    passwordError.textContent = '';
   }
 
-  //
-  // === PHI Registration Form Submission ===
-  //
-  const phiForm = document.getElementById("phi-registration-form");
-  const phiIdError = document.getElementById("phiid-error");
-  const passwordMatchError = document.getElementById("password-match-error");
+  // Final PHI ID validation
+  const q = query(collection(db, 'users'), where('phiId', '==', phiId));
+  const snap = await getDocs(q);
+  if (!snap.empty) {
+    phiIdError.textContent = 'PHI ID already exists.';
+    return;
+  }
 
-  // Listen for form submission
-  phiForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  // Cloud Function URL (make sure this is correct)
+  const cloudFunctionURL = 'https://createphiuser-m2olz6aiqa-uc.a.run.app';
+  console.log('Submitting to Cloud Function at:', cloudFunctionURL);
 
-    // Clear previous error messages
-    phiIdError.innerText = "";
-    passwordMatchError.innerText = "";
-
-    // Gather form field values
-    const phiId = document.getElementById("phi-id").value.trim();
-    const fullName = document.getElementById("full-name").value.trim();
-    const nic = document.getElementById("nic").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const personalAddress = document.getElementById("address").value.trim();
-    const officeLocation = document.getElementById("office-location").value.trim();
-    const district = document.getElementById("district").value.trim();
-
-    // Collect all selected multi-select options for GN Divisions
-    const selectedDivisionsElements = document.querySelectorAll("#selected-options .selected-option");
-    let gnDivisions = [];
-    selectedDivisionsElements.forEach(el => {
-      const value = el.getAttribute("data-value");
-      if (value) {
-        gnDivisions.push(value);
-      }
+  try {
+    const response = await fetch(cloudFunctionURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        phiId,
+        fullName,
+        nic,
+        phone,
+        email,
+        personalAddress,
+        officeLocation,
+        district,
+        gnDivisions: selectedGNs,
+        password
+      })
     });
+    console.log('Fetch response status:', response.status);
+    const result = await response.json();
+    console.log('Fetch response body:', result);
 
-    // Get passwords
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirm-password").value;
-
-    // Validate PHI ID: Must be exactly 6 digits.
-    if (!/^\d{6}$/.test(phiId)) {
-      phiIdError.innerText = "PHI ID must be exactly 6 digits.";
-      return;
+    if (!response.ok) {
+      throw new Error(result.error || 'Failed to register PHI.');
     }
 
-    // Validate that the password and confirm password match.
-    if (password !== confirmPassword) {
-      passwordMatchError.innerText = "Passwords do not match.";
-      return;
-    }
-
-    // Prepare the payload to send to the Cloud Function
-    const payload = {
-      phiId: phiId,
-      fullName: fullName,
-      nic: nic,
-      phone: phone,
-      email: email,
-      personalAddress: personalAddress,
-      officeLocation: officeLocation,
-      district: district,
-      gnDivisions: gnDivisions,
-      password: password
-    };
-
-    try {
-      // Replace the URL below with your deployed Cloud Function's endpoint URL.
-      const functionUrl = "https://us-central1-safe-serve-8de99.cloudfunctions.net/createPHIUser";
-      const response = await fetch(functionUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      const data = await response.json();
-      if (response.ok) {
-        alert("PHI registered successfully!");
-        phiForm.reset();
-        // Clear the multi-select container
-        selectedOptionsContainer.innerHTML = "";
-      } else {
-        // Show an error message under PHI ID (or elsewhere as needed)
-        if (data.error) {
-          phiIdError.innerText = data.error;
-        } else {
-          phiIdError.innerText = "Registration failed. Please try again.";
-        }
-      }
-    } catch (error) {
-      console.error("Error during registration:", error);
-      phiIdError.innerText = "Registration error: " + error.message;
-    }
-  });
+    alert('PHI registered successfully!');
+    form.reset();
+    selectedOptionsContainer.innerHTML = '';
+    hideSlider(); // Ensure hideSlider() is defined somewhere in your global scripts.
+  } catch (err) {
+    alert('Error: ' + err.message);
+    console.error(err);
+  }
 });
-          phiForm.reset();
-          // Clear the multi-select container
-          selectedOptionsContainer.innerHTML = "";
-        } else {
-          // Show an error message under PHI ID (or elsewhere as needed)
-          if (data.error) {
-            phiIdError.innerText = data.error;
-          } else {
-            phiIdError.innerText = "Registration failed. Please try again.";
-          }
-        }
-      } catch (error) {
-        console.error("Error during registration:", error);
-        phiIdError.innerText = "Registration error: " + error.message;
-      }
-    });
-  });
-  

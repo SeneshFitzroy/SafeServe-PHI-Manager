@@ -447,3 +447,9 @@
     color: #555;
 }
 
+#error-message, #form-status {
+    font-size: 16px;
+    margin-left: 25px;
+    margin-top: 10px;
+  }
+  
