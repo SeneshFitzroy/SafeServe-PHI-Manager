@@ -95,3 +95,8 @@ exports.createPHIUser = onRequest(async (req, res) => {
     res.status(500).send({ error: error.message });
   }
 });
+
+
+
+const { updatePHIStatus } = require("./updatePHIStatus");
+exports.updatePHIStatus = updatePHIStatus;

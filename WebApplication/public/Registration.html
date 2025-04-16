@@ -12,8 +12,7 @@
     <script type="module" src="js/nav-access.js"></script>
     <script type="module" src="js/user-info.js"></script>
     <script type="module" src="js/phi-registration.js"></script>
-
-
+    <script type="module" src="js/phi-listing.js"></script>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -108,21 +107,22 @@
         
         <div class="content-container" >
             <div class="user">
-                <p class="user-id">13236</p>
-                <p class="user-s-name">Kasun Madhushanka Perera</p>
-                <p class="user-phone">0708905003</p>
+                <p class="user-id"></p>
+                <p class="user-s-name">  </p>
+                <p class="user-phone"></p>
                 <div class="status">
-                    <button class="toggle-btn Active" onclick="toggleLight(this)">Active</button>
+                    <button class="toggle-btn ${statusClass}" data-uid="${data.uid}" data-status="${statusText}">${statusText}</button>
                 </div>
                 <div class="user-actions">
                     <!-- view button -->
-                    <div class="view" onclick="showViewSlider()">
+                    <div class="view" data-uid="${data.uid}">
                         <i class="bi bi-eye-fill"></i>
                     </div>
                     <!-- EDIT button -->
-                    <div class="edit" onclick="showEditSlider()">
+                    <div class="edit" onclick="showEditSlider('${data.uid}')">
                         <i class="bi bi-pencil-fill"></i>
                     </div>
+                      
                     <!-- DELETE button -->
                     <div class="delete" onclick="confirmDelete()">
                         <i class="bi bi-trash3-fill"></i>
@@ -228,39 +228,35 @@
                     <div class="edit-form">
                         <div class="form-row">
                             <label class="form-label">PHI ID</label>
-                            <input class="form-text" type="text" id="" />
+                            <input class="form-text" type="text" id="view-phi-id" />
                         </div>
                         <div class="form-row">
                           <label class="form-label">Full Name</label>
-                          <input class="form-text" type="text" id="" />
+                          <input class="form-text" type="text" id="view-full-name" />
                         </div>
                         <div class="form-row">
                           <label class="form-label">NIC</label>
-                          <input class="form-text" type="text" id="" />
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Role</label>
-                            <input class="form-text" type="text" id="" />
+                          <input class="form-text" type="text" id="view-nic" />
                         </div>
                         <div class="form-row">
                           <label class="form-label">Phone Number</label>
-                          <input class="form-text" type="text" id="" />
+                          <input class="form-text" type="text" id="view-phone" />
                         </div>
                         <div class="form-row">
                             <label class="form-label">Email</label>
-                            <input class="form-text" type="email" id="" />
+                            <input class="form-text" type="email" id="view-phi-email" />
                         </div>
                         <div class="form-row">
                             <label class="form-label">Personal Address</label>
-                            <input class="form-text" type="text" id="" />
+                            <input class="form-text" type="text" id="view-personal-address" />
                         </div>
                         <div class="form-row">
                             <label class="form-label">Office Location</label>
-                            <input class="form-text" type="text" id="" />
+                            <input class="form-text" type="text" id="view-office-location" />
                         </div>
                         <div class="form-row">
                             <label class="form-label">District</label>
-                            <input class="form-text" type="text" id="" />
+                            <input class="form-text" type="text" id="view-district" />
                         </div>
                         <div class="form-row">
                             <label class="form-label">Assigned Grama Niladhari Divisions</label>
@@ -280,50 +276,42 @@
     <!--Edit PHI DetailsSlider-->
     <div class="slider" id="editPHISlider">
         <div class="slider-container">
-            <div class="slider-header">
-                <div class="slider-title">Edit PHI Details</div>
-                <img class="close-slider" src="images/Cancelslide.png" onclick="hideEditSlider()" />
-                <div class="slider-hline">
-                    <hr size="2" color="#1F41BB" />
-                </div>
+        <div class="slider-header">
+            <div class="slider-title">Edit PHI Details</div>
+            <img class="close-slider" src="images/Cancelslide.png" onclick="hideEditSlider()" />
+            <div class="slider-hline">
+            <hr size="2" color="#1F41BB" />
             </div>
-
-            <div class="slider-form">
-                <form>
-                    <div class="edit-form">
-                        <div class="form-row">
-                            <label class="form-label">District</label>
-                            <div class="user-role-select">
-                                <select>
-                                    <option>Colombo</option>
-                                    <option>Kalutara</option>
-                                    <option>Gampha</option>
-                                    <option>Polonnaruwa</option>
-                                    <option>Nuwara Eliya</option>
-                                    <option>Kandy</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <label class="form-label">Assigned Grama Niladhari Divisions</label>
-                            <div class="multi-select-container">
-                                <div id="selected-options" class="selected-options"></div>
-                                <select id="multiSelectDropdown">
-                                    <option value="Biyagama">Biyagama</option>
-                                    <option value="Kottwa">Kottwa</option>
-                                    <option value="Kadawatha">Kadawatha</option>
-                                    <option value="Gampaha">Gampaha</option>
-                                    <option value="Colombo">Colombo</option>
-                                </select>
-                            </div>
-                        </div>
-                        <button class="form-save-but" style="margin-top:0px;" type="submit" onclick="hideEditSlider()">Update</button>
-                    </div>
-                </form>
-            </div>  
+        </div>
+    
+        <div class="slider-form">
+            <form onsubmit="event.preventDefault(); updatePHI();">
+            <div class="edit-form">
+                <div class="form-row">
+                <label class="form-label">District</label>
+                <!-- Add an id to this select element -->
+                <div class="user-role-select">
+                    <select id="edit-district">
+                    <option value="Colombo">Colombo</option>
+                    </select>
+                </div>
+                </div>
+                <div class="form-row">
+                <label class="form-label">Assigned Grama Niladhari Divisions</label>
+                <div class="multi-select-container">
+                    <!-- Use a unique container id for edit -->
+                    <div id="edit-selected-options" class="selected-options"></div>
+                    <select id="edit-multiSelectDropdown">
+                    </select>
+                </div>
+                </div>
+                <button class="form-save-but" type="submit">Update</button>
+            </div>
+            </form>
+        </div>  
         </div>
     </div>
-
+  
 
 
     <!-- Confirmation Modal -->
@@ -336,121 +324,98 @@
     </div>
 
 
-
-
-
-
     <script>
         function logoutUser(e) {
-            e.preventDefault(); // prevent form reload
+            e.preventDefault(); 
             sessionStorage.clear();
-            window.location.href = "login.html"; // or your login page name
-        }
-
-
-
-        let currentButton = null; // Store reference to the clicked button
-        let actionType = ""; // Store action type (Activate or Deactivate)
-    
-        function toggleLight(button) {
-            currentButton = button; // Store reference to the clicked button
-            if (button.classList.contains("Active")) {
-                actionType = "Deactivate";
-                document.getElementById("modalText").textContent = "Are you sure you want to deactivate this PHI account?";
-            } else {
-                actionType = "Activate";
-                document.getElementById("modalText").textContent = "Are you sure you want to activate this PHI account?";
-            }
-            document.getElementById("confirmModal").style.display = "flex"; // Show modal
+            window.location.href = "login.html";
         }
     
-        // Handle "Confirm" button in the modal
-        document.getElementById("confirmBtn").addEventListener("click", function () {
-            if (currentButton) {
-                if (actionType === "Deactivate") {
-                    currentButton.classList.remove("Active");
-                    currentButton.classList.add("Inactive");
-                    currentButton.textContent = "Inactive";
-                } else {
-                    currentButton.classList.remove("Inactive");
-                    currentButton.classList.add("Active");
-                    currentButton.textContent = "Active";
-                }
-            }
-            document.getElementById("confirmModal").style.display = "none"; // Hide modal
-        });
-    
-        // Handle "Cancel" button in the modal
         document.getElementById("cancelBtn").addEventListener("click", function () {
-            document.getElementById("confirmModal").style.display = "none"; // Hide modal
+            document.getElementById("confirmModal").style.display = "none";
         });
     
-        // Close modal if clicked outside content
         window.onclick = function (event) {
             let modal = document.getElementById("confirmModal");
             if (event.target === modal) {
                 modal.style.display = "none";
             }
         };
-
+    
         function showSlider() {
             document.getElementById('addPHISlider').classList.add('active');
         }
-
+    
         function hideSlider() {
             document.getElementById('addPHISlider').classList.remove('active');
         }
-
+    
         function showEditSlider() {
             document.getElementById('editPHISlider').classList.add('active');
         }
-
+    
         function hideEditSlider() {
             document.getElementById('editPHISlider').classList.remove('active');
         }
-
+    
         function showViewSlider() {
             document.getElementById('viewPHISlider').classList.add('active');
         }
-
+    
         function hideViewSlider() {
             document.getElementById('viewPHISlider').classList.remove('active');
         }
-        
-
-        document.addEventListener("DOMContentLoaded", function () {
-            const select = document.getElementById("multiSelectDropdown");
-            const selectedOptionsContainer = document.getElementById("selected-options");
-
-            // Function to add selected option
-            select.addEventListener("change", function () {
-                const selectedValue = select.value;
-                if (selectedValue) {
-                    addSelectedOption(selectedValue);
-                    select.value = ""; // Reset dropdown
-                }
+    
+        // Shared utility function to add GN division chips
+        function addSelectedOption(value, container) {
+            if (container.querySelector(`[data-value="${value}"]`)) return;
+    
+            const optionElement = document.createElement("div");
+            optionElement.classList.add("selected-option");
+            optionElement.setAttribute("data-value", value);
+            optionElement.innerHTML = `${value} <button class="remove-option">&times;</button>`;
+    
+            container.appendChild(optionElement);
+    
+            optionElement.querySelector(".remove-option").addEventListener("click", function () {
+                container.removeChild(optionElement);
             });
-
-            function addSelectedOption(value) {
-                // Prevent duplicate selections
-                if (document.querySelector(`[data-value="${value}"]`)) return;
-
-                // Create selected option element
-                const optionElement = document.createElement("div");
-                optionElement.classList.add("selected-option");
-                optionElement.setAttribute("data-value", value);
-                optionElement.innerHTML = `${value} <button class="remove-option">&times;</button>`;
-
-                // Append to container
-                selectedOptionsContainer.appendChild(optionElement);
-
-                // Remove option when clicked
-                optionElement.querySelector(".remove-option").addEventListener("click", function () {
-                    selectedOptionsContainer.removeChild(optionElement);
+        }
+    
+        // 🔹 Add PHI GN dropdown logic
+        document.addEventListener("DOMContentLoaded", function () {
+            const select = document.getElementById("add-multiSelectDropdown");
+            const container = document.getElementById("add-selected-options");
+    
+            if (select) {
+                select.addEventListener("change", function () {
+                    const selectedValue = select.value;
+                    if (selectedValue) {
+                        addSelectedOption(selectedValue, container);
+                        select.value = "";
+                    }
+                });
+            }
+        });
+    
+        // 🔹 Edit PHI GN dropdown logic
+        document.addEventListener("DOMContentLoaded", function () {
+            const select = document.getElementById("edit-multiSelectDropdown");
+            const container = document.getElementById("edit-selected-options");
+    
+            if (select) {
+                select.addEventListener("change", function () {
+                    const selectedValue = select.value;
+                    if (selectedValue && !container.querySelector(`[data-value="${selectedValue}"]`)) {
+                        addSelectedOption(selectedValue, container);
+                        select.value = "";
+                    }
                 });
             }
         });
     </script>
     
+
+
 </body>
 </html>
