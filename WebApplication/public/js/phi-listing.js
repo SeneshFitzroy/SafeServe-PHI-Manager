@@ -6,7 +6,8 @@ import {
   getDocs,
   query,
   where,
-  setDoc
+  setDoc,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
 const container = document.querySelector('.content-container');
@@ -51,6 +52,7 @@ export async function fetchAndRenderPHIs() {
     setupToggleButtons();
     setupViewButtons();
     setupEditButtons();
+    setupDeleteButtons();
 
   } catch (err) {
     console.error("Error fetching PHIs:", err);
@@ -132,6 +134,20 @@ function setupEditButtons() {
     });
   });
 }
+
+function setupDeleteButtons() {
+  const deleteButtons = document.querySelectorAll('.delete');
+
+  deleteButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const uid = btn.getAttribute('data-uid');
+      if (uid) {
+        confirmDelete(uid);
+      }
+    });
+  });
+}
+
 
 document.getElementById('confirmBtn').addEventListener('click', async () => {
   const uid = document.getElementById('confirmBtn').getAttribute('data-uid');
@@ -311,3 +327,23 @@ export async function updatePHI() {
 }
 
 window.updatePHI = updatePHI;
+
+import { deleteUser } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+
+export async function confirmDelete(uid) {
+  const confirmed = confirm("Are you sure you want to delete this PHI?");
+  if (!confirmed) return;
+
+  try {
+    //  Delete from Firestore
+    await deleteDoc(doc(db, "users", uid));
+
+    fetchAndRenderPHIs(); 
+
+  } catch (err) {
+    console.error("Error deleting PHI:", err);
+    alert("Failed to delete PHI. Please try again.");
+  }
+}
+
+window.confirmDelete = confirmDelete;
