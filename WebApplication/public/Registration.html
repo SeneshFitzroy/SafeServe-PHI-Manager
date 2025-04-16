@@ -153,33 +153,33 @@
                         <!-- Inside your Add PHI Slider form -->
                         <form id="phi-registration-form">
                             <div class="form-row">
-                            <label class="form-label">PHI ID</label>
-                            <input class="form-text" type="text" id="phi-id" placeholder="Enter 6-digit PHI ID" required />
-                            <div class="error-message" id="phiid-error"></div>
+                                <label class="form-label">PHI ID</label>
+                                <input class="form-text" type="text" id="phi-id" placeholder="Enter 6-digit PHI ID" required />
+                                <div class="error-message" id="phiid-error"></div>
                             </div>
                             <div class="form-row">
-                            <label class="form-label">Full Name</label>
-                            <input class="form-text" type="text" id="full-name" placeholder="Enter full name" required />
+                                <label class="form-label">Full Name</label>
+                                <input class="form-text" type="text" id="full-name" placeholder="Enter full name" required />
                             </div>
                             <div class="form-row">
-                            <label class="form-label">NIC</label>
-                            <input class="form-text" type="text" id="nic" placeholder="Enter NIC" required />
+                                <label class="form-label">NIC</label>
+                                <input class="form-text" type="text" id="nic" placeholder="Enter NIC" required />
                             </div>
                             <div class="form-row">
-                            <label class="form-label">Phone Number</label>
-                            <input class="form-text" type="text" id="phone" placeholder="Enter phone number" required />
+                                <label class="form-label">Phone Number</label>
+                                <input class="form-text" type="text" id="phone" placeholder="Enter phone number" required />
                             </div>
                             <div class="form-row">
-                            <label class="form-label">Email</label>
-                            <input class="form-text" type="email" id="phi-email" placeholder="Enter email" required />
+                                <label class="form-label">Email</label>
+                                <input class="form-text" type="email" id="phi-email" placeholder="Enter email" required />
                             </div>
                             <div class="form-row">
-                            <label class="form-label">Personal Address</label>
-                            <input class="form-text" type="text" id="personal-address" placeholder="Enter address" required />
+                                <label class="form-label">Personal Address</label>
+                                <input class="form-text" type="text" id="personal-address" placeholder="Enter address" required />
                             </div>
                             <div class="form-row">
-                            <label class="form-label">Office Location</label>
-                            <input class="form-text" type="text" id="office-location" placeholder="Enter office location" required />
+                                <label class="form-label">Office Location</label>
+                                <input class="form-text" type="text" id="office-location" placeholder="Enter office location" required />
                             </div>
                             <div class="form-row">
                                 <label class="form-label">District</label>
@@ -190,18 +190,17 @@
                                 <div class="multi-select-container">
                                   <div id="add-selected-options" class="selected-options"></div>
                                   <select id="add-multiSelectDropdown">
-                                    <!-- Options can be static initially or will be replaced/populated by JS -->
                                   </select>
                                 </div>
                             </div>
                             <div class="form-row">
-                            <label class="form-label">Enter New Password</label>
-                            <input class="form-text" type="password" id="new-password" placeholder="Enter new password" required />
+                                <label class="form-label">Enter New Password</label>
+                                <input class="form-text" type="password" id="new-password" placeholder="Enter new password" required />
                             </div>
                             <div class="form-row">
-                            <label class="form-label">Confirm Password</label>
-                            <input class="form-text" type="password" id="confirm-password" placeholder="Confirm password" required />
-                            <div class="error-message" id="password-match-error"></div>
+                                <label class="form-label">Confirm Password</label>
+                                <input class="form-text" type="password" id="confirm-password" placeholder="Confirm password" required />
+                                <div class="error-message" id="password-match-error"></div>
                             </div>
                             <button class="form-save-but" type="submit">Save</button>
                         </form>
@@ -289,7 +288,6 @@
             <div class="edit-form">
                 <div class="form-row">
                 <label class="form-label">District</label>
-                <!-- Add an id to this select element -->
                 <div class="user-role-select">
                     <select id="edit-district">
                     <option value="Colombo">Colombo</option>
@@ -299,7 +297,6 @@
                 <div class="form-row">
                 <label class="form-label">Assigned Grama Niladhari Divisions</label>
                 <div class="multi-select-container">
-                    <!-- Use a unique container id for edit -->
                     <div id="edit-selected-options" class="selected-options"></div>
                     <select id="edit-multiSelectDropdown">
                     </select>
@@ -313,7 +310,6 @@
     </div>
   
 
-
     <!-- Confirmation Modal -->
     <div id="confirmModal" class="modal">
         <div class="modal-content">
@@ -322,6 +318,9 @@
             <button id="confirmBtn" class="confirm-btn">Confirm</button>
         </div>
     </div>
+
+
+
 
 
     <script>
@@ -382,7 +381,7 @@
             });
         }
     
-        // 🔹 Add PHI GN dropdown logic
+        // Add PHI GN dropdown logic
         document.addEventListener("DOMContentLoaded", function () {
             const select = document.getElementById("add-multiSelectDropdown");
             const container = document.getElementById("add-selected-options");
@@ -398,7 +397,7 @@
             }
         });
     
-        // 🔹 Edit PHI GN dropdown logic
+        // Edit PHI GN dropdown logic
         document.addEventListener("DOMContentLoaded", function () {
             const select = document.getElementById("edit-multiSelectDropdown");
             const container = document.getElementById("edit-selected-options");

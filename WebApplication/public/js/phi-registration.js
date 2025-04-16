@@ -65,7 +65,7 @@ phiIdInput.addEventListener('input', async () => {
   phiIdError.textContent = snap.empty ? '' : 'PHI ID already exists.';
 });
 
-// 3️⃣ Handle GN multi-select
+//  Handle GN multi-select
 gnDropdown.addEventListener('change', () => {
   const value = gnDropdown.value;
   if (!value || document.querySelector(`[data-value="${value}"]`)) return;
@@ -80,7 +80,7 @@ gnDropdown.addEventListener('change', () => {
   gnDropdown.value = '';
 });
 
-// 4️⃣ Form Submission -> Call Cloud Function
+//  Form Submission -> Call Cloud Function
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
