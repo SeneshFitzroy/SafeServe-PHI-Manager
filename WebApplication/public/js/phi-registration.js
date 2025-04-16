@@ -10,6 +10,8 @@ import {
   getDocs
 } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
 
+import { fetchAndRenderPHIs } from './phi-listing.js'; 
+
 // DOM Elements (IDs must be unique in your HTML)
 const districtField = document.getElementById('district');
 const gnDropdown = document.getElementById('add-multiSelectDropdown');
@@ -141,10 +143,13 @@ form.addEventListener('submit', async (e) => {
     if (!response.ok) {
       throw new Error(result.error || 'Failed to register PHI.');
     }
-
+    
+    
     form.reset();
     selectedOptionsContainer.innerHTML = '';
-    hideSlider(); // Ensure hideSlider() is defined somewhere in your global scripts.
+    hideSlider(); // Close the slider
+    await fetchAndRenderPHIs(); 
+    
   } catch (err) {
     alert('Error: ' + err.message);
     console.error(err);
