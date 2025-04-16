@@ -20,25 +20,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value;
 
-    // Reset error messages
-    emailError.innerText = "";
-    passwordError.innerText = "";
-    messageDiv.innerText = "";
+  // Reset error styles
+  emailError.innerText = "";
+  passwordError.innerText = "";
+  messageDiv.innerText = "";
+  document.getElementById("username").classList.remove("invalid");
+  document.getElementById("password").classList.remove("invalid");
+  emailError.style.display = "none";
+  passwordError.style.display = "none";
 
-    // Simple Validation
-    let hasError = false;
+  let hasError = false;
 
-    if (!email.includes("@") || !email.includes(".")) {
-      emailError.innerText = "Please enter a valid email address.";
-      hasError = true;
-    }
+  // Email Validation
+  if (!email.includes("@") || !email.includes(".")) {
+    emailError.innerText = "Please enter a valid email address.";
+    emailError.style.display = "block";
+    document.getElementById("username").classList.add("invalid");
+    hasError = true;
+  }
 
-    if (password.length < 6) {
-      passwordError.innerText = "Password must be at least 6 characters.";
-      hasError = true;
-    }
+  // Password Validation
+  if (password.length < 6) {
+    passwordError.innerText = "Password must be at least 6 characters.";
+    passwordError.style.display = "block";
+    document.getElementById("password").classList.add("invalid");
+    hasError = true;
+  }
 
-    if (hasError) return;
+  if (hasError) return;
+
 
     try {
       // Firebase login
