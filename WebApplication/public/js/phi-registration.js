@@ -10,6 +10,8 @@ import {
   getDocs
 } from 'https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js';
 
+import { fetchAndRenderPHIs } from './phi-listing.js'; 
+
 // DOM Elements (IDs must be unique in your HTML)
 const districtField = document.getElementById('district');
 const gnDropdown = document.getElementById('add-multiSelectDropdown');
@@ -65,7 +67,7 @@ phiIdInput.addEventListener('input', async () => {
   phiIdError.textContent = snap.empty ? '' : 'PHI ID already exists.';
 });
 
-// 3️⃣ Handle GN multi-select
+//  Handle GN multi-select
 gnDropdown.addEventListener('change', () => {
   const value = gnDropdown.value;
   if (!value || document.querySelector(`[data-value="${value}"]`)) return;
@@ -80,7 +82,7 @@ gnDropdown.addEventListener('change', () => {
   gnDropdown.value = '';
 });
 
-// 4️⃣ Form Submission -> Call Cloud Function
+//  Form Submission -> Call Cloud Function
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -141,10 +143,13 @@ form.addEventListener('submit', async (e) => {
     if (!response.ok) {
       throw new Error(result.error || 'Failed to register PHI.');
     }
-
+    
+    
     form.reset();
     selectedOptionsContainer.innerHTML = '';
-    hideSlider(); // Ensure hideSlider() is defined somewhere in your global scripts.
+    hideSlider(); // Close the slider
+    await fetchAndRenderPHIs(); 
+    
   } catch (err) {
     alert('Error: ' + err.message);
     console.error(err);
