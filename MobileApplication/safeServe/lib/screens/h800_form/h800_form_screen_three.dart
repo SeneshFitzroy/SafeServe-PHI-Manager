@@ -16,31 +16,30 @@ class H800FormScreenThree extends StatefulWidget {
 }
 
 class H800FormScreenThreeState extends State<H800FormScreenThree> {
-  // Part 4: Equipment & Furniture
-  String? _equipmentForFoodHandling;
-  String? _conditionOfEquipment;
-  String? _cleanOfEquipment;
-  String? _foodTongsAvailable;
-  String? _storageCleanEquip;
-  String? _suitableSafetyofFurniture;
-  String? _furnitureCondition;
-  String? _cleaningAndMaintenanceOfFurniture;
-  String? _maintenanceOfRefrigerators;
-  String? _cleanandMaintenanceOfRefrigerators;
-
-  // Part 5: Storage
-  String? _storageFacilities;
-  String? _storageOfRawMaterials;
-  String? _storageOfCookedFood;
-  String? _foodStoredTemp;
-  String? _storageInRefrigerator;
-  String? _measuresToPreventContamination;
-
-  // Part 6: Water Supply
-  String? _waterSource;
-  String? _waterStorageMethod;
-  String? _waterDispensedThroughTaps;
-  String? _waterSafetyCertified;
+  // Part 3: Area of Food Preparation/Serving/Display/Storage
+  String? _generalCleanlinessPart3;
+  String? _safetyMeasuresForCleanliness;
+  String? _hasFlies;
+  String? _hasPests;
+  String? _hasFloor;
+  String? _maintenanceOfWalls;
+  String? _maintenanceOfCeilingPart3;
+  String? _spaceInWorkingArea;
+  String? _dailyCleaning;
+  String? _riskOfContaminationFromToilets;
+  String? _adequateBins;
+  String? _hasUnnecessaryItems;
+  String? _cleaningToolsAvailable;
+  String? _hasObjectionableOdor;
+  String? _hasOpenDrains;
+  String? _areaUsedForSleeping;
+  String? _separateChoppingBoards;
+  String? _cleanlinessOfEquipment;
+  String? _suitabilityOfLayout;
+  String? _lightAndVentilationPart3;
+  String? _houseKeeping;
+  String? _waterSupplySuitable;
+  String? _safeFoodHandling;
 
   // Validation flags
   Map<String, bool> _isInvalid = {};
@@ -49,77 +48,90 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
   void initState() {
     super.initState();
     // Initialize values from formData
-    _equipmentForFoodHandling = widget.formData.equipmentForFoodHandling;
-    _conditionOfEquipment = widget.formData.conditionOfEquipment;
-    _cleanOfEquipment = widget.formData.cleanOfEquipment;
-    _foodTongsAvailable = widget.formData.foodTongsAvailable;
-    _storageCleanEquip = widget.formData.storageCleanEquip;
-    _suitableSafetyofFurniture = widget.formData.suitableSafetyofFurniture;
-    _furnitureCondition = widget.formData.furnitureCondition;
-    _cleaningAndMaintenanceOfFurniture = widget.formData.cleaningAndMaintenanceOfFurniture;
-    _maintenanceOfRefrigerators = widget.formData.maintenanceOfRefrigerators;
-    _cleanandMaintenanceOfRefrigerators = widget.formData.cleanandMaintenanceOfRefrigerators;
-
-    _storageFacilities = widget.formData.storageFacilities;
-    _storageOfRawMaterials = widget.formData.storageOfRawMaterials;
-    _storageOfCookedFood = widget.formData.storageOfCookedFood;
-    _foodStoredTemp = widget.formData.foodStoredTemp;
-    _storageInRefrigerator = widget.formData.storageInRefrigerator;
-    _measuresToPreventContamination = widget.formData.measuresToPreventContamination;
-
-    _waterSource = widget.formData.waterSource;
-    _waterStorageMethod = widget.formData.waterStorageMethod;
-    _waterDispensedThroughTaps = widget.formData.waterDispensedThroughTaps;
-    _waterSafetyCertified = widget.formData.waterSafetyCertified;
+    _generalCleanlinessPart3 = widget.formData.generalCleanlinessPart3;
+    _safetyMeasuresForCleanliness =
+        widget.formData.safetyMeasuresForCleanliness;
+    _hasFlies = widget.formData.hasFlies;
+    _hasPests = widget.formData.hasPests;
+    _hasFloor = widget.formData.hasFloor;
+    _maintenanceOfWalls = widget.formData.maintenanceOfWalls;
+    _maintenanceOfCeilingPart3 = widget.formData.maintenanceOfCeilingPart3;
+    _spaceInWorkingArea = widget.formData.spaceInWorkingArea;
+    _dailyCleaning = widget.formData.dailyCleaning;
+    _riskOfContaminationFromToilets =
+        widget.formData.riskOfContaminationFromToilets;
+    _adequateBins = widget.formData.adequateBins;
+    _hasUnnecessaryItems = widget.formData.hasUnnecessaryItems;
+    _cleaningToolsAvailable = widget.formData.cleaningToolsAvailable;
+    _hasObjectionableOdor = widget.formData.hasObjectionableOdor;
+    _hasOpenDrains = widget.formData.hasOpenDrains;
+    _areaUsedForSleeping = widget.formData.areaUsedForSleeping;
+    _separateChoppingBoards = widget.formData.separateChoppingBoards;
+    _cleanlinessOfEquipment = widget.formData.cleanlinessOfEquipment;
+    _suitabilityOfLayout = widget.formData.suitabilityOfLayout;
+    _lightAndVentilationPart3 = widget.formData.lightAndVentilationPart3;
+    _houseKeeping = widget.formData.houseKeeping;
+    _waterSupplySuitable = widget.formData.waterSupplySuitable;
+    _safeFoodHandling = widget.formData.safeFoodHandling;
 
     // Initialize validation flags
     _isInvalid = {
-      'equipmentForFoodHandling': false,
-      'conditionOfEquipment': false,
-      'cleanOfEquipment':false,
-      'foodTongsAvailable': false,
-      'storageCleanEquip':false,
-      'suitableSafetyofFurniture': false,
-      'furnitureCondition': false,
-      'cleaningAndMaintenanceOfFurniture': false,
-      'maintenanceOfRefrigerators': false,
-      'cleanandMaintenanceOfRefrigerators': false,
-      'storageFacilities': false,
-      'storageOfRawMaterials': false,
-      'storageOfCookedFood': false,
-      'foodStoredTemp':false,
-      'storageInRefrigerator': false,
-      'measuresToPreventContamination': false,
-      'waterSource': false,
-      'waterStorageMethod':false,
-      'waterDispensedThroughTaps': false,
-      'waterSafetyCertified': false,
+      'generalCleanlinessPart3': false,
+      'safetyMeasuresForCleanliness': false,
+      'hasFlies': false,
+      'hasPests': false,
+      'hasFloor': false,
+      'maintenanceOfWalls': false,
+      'maintenanceOfCeilingPart3': false,
+      'spaceInWorkingArea': false,
+      'dailyCleaning': false,
+      'riskOfContaminationFromToilets': false,
+      'adequateBins': false,
+      'hasUnnecessaryItems': false,
+      'cleaningToolsAvailable': false,
+      'hasObjectionableOdor': false,
+      'hasOpenDrains': false,
+      'areaUsedForSleeping': false,
+      'separateChoppingBoards': false,
+      'cleanlinessOfEquipment': false,
+      'suitabilityOfLayout': false,
+      'lightAndVentilationPart3': false,
+      'houseKeeping': false,
+      'waterSupplySuitable': false,
+      'safeFoodHandling': false,
     };
   }
 
   bool _validateForm() {
     bool isValid = true;
     setState(() {
-      _isInvalid['equipmentForFoodHandling'] = _equipmentForFoodHandling == null;
-      _isInvalid['conditionOfEquipment'] = _conditionOfEquipment == null;
-       _isInvalid['cleanOfEquipment'] = _cleanOfEquipment == null;
-      _isInvalid['foodTongsAvailable'] = _foodTongsAvailable == null;
-      _isInvalid['storageCleanEquip'] = _storageCleanEquip == null;
-      _isInvalid['suitableSafetyofFurniture'] =_suitableSafetyofFurniture == null;
-      _isInvalid['furnitureCondition'] = _furnitureCondition == null;
-      _isInvalid['cleaningAndMaintenanceOfFurniture'] = _cleaningAndMaintenanceOfFurniture == null;
-      _isInvalid['maintenanceOfRefrigerators'] = _maintenanceOfRefrigerators == null;
-      _isInvalid ['cleanandMaintenanceOfRefrigerators']= _cleanandMaintenanceOfRefrigerators == null;
-      _isInvalid['storageFacilities'] = _storageFacilities == null;
-      _isInvalid['storageOfRawMaterials'] = _storageOfRawMaterials == null;
-      _isInvalid['storageOfCookedFood'] = _storageOfCookedFood == null;
-      _isInvalid['foodStoredTemp']=_foodStoredTemp ==null;
-      _isInvalid['storageInRefrigerator'] = _storageInRefrigerator == null;
-      _isInvalid['measuresToPreventContamination'] = _measuresToPreventContamination == null;
-      _isInvalid['waterSource'] = _waterSource == null;
-      _isInvalid['waterStorageMethod']= _waterStorageMethod ==null;
-      _isInvalid['waterDispensedThroughTaps'] = _waterDispensedThroughTaps == null;
-      _isInvalid['waterSafetyCertified'] = _waterSafetyCertified == null;
+      _isInvalid['generalCleanlinessPart3'] = _generalCleanlinessPart3 == null;
+      _isInvalid['safetyMeasuresForCleanliness'] =
+          _safetyMeasuresForCleanliness == null;
+      _isInvalid['hasFlies'] = _hasFlies == null;
+      _isInvalid['hasPests'] = _hasPests == null;
+      _isInvalid['hasFloor'] = _hasFloor == null;
+      _isInvalid['maintenanceOfWalls'] = _maintenanceOfWalls == null;
+      _isInvalid['maintenanceOfCeilingPart3'] =
+          _maintenanceOfCeilingPart3 == null;
+      _isInvalid['spaceInWorkingArea'] = _spaceInWorkingArea == null;
+      _isInvalid['dailyCleaning'] = _dailyCleaning == null;
+      _isInvalid['riskOfContaminationFromToilets'] =
+          _riskOfContaminationFromToilets == null;
+      _isInvalid['adequateBins'] = _adequateBins == null;
+      _isInvalid['hasUnnecessaryItems'] = _hasUnnecessaryItems == null;
+      _isInvalid['cleaningToolsAvailable'] = _cleaningToolsAvailable == null;
+      _isInvalid['hasObjectionableOdor'] = _hasObjectionableOdor == null;
+      _isInvalid['hasOpenDrains'] = _hasOpenDrains == null;
+      _isInvalid['areaUsedForSleeping'] = _areaUsedForSleeping == null;
+      _isInvalid['separateChoppingBoards'] = _separateChoppingBoards == null;
+      _isInvalid['cleanlinessOfEquipment'] = _cleanlinessOfEquipment == null;
+      _isInvalid['suitabilityOfLayout'] = _suitabilityOfLayout == null;
+      _isInvalid['lightAndVentilationPart3'] =
+          _lightAndVentilationPart3 == null;
+      _isInvalid['houseKeeping'] = _houseKeeping == null;
+      _isInvalid['waterSupplySuitable'] = _waterSupplySuitable == null;
+      _isInvalid['safeFoodHandling'] = _safeFoodHandling == null;
     });
 
     isValid = !_isInvalid.containsValue(true);
@@ -127,27 +139,31 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
   }
 
   void _updateFormData() {
-    widget.formData.equipmentForFoodHandling = _equipmentForFoodHandling;
-    widget.formData.conditionOfEquipment = _conditionOfEquipment;
-    widget.formData.cleanOfEquipment= _cleanOfEquipment;
-    widget.formData.foodTongsAvailable = _foodTongsAvailable;
-    widget.formData.storageCleanEquip = _storageCleanEquip;
-    widget.formData.suitableSafetyofFurniture = _suitableSafetyofFurniture;
-    widget.formData.furnitureCondition = _furnitureCondition;
-    widget.formData.cleaningAndMaintenanceOfFurniture = _cleaningAndMaintenanceOfFurniture;
-    widget.formData.maintenanceOfRefrigerators = _maintenanceOfRefrigerators;
-    widget.formData.cleanandMaintenanceOfRefrigerators = _cleanandMaintenanceOfRefrigerators;
-
-    widget.formData.storageFacilities = _storageFacilities;
-    widget.formData.storageOfRawMaterials = _storageOfRawMaterials;
-    widget.formData.storageOfCookedFood = _storageOfCookedFood;
-    widget.formData.storageInRefrigerator = _storageInRefrigerator;
-    widget.formData.measuresToPreventContamination = _measuresToPreventContamination;
-
-    widget.formData.waterSource = _waterSource;
-    widget.formData.waterStorageMethod = _waterStorageMethod;
-    widget.formData.waterDispensedThroughTaps = _waterDispensedThroughTaps;
-    widget.formData.waterSafetyCertified = _waterSafetyCertified;
+    widget.formData.generalCleanlinessPart3 = _generalCleanlinessPart3;
+    widget.formData.safetyMeasuresForCleanliness =
+        _safetyMeasuresForCleanliness;
+    widget.formData.hasFlies = _hasFlies;
+    widget.formData.hasPests = _hasPests;
+    widget.formData.hasFloor = _hasFloor;
+    widget.formData.maintenanceOfWalls = _maintenanceOfWalls;
+    widget.formData.maintenanceOfCeilingPart3 = _maintenanceOfCeilingPart3;
+    widget.formData.spaceInWorkingArea = _spaceInWorkingArea;
+    widget.formData.dailyCleaning = _dailyCleaning;
+    widget.formData.riskOfContaminationFromToilets =
+        _riskOfContaminationFromToilets;
+    widget.formData.adequateBins = _adequateBins;
+    widget.formData.hasUnnecessaryItems = _hasUnnecessaryItems;
+    widget.formData.cleaningToolsAvailable = _cleaningToolsAvailable;
+    widget.formData.hasObjectionableOdor = _hasObjectionableOdor;
+    widget.formData.hasOpenDrains = _hasOpenDrains;
+    widget.formData.areaUsedForSleeping = _areaUsedForSleeping;
+    widget.formData.separateChoppingBoards = _separateChoppingBoards;
+    widget.formData.cleanlinessOfEquipment = _cleanlinessOfEquipment;
+    widget.formData.suitabilityOfLayout = _suitabilityOfLayout;
+    widget.formData.lightAndVentilationPart3 = _lightAndVentilationPart3;
+    widget.formData.houseKeeping = _houseKeeping;
+    widget.formData.waterSupplySuitable = _waterSupplySuitable;
+    widget.formData.safeFoodHandling = _safeFoodHandling;
   }
 
   @override
@@ -174,9 +190,10 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: LinearProgressIndicator(
-                    value: 0.75, // 3/4 of the form completed
+                    value: 0.5, // 2/4 of the form completed
                     backgroundColor: Colors.grey[300],
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -186,254 +203,290 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Part 4: Equipment & Furniture (10 Marks)',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        'Part 3: Area of Food Preparation/Serving/Display/Storage (30 Marks)',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
-                        label: '4.1 Equipment/utensils for food handling',
-                        initialValue: _equipmentForFoodHandling,
-                        isInvalid: _isInvalid['equipmentForFoodHandling']!,
+                        label: '3.1 General cleanliness',
+                        initialValue: _generalCleanlinessPart3,
+                        isInvalid: _isInvalid['generalCleanlinessPart3']!,
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
+                        onChanged: (value) {
+                          setState(() {
+                            _generalCleanlinessPart3 = value;
+                            _isInvalid['generalCleanlinessPart3'] =
+                                value == null;
+                          });
+                        },
+                      ),
+                      GenericDropdown(
+                        label: '3.2 Safety measures for cleanliness',
+                        initialValue: _safetyMeasuresForCleanliness,
+                        isInvalid: _isInvalid['safetyMeasuresForCleanliness']!,
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
+                        onChanged: (value) {
+                          setState(() {
+                            _safetyMeasuresForCleanliness = value;
+                            _isInvalid['safetyMeasuresForCleanliness'] =
+                                value == null;
+                          });
+                        },
+                      ),
+                      RadioButtonField(
+                        label: '3.3 Presence of flies',
+                        value: _hasFlies,
+                        isInvalid: _isInvalid['hasFlies']!,
+                        onChanged: (value) {
+                          setState(() {
+                            _hasFlies = value;
+                            _isInvalid['hasFlies'] = value == null;
+                          });
+                        },
+                      ),
+                      RadioButtonField(
+                        label: '3.4 Presence of pests',
+                        value: _hasPests,
+                        isInvalid: _isInvalid['hasPests']!,
+                        onChanged: (value) {
+                          setState(() {
+                            _hasPests = value;
+                            _isInvalid['hasPests'] = value == null;
+                          });
+                        },
+                      ),
+                      GenericDropdown(
+                        label: '3.5 Floor availability',
+                        initialValue: _hasFloor,
+                        isInvalid: _isInvalid['hasFloor']!,
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
+                        onChanged: (value) {
+                          setState(() {
+                            _hasFloor = value;
+                            _isInvalid['hasFloor'] = value == null;
+                          });
+                        },
+                      ),
+                      GenericDropdown(
+                        label: '3.6 Maintenance of walls',
+                        initialValue: _maintenanceOfWalls,
+                        isInvalid: _isInvalid['maintenanceOfWalls']!,
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
+                        onChanged: (value) {
+                          setState(() {
+                            _maintenanceOfWalls = value;
+                            _isInvalid['maintenanceOfWalls'] = value == null;
+                          });
+                        },
+                      ),
+                      GenericDropdown(
+                        label: '3.7 Maintenance of ceiling',
+                        initialValue: _maintenanceOfCeilingPart3,
+                        isInvalid: _isInvalid['maintenanceOfCeilingPart3']!,
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
+                        onChanged: (value) {
+                          setState(() {
+                            _maintenanceOfCeilingPart3 = value;
+                            _isInvalid['maintenanceOfCeilingPart3'] =
+                                value == null;
+                          });
+                        },
+                      ),
+                      GenericDropdown(
+                        label: '3.8 Space in working area',
+                        initialValue: _spaceInWorkingArea,
+                        isInvalid: _isInvalid['spaceInWorkingArea']!,
                         items: const ['Adequate', 'Inadequate'],
                         onChanged: (value) {
                           setState(() {
-                            _equipmentForFoodHandling = value;
-                            _isInvalid['equipmentForFoodHandling'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '4.2 Condition of equipment/utensils',
-                        initialValue: _conditionOfEquipment,
-                        isInvalid: _isInvalid['conditionOfEquipment']!,
-                        items: const ['Satisfactory', 'Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _conditionOfEquipment = value;
-                            _isInvalid['conditionOfEquipment'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '4.3 Cleanliness of equipment/utensils',
-                        initialValue: _cleanOfEquipment,
-                        isInvalid: _isInvalid['cleanOfEquipment']!,
-                        items: const ['Satisfactory', 'Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _cleanOfEquipment = value;
-                            _isInvalid['cleanOfEquipment'] = value == null;
+                            _spaceInWorkingArea = value;
+                            _isInvalid['spaceInWorkingArea'] = value == null;
                           });
                         },
                       ),
                       RadioButtonField(
-                        label: '4.4 Availability of food tongs/spoons to serve food items',
-                        value: _foodTongsAvailable,
-                        isInvalid: _isInvalid['foodTongsAvailable']!,
+                        label: '3.9 Daily cleaning ',
+                        value: _dailyCleaning,
+                        isInvalid: _isInvalid['dailyCleaning']!,
                         onChanged: (value) {
                           setState(() {
-                            _foodTongsAvailable = value;
-                            _isInvalid['foodTongsAvailable'] = value == null;
+                            _dailyCleaning = value;
+                            _isInvalid['dailyCleaning'] = value == null;
                           });
                         },
                       ),
-                      RadioButtonField(//new
-                        label: '4.5 Storage facilities for cleaned equipment',
-                        value: _storageCleanEquip,
-                        isInvalid: _isInvalid['storageCleanEquip']!,
+                      RadioButtonField(
+                        label:
+                            '3.10 Risk of contamination from toilets',
+                        value: _riskOfContaminationFromToilets,
+                        isInvalid:
+                            _isInvalid['riskOfContaminationFromToilets']!,
                         onChanged: (value) {
                           setState(() {
-                            _storageCleanEquip = value;
-                            _isInvalid['storageCleanEquip'] = value == null;
+                            _riskOfContaminationFromToilets = value;
+                            _isInvalid['riskOfContaminationFromToilets'] =
+                                value == null;
+                          });
+                        },
+                      ),
+                      RadioButtonField(
+                        label:
+                            '3.11 Adequate bins with lids for waste disposal',
+                        value: _adequateBins,
+                        isInvalid: _isInvalid['adequateBins']!,
+                        onChanged: (value) {
+                          setState(() {
+                            _adequateBins = value;
+                            _isInvalid['adequateBins'] = value == null;
+                          });
+                        },
+                      ),
+                      RadioButtonField(
+                        label:
+                            '3.12 Empty boxes/Gunny bags and other unnecessary items',
+                        value: _hasUnnecessaryItems,
+                        isInvalid: _isInvalid['hasUnnecessaryItems']!,
+                        onChanged: (value) {
+                          setState(() {
+                            _hasUnnecessaryItems = value;
+                            _isInvalid['hasUnnecessaryItems'] = value == null;
+                          });
+                        },
+                      ),
+                      RadioButtonField(
+                        label:
+                            '3.13 Availability of cleaning tools/materials/serviettes',
+                        value: _cleaningToolsAvailable,
+                        isInvalid: _isInvalid['cleaningToolsAvailable']!,
+                        onChanged: (value) {
+                          setState(() {
+                            _cleaningToolsAvailable = value;
+                            _isInvalid['cleaningToolsAvailable'] =
+                                value == null;
+                          });
+                        },
+                      ),
+                      RadioButtonField(
+                        label: '3.14 Objectionable odor',
+                        value: _hasObjectionableOdor,
+                        isInvalid: _isInvalid['hasObjectionableOdor']!,
+                        onChanged: (value) {
+                          setState(() {
+                            _hasObjectionableOdor = value;
+                            _isInvalid['hasObjectionableOdor'] = value == null;
+                          });
+                        },
+                      ),
+                      RadioButtonField(
+                        label:
+                            '3.15 Open drains & stagnated waste water',
+                        value: _hasOpenDrains,
+                        isInvalid: _isInvalid['hasOpenDrains']!,
+                        onChanged: (value) {
+                          setState(() {
+                            _hasOpenDrains = value;
+                            _isInvalid['hasOpenDrains'] = value == null;
+                          });
+                        },
+                      ),
+                      RadioButtonField(
+                        label:
+                            '3.16 Area used for sleeping or any other unrelated activities',
+                        value: _areaUsedForSleeping,
+                        isInvalid: _isInvalid['areaUsedForSleeping']!,
+                        onChanged: (value) {
+                          setState(() {
+                            _areaUsedForSleeping = value;
+                            _isInvalid['areaUsedForSleeping'] = value == null;
+                          });
+                        },
+                      ),
+                      RadioButtonField(
+                        label:
+                            '3.17 Use of separate chopping boards/knives etc.',
+                        value: _separateChoppingBoards,
+                        isInvalid: _isInvalid['separateChoppingBoards']!,
+                        onChanged: (value) {
+                          setState(() {
+                            _separateChoppingBoards = value;
+                            _isInvalid['separateChoppingBoards'] =
+                                value == null;
+                          });
+                        },
+                      ),
+                      RadioButtonField(
+                        label:
+                            '3.18 Cleanliness of equipment/utensils',
+                        value: _cleanlinessOfEquipment,
+                        isInvalid: _isInvalid['cleanlinessOfEquipment']!,
+                        onChanged: (value) {
+                          setState(() {
+                            _cleanlinessOfEquipment = value;
+                            _isInvalid['cleanlinessOfEquipment'] =
+                                value == null;
+                          });
+                        },
+                      ),
+                      RadioButtonField(
+                        label:
+                            '3.19 Suitability of layout of the area for the process',
+                        value: _suitabilityOfLayout,
+                        isInvalid: _isInvalid['suitabilityOfLayout']!,
+                        onChanged: (value) {
+                          setState(() {
+                            _suitabilityOfLayout = value;
+                            _isInvalid['suitabilityOfLayout'] = value == null;
                           });
                         },
                       ),
                       GenericDropdown(
-                        label: '4.6 Furniture- Tables/Chairs/Cupboards/Racks etc.',
-                        initialValue: _furnitureCondition,
-                        isInvalid: _isInvalid['furnitureCondition']!,
+                        label: '3.20 Light and ventilation',
+                        initialValue: _lightAndVentilationPart3,
+                        isInvalid: _isInvalid['lightAndVentilationPart3']!,
                         items: const ['Adequate', 'Inadequate'],
                         onChanged: (value) {
                           setState(() {
-                            _furnitureCondition = value;
-                            _isInvalid['furnitureCondition'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(//new
-                        label: '4.7 Suitability for required purpose and safety of furniture',
-                        initialValue: _suitableSafetyofFurniture,
-                        isInvalid: _isInvalid['suitableSafetyofFurniture']!,
-                        items: const ['Satisfactory', 'Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _suitableSafetyofFurniture = value;
-                            _isInvalid['suitableSafetyofFurniture'] = value == null;
+                            _lightAndVentilationPart3 = value;
+                            _isInvalid['lightAndVentilationPart3'] =
+                                value == null;
                           });
                         },
                       ),
                       GenericDropdown(
-                        label: '4.8 Cleaning and maintenance of furniture',
-                        initialValue: _cleaningAndMaintenanceOfFurniture,
-                        isInvalid: _isInvalid['cleaningAndMaintenanceOfFurniture']!,
-                        items: const ['Satisfactory', 'Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _cleaningAndMaintenanceOfFurniture = value;
-                            _isInvalid['cleaningAndMaintenanceOfFurniture'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '4.9 Maintenance of temperature in refrigerators/deep freezers',
-                        initialValue: _maintenanceOfRefrigerators,
-                        isInvalid: _isInvalid['maintenanceOfRefrigerators']!,
-                        items: const ['Satisfactory', 'Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _maintenanceOfRefrigerators = value;
-                            _isInvalid['maintenanceOfRefrigerators'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(//new
-                        label: '4.10 Cleanliness & maintenance of refrigerators/deep freezers',
-                        initialValue: _cleanandMaintenanceOfRefrigerators,
-                        isInvalid: _isInvalid['cleanandMaintenanceOfRefrigerators']!,
-                        items: const ['Satisfactory', 'Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _cleanandMaintenanceOfRefrigerators = value;
-                            _isInvalid['cleanandMaintenanceOfRefrigerators'] = value == null;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 30),
-                      const Text(
-                        'Part 5: Storage (10 Marks)',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 20),
-                      GenericDropdown(
-                        label: '5.1 Storage facilities and housekeeping',
-                        initialValue: _storageFacilities,
-                        isInvalid: _isInvalid['storageFacilities']!,
+                        label: '3.21 Housekeeping ',
+                        initialValue: _houseKeeping,
+                        isInvalid: _isInvalid['houseKeeping']!,
                         items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
-                            _storageFacilities = value;
-                            _isInvalid['storageFacilities'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '5.2 Storage of raw materials',
-                        initialValue: _storageOfRawMaterials,
-                        isInvalid: _isInvalid['storageOfRawMaterials']!,
-                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _storageOfRawMaterials = value;
-                            _isInvalid['storageOfRawMaterials'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '5.3 Storage of cooked/partially cooked/prepared food',
-                        initialValue: _storageOfCookedFood,
-                        isInvalid: _isInvalid['storageOfCookedFood']!,
-                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _storageOfCookedFood = value;
-                            _isInvalid['storageOfCookedFood'] = value == null;
-                          });
-                        },
-                      ),
-                      RadioButtonField(//new
-                        label: '5.4 Food stored under suitable temperature',
-                        value: _foodStoredTemp,
-                        isInvalid: _isInvalid['foodStoredTemp']!,
-                        onChanged: (value) {
-                          setState(() {
-                            _foodStoredTemp = value;
-                            _isInvalid['foodStoredTemp'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '5.5 Storage of food in refrigerator/deep freezer',
-                        initialValue: _storageInRefrigerator,
-                        isInvalid: _isInvalid['storageInRefrigerator']!,
-                        items: const ['Satisfactory', 'Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _storageInRefrigerator = value;
-                            _isInvalid['storageInRefrigerator'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '5.6 Measures taken to prevent contamination during food storage',
-                        initialValue: _measuresToPreventContamination,
-                        isInvalid: _isInvalid['measuresToPreventContamination']!,
-                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _measuresToPreventContamination = value;
-                            _isInvalid['measuresToPreventContamination'] = value == null;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 30),
-                      const Text(
-                        'Part 6: Water Supply (5 Marks)',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 20),
-                      GenericDropdown(
-                        label: '6.1 Water source',
-                        initialValue: _waterSource,
-                        isInvalid: _isInvalid['waterSource']!,
-                        items: const ['Safe', 'Unsafe'],
-                        onChanged: (value) {
-                          setState(() {
-                            _waterSource = value;
-                            _isInvalid['waterSource'] = value == null;
-                          });
-                        },
-                      ),
-                       GenericDropdown(
-                        label: '6.2 Water storage method',
-                        initialValue: _waterStorageMethod,
-                        isInvalid: _isInvalid['waterStorageMethod']!,
-                        items: const ['Satisfactory', 'Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _waterStorageMethod = value;
-                            _isInvalid['waterStorageMethod'] = value == null;
+                            _houseKeeping = value;
+                            _isInvalid['houseKeeping'] = value == null;
                           });
                         },
                       ),
                       RadioButtonField(
-                        label: '6.3 Water dispensed through taps',
-                        value: _waterDispensedThroughTaps,
-                        isInvalid: _isInvalid['waterDispensedThroughTaps']!,
+                        label:
+                            '3.22 Water supply suitable for different task ',
+                        value: _waterSupplySuitable,
+                        isInvalid: _isInvalid['waterSupplySuitable']!,
                         onChanged: (value) {
                           setState(() {
-                            _waterDispensedThroughTaps = value;
-                            _isInvalid['waterDispensedThroughTaps'] = value == null;
+                            _waterSupplySuitable = value;
+                            _isInvalid['waterSupplySuitable'] = value == null;
                           });
                         },
                       ),
-                      RadioButtonField(
-                        label: '6.4 Safety of water certified by analytical reports (Bacteriology - 01, Chemical - 01)',
-                        value: _waterSafetyCertified,
-                        isInvalid: _isInvalid['waterSafetyCertified']!,
+                      GenericDropdown(
+                        label:'3.23 Safe food handling practices',
+                        initialValue: _safeFoodHandling,
+                        isInvalid: _isInvalid['safeFoodHandling']!,
+                        items: const ['Good', 'Satisfactory','Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
-                            _waterSafetyCertified = value;
-                            _isInvalid['waterSafetyCertified'] = value == null;
+                            _safeFoodHandling = value;
+                            _isInvalid['safeFoodHandling'] =
+                                value == null;
                           });
                         },
                       ),
