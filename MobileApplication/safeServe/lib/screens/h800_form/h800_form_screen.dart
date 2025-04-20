@@ -23,15 +23,6 @@ class H800FormScreenState extends State<H800FormScreen> {
   String? _hasAnimals;
   String? _hasSmokeOrAdverseEffects;
 
-  // Part 2: Building
-  String? _natureOfBuilding;
-  String? _space;
-  String? _lightAndVentilation;
-  String? _conditionOfFloor;
-  String? _conditionOfWall;
-  String? _conditionOfCeiling;
-  String? _hasHazards;
-
   // Validation flags
   Map<String, bool> _isInvalid = {};
 
@@ -45,14 +36,6 @@ class H800FormScreenState extends State<H800FormScreen> {
     _hasAnimals = widget.formData.hasAnimals;
     _hasSmokeOrAdverseEffects = widget.formData.hasSmokeOrAdverseEffects;
 
-    _natureOfBuilding = widget.formData.natureOfBuilding;
-    _space = widget.formData.space;
-    _lightAndVentilation = widget.formData.lightAndVentilation;
-    _conditionOfFloor = widget.formData.conditionOfFloor;
-    _conditionOfWall = widget.formData.conditionOfWall;
-    _conditionOfCeiling = widget.formData.conditionOfCeiling;
-    _hasHazards = widget.formData.hasHazards;
-
     // Initialize validation flags
     _isInvalid = {
       'suitabilityForBusiness': false,
@@ -60,13 +43,6 @@ class H800FormScreenState extends State<H800FormScreen> {
       'hasPollutingConditions': false,
       'hasAnimals': false,
       'hasSmokeOrAdverseEffects': false,
-      'natureOfBuilding': false,
-      'space': false,
-      'lightAndVentilation': false,
-      'conditionOfFloor': false,
-      'conditionOfWall': false,
-      'conditionOfCeiling': false,
-      'hasHazards': false,
     };
   }
 
@@ -77,15 +53,7 @@ class H800FormScreenState extends State<H800FormScreen> {
       _isInvalid['generalCleanliness'] = _generalCleanliness == null;
       _isInvalid['hasPollutingConditions'] = _hasPollutingConditions == null;
       _isInvalid['hasAnimals'] = _hasAnimals == null;
-      _isInvalid['hasSmokeOrAdverseEffects'] =
-          _hasSmokeOrAdverseEffects == null;
-      _isInvalid['natureOfBuilding'] = _natureOfBuilding == null;
-      _isInvalid['space'] = _space == null;
-      _isInvalid['lightAndVentilation'] = _lightAndVentilation == null;
-      _isInvalid['conditionOfFloor'] = _conditionOfFloor == null;
-      _isInvalid['conditionOfWall'] = _conditionOfWall == null;
-      _isInvalid['conditionOfCeiling'] = _conditionOfCeiling == null;
-      _isInvalid['hasHazards'] = _hasHazards == null;
+      _isInvalid['hasSmokeOrAdverseEffects'] = _hasSmokeOrAdverseEffects == null;
     });
 
     isValid = !_isInvalid.containsValue(true);
@@ -98,14 +66,6 @@ class H800FormScreenState extends State<H800FormScreen> {
     widget.formData.hasPollutingConditions = _hasPollutingConditions;
     widget.formData.hasAnimals = _hasAnimals;
     widget.formData.hasSmokeOrAdverseEffects = _hasSmokeOrAdverseEffects;
-
-    widget.formData.natureOfBuilding = _natureOfBuilding;
-    widget.formData.space = _space;
-    widget.formData.lightAndVentilation = _lightAndVentilation;
-    widget.formData.conditionOfFloor = _conditionOfFloor;
-    widget.formData.conditionOfWall = _conditionOfWall;
-    widget.formData.conditionOfCeiling = _conditionOfCeiling;
-    widget.formData.hasHazards = _hasHazards;
   }
 
   @override
@@ -132,10 +92,9 @@ class H800FormScreenState extends State<H800FormScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: LinearProgressIndicator(
-                    value: 0.25, // 1/4 of the form completed
+                    value: 0.1, // 1/10 of the form completed
                     backgroundColor: Colors.grey[300],
-                    valueColor:
-                        const AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -146,8 +105,7 @@ class H800FormScreenState extends State<H800FormScreen> {
                     children: [
                       const Text(
                         'Part 1: Location & Environment (5 Marks)',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
@@ -158,8 +116,7 @@ class H800FormScreenState extends State<H800FormScreen> {
                         onChanged: (value) {
                           setState(() {
                             _suitabilityForBusiness = value;
-                            _isInvalid['suitabilityForBusiness'] =
-                                value == null;
+                            _isInvalid['suitabilityForBusiness'] = value == null;
                           });
                         },
                       ),
@@ -182,8 +139,7 @@ class H800FormScreenState extends State<H800FormScreen> {
                         onChanged: (value) {
                           setState(() {
                             _hasPollutingConditions = value;
-                            _isInvalid['hasPollutingConditions'] =
-                                value == null;
+                            _isInvalid['hasPollutingConditions'] = value == null;
                           });
                         },
                       ),
@@ -205,98 +161,7 @@ class H800FormScreenState extends State<H800FormScreen> {
                         onChanged: (value) {
                           setState(() {
                             _hasSmokeOrAdverseEffects = value;
-                            _isInvalid['hasSmokeOrAdverseEffects'] =
-                                value == null;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 30),
-                      const Text(
-                        'Part 2: Building (10 Marks)',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 20),
-                      GenericDropdown(
-                        label: '2.1 Nature of the building',
-                        initialValue: _natureOfBuilding,
-                        isInvalid: _isInvalid['natureOfBuilding']!,
-                        items: const ['Permanent', 'Temporary'],
-                        onChanged: (value) {
-                          setState(() {
-                            _natureOfBuilding = value;
-                            _isInvalid['natureOfBuilding'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.2 Space ',
-                        initialValue: _space,
-                        isInvalid: _isInvalid['space']!,
-                        items: const ['Adequate', 'Inadequate'],
-                        onChanged: (value) {
-                          setState(() {
-                            _space = value;
-                            _isInvalid['space'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.3 Light and ventilation',
-                        initialValue: _lightAndVentilation,
-                        isInvalid: _isInvalid['lightAndVentilation']!,
-                        items: const ['Adequate', 'Inadequate'],
-                        onChanged: (value) {
-                          setState(() {
-                            _lightAndVentilation = value;
-                            _isInvalid['lightAndVentilation'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.4 Condition of the floor',
-                        initialValue: _conditionOfFloor,
-                        isInvalid: _isInvalid['conditionOfFloor']!,
-                        items: const ['Good', 'Satisfactory','Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _conditionOfFloor = value;
-                            _isInvalid['conditionOfFloor'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.5 Condition of the wall',
-                        initialValue: _conditionOfWall,
-                        isInvalid: _isInvalid['conditionOfWall']!,
-                        items: const ['Good', 'Satisfactory','Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _conditionOfWall = value;
-                            _isInvalid['conditionOfWall'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.6 Condition of the ceiling',
-                        initialValue: _conditionOfCeiling,
-                        isInvalid: _isInvalid['conditionOfCeiling']!,
-                        items: const ['Good', 'Satisfactory','Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _conditionOfCeiling = value;
-                            _isInvalid['conditionOfCeiling'] = value == null;
-                          });
-                        },
-                      ),
-                      RadioButtonField(
-                        label: '2.7 Hazards to employees/customers',
-                        value: _hasHazards,
-                        isInvalid: _isInvalid['hasHazards']!,
-                        onChanged: (value) {
-                          setState(() {
-                            _hasHazards = value;
-                            _isInvalid['hasHazards'] = value == null;
+                            _isInvalid['hasSmokeOrAdverseEffects'] = value == null;
                           });
                         },
                       ),
