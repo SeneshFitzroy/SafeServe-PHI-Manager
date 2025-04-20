@@ -212,20 +212,20 @@ class H800FormData {
   total += maintenanceOfWalls == 'Good' ? 2 : (maintenanceOfWalls == 'Satisfactory' ? 1 : 0);
   total += maintenanceOfCeilingPart3 == 'Good' ? 2 : (maintenanceOfCeilingPart3 == 'Satisfactory' ? 1 : 0);
   total += spaceInWorkingArea == 'Adequate' ? 1 : 0;
-  total += dailyCleaning == 'Yes' ? 1 : 0;
+  total += dailyCleaning == 'Yes' ? 1 : 0;//3.9
   total += riskOfContaminationFromToilets == 'Yes' ? 0 : 1;
-  total += adequateBins == 'Yes' ? 1 : 0;
-  total += hasUnnecessaryItems == 'Yes' ? 0 : 1;
-  total += cleaningToolsAvailable == 'Yes' ? 1 : 0;
-  total += hasObjectionableOdor == 'Yes' ? 0 : 1;
-  total += hasOpenDrains == 'Yes' ? 0 : 1;
-  total += areaUsedForSleeping == 'Yes' ? 0 : 1;
-  total += separateChoppingBoards == 'Yes' ? 1 : 0;
+  total += adequateBins == 'Yes' ? 1 : 0;//3.11
+  total += hasUnnecessaryItems == 'Yes' ? 0 : 1; //3.12
+  total += cleaningToolsAvailable == 'Yes' ? 1 : 0;//3.13
+  total += hasObjectionableOdor == 'Yes' ? 0 : 1;//3.14
+  total += hasOpenDrains == 'Yes' ? 0 : 1;//3.15
+  total += areaUsedForSleeping == 'Yes' ? 0 : 1;//3.16
+  total += separateChoppingBoards == 'Yes' ? 1 : 0;//3.17
   total += cleanlinessOfEquipment == 'Yes' ? 1 : 0;
   total += suitabilityOfLayout == 'Yes' ? 1 : 0;
   total += lightAndVentilationPart3 == 'Adequate' ? 1 : 0;
   total += houseKeeping =='Good' ? 2 : (houseKeeping == 'Satisfactory' ? 1 : 0);
-  total += waterSupplySuitable == 'Suitable' ? 1 :0;
+  total += waterSupplySuitable == 'Yes' ? 1 :0;
   total += safeFoodHandling == 'Good' ? 2 : (safeFoodHandling == 'Satisfactory' ? 1 : 0);
 
   // Part 4: Equipment & Furniture (10 Marks)
@@ -252,7 +252,7 @@ class H800FormData {
   total += waterSource == 'Safe' ? 1 : 0;
   total += waterStorageMethod  == 'Satisfactory' ? 1 : 0;
   total += waterDispensedThroughTaps == 'Yes' ? 1 : 0;
-  total += waterSafetyCertified == 'Good' ? 2 : (waterSafetyCertified == 'Satisfactory' ? 1 : 0);
+  total += waterSafetyCertified == 'Yes' ? 2 : 0;
 
   // Part 7: Waste Management (10 Marks)
   total += numberofBinswithLids == 'Available'? 1 : 0;
@@ -287,6 +287,7 @@ class H800FormData {
   total += preventSmoking == 'Yes' ? 1 : 0;
   total += issuingBills == 'Yes' ? 1 : 0;
   total += foodSafetyCertification == 'Yes' ? 1 : 0;
+
 
   return total;
 }
