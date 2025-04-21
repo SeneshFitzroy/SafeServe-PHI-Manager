@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/map_view/map_view_screen.dart';
 
 class SafeServeDrawer extends StatelessWidget {
   final String profileImageUrl;
@@ -31,7 +32,15 @@ class SafeServeDrawer extends StatelessWidget {
                   _buildDrawerItem(icon: Icons.calendar_today, label: 'Calendar', onTap: () {}),
                   _buildDrawerItem(icon: Icons.store, label: 'Shops', onTap: () {}),
                   _buildDrawerItem(icon: Icons.description, label: 'Forms', onTap: () {}),
-                  _buildDrawerItem(icon: Icons.map, label: 'Map View', onTap: () {}),
+                  _buildDrawerItem(
+                    icon: Icons.map, 
+                    label: 'Map View', 
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => const MapViewScreen()),
+                      );
+                    }
+                  ),
                   _buildDrawerItem(icon: Icons.notifications, label: 'Notifications', onTap: () {}),
                   _buildDrawerItem(icon: Icons.assessment, label: 'Reports', onTap: () {}),
                   _buildDrawerItem(icon: Icons.settings, label: 'Settings', onTap: () {}),
