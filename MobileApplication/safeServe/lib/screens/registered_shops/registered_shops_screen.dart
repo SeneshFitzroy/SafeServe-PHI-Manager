@@ -6,6 +6,7 @@ import '../../../widgets/custom_nav_bar_icon.dart';
 import '../register_shop/register_shop_form_data.dart';
 import '../register_shop/screen_one/register_shop_screen_one.dart';
 import 'widgets/shop_card.dart';
+import '../Photo_upload/photoupload.dart';
 
 class RegisteredShopsScreen extends StatefulWidget {
   const RegisteredShopsScreen({super.key});
@@ -133,6 +134,7 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
           _buildFloatingNavBar(context),
         ],
       ),
+      // Removed the FloatingActionButton here
     );
   }
 

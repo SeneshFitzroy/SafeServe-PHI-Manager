@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/Photo_upload/photoupload.dart';
 
 class SafeServeDrawer extends StatelessWidget {
   final String profileImageUrl;
@@ -30,6 +31,17 @@ class SafeServeDrawer extends StatelessWidget {
                   _buildDrawerItem(icon: Icons.dashboard, label: 'Dashboard', onTap: () {}),
                   _buildDrawerItem(icon: Icons.calendar_today, label: 'Calendar', onTap: () {}),
                   _buildDrawerItem(icon: Icons.store, label: 'Shops', onTap: () {}),
+                  _buildDrawerItem(
+                    icon: Icons.camera_alt,
+                    label: 'Upload Photo',
+                    onTap: () {
+                      Navigator.pop(context); // Close drawer first
+                      Navigator.push(
+                        context, 
+                        MaterialPageRoute(builder: (context) => const PhotoUpload()),
+                      );
+                    },
+                  ),
                   _buildDrawerItem(icon: Icons.description, label: 'Forms', onTap: () {}),
                   _buildDrawerItem(icon: Icons.map, label: 'Map View', onTap: () {}),
                   _buildDrawerItem(icon: Icons.notifications, label: 'Notifications', onTap: () {}),
