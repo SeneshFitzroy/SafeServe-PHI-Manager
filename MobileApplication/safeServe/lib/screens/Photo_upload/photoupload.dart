@@ -1,181 +1,135 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../widgets/safe_serve_appbar.dart';
 
 class PhotoUpload extends StatefulWidget {
   const PhotoUpload({Key? key}) : super(key: key);
 
   @override
-  _PhotoUploadState createState() => _PhotoUploadState();
+  State<PhotoUpload> createState() => _PhotoUploadState();
 }
 
 class _PhotoUploadState extends State<PhotoUpload> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   File? _image;
   final ImagePicker _picker = ImagePicker();
+  bool _isLoading = false;
+  String? _errorMessage;
 
   Future<void> _getImageFromCamera() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-    if (image != null) {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 80,
+        maxWidth: 1200,
+      );
+      if (image != null) {
+        setState(() {
+          _image = File(image.path);
+          _errorMessage = null;
+        });
+      }
+    } catch (e) {
       setState(() {
-        _image = File(image.path);
+        _errorMessage = 'Failed to capture image: ${e.toString()}';
       });
     }
   }
 
   Future<void> _getImageFromGallery() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
+    try {
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+        maxWidth: 1200,
+      );
+      if (image != null) {
+        setState(() {
+          _image = File(image.path);
+          _errorMessage = null;
+        });
+      }
+    } catch (e) {
       setState(() {
-        _image = File(image.path);
+        _errorMessage = 'Failed to select image: ${e.toString()}';
       });
     }
   }
 
-  void _handleSubmit() {
-    // Add your upload logic here
-    if (_image != null) {
-      // Upload the image to server or process it
+  void _handleSubmit() async {
+    if (_image == null) {
+      setState(() {
+        _errorMessage = 'Please select an image first';
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      // Simulate upload delay
+      await Future.delayed(const Duration(seconds: 2));
+      
+      // TODO: Implement actual upload logic
+      // Example:
+      // final response = await uploadImageToServer(_image!);
+      
+      setState(() {
+        _isLoading = false;
+      });
+      
+      // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Uploading photo...')),
+        const SnackBar(
+          content: Text('Photo uploaded successfully!'),
+          backgroundColor: Colors.green,
+        ),
       );
-      // Navigate to next screen or show confirmation
-    } else {
-      // Show error that no image is selected
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select an image first')),
-      );
+      
+      // Navigate back after success
+      Navigator.of(context).pop();
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _errorMessage = 'Failed to upload: ${e.toString()}';
+      });
     }
   }
 
   void _handlePrevious() {
-    // Navigate back or to the previous step
     Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 412,
-          height: 917,
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment(0.50, -0.00),
-              end: Alignment(0.50, 1.00),
-              colors: [const Color(0xFFE6F5FE), const Color(0xFFF5ECF9)],
-            ),
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: SafeServeAppBar(
+        height: 70,
+        onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
+      ),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment(0.50, -0.00),
+            end: Alignment(0.50, 1.00),
+            colors: [Color(0xFFE6F5FE), Color(0xFFF5ECF9)],
           ),
-          child: Stack(
-            children: [
-              Positioned(
-                left: 0,
-                top: 0,
-                child: Container(
-                  width: 412,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0x3F000000),
-                        blurRadius: 4,
-                        offset: Offset(0, 4),
-                        spreadRadius: 0,
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 78,
-                top: 44,
-                child: Text(
-                  'SafeServe',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: const Color(0xFF1F41BB),
-                    fontSize: 25,
-                    fontFamily: 'Roboto',
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 299,
-                top: 41,
-                child: Container(
-                  width: 35,
-                  height: 35,
-                  decoration: ShapeDecoration(
-                    color: const Color(0xFFCDE6FE),
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                        width: 2,
-                        color: const Color(0xFFCDE6FE),
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 349,
-                top: 41,
-                child: Container(
-                  width: 35,
-                  height: 35,
-                  decoration: ShapeDecoration(
-                    color: const Color(0xFFCDE6FE),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 304,
-                top: 46,
-                child: Container(
-                  width: 25,
-                  height: 24,
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(),
-                  child: Stack(),
-                ),
-              ),
-              Positioned(
-                left: 353,
-                top: 42,
-                child: Container(
-                  width: 27,
-                  height: 33,
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(),
-                  child: Stack(),
-                ),
-              ),
-              Positioned(
-                left: 33,
-                top: 35,
-                child: Container(
-                  width: 36,
-                  height: 38,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: NetworkImage("https://placehold.co/36x38"),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 33,
-                top: 136,
-                child: Text(
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
                   'Photo Upload',
-                  textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 25,
@@ -183,152 +137,239 @@ class _PhotoUploadState extends State<PhotoUpload> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-              ),
-              // Photo display area with functionality
-              Positioned(
-                left: 33,
-                top: 209,
-                child: Container(
-                  width: 351,
-                  height: 533,
+                const SizedBox(height: 8),
+                const Text(
+                  'Upload high-quality photos of the establishment',
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                
+                // Photo display area
+                Container(
+                  width: double.infinity,
+                  height: 400,
                   decoration: BoxDecoration(
                     color: const Color(0xFF575656),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
                   ),
-                  child: _image == null
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.photo_library,
-                              size: 80,
-                              color: Colors.white70,
-                            ),
-                            const SizedBox(height: 20),
-                            Text(
-                              'No image selected',
+                  child: _isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        )
+                      : _image == null
+                          ? _buildImagePlaceholder()
+                          : _buildImagePreview(),
+                ),
+                
+                if (_errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16),
+                    child: Text(
+                      _errorMessage!,
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                
+                const SizedBox(height: 32),
+                
+                // Buttons row
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // Previous button
+                    OutlinedButton(
+                      onPressed: _handlePrevious,
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Color(0xFF1F41BB), width: 2),
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text(
+                        'Previous',
+                        style: TextStyle(
+                          color: Color(0xFF1F41BB),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    
+                    // Submit button
+                    ElevatedButton(
+                      onPressed: _isLoading ? null : _handleSubmit,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1F41BB),
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: _isLoading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Text(
+                              'Submit',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 18,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
                               ),
                             ),
-                            const SizedBox(height: 30),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton.icon(
-                                  onPressed: _getImageFromCamera,
-                                  icon: Icon(Icons.camera_alt),
-                                  label: Text('Camera'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF1F41BB),
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                ElevatedButton.icon(
-                                  onPressed: _getImageFromGallery,
-                                  icon: Icon(Icons.photo),
-                                  label: Text('Gallery'),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF1F41BB),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            Image.file(
-                              _image!,
-                              fit: BoxFit.cover,
-                            ),
-                            Positioned(
-                              top: 10,
-                              right: 10,
-                              child: CircleAvatar(
-                                backgroundColor: Colors.red,
-                                radius: 20,
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.close,
-                                    color: Colors.white,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _image = null;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImagePlaceholder() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(
+          Icons.photo_library,
+          size: 80,
+          color: Colors.white70,
+        ),
+        const SizedBox(height: 20),
+        const Text(
+          'No image selected',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
+        ),
+        const SizedBox(height: 30),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton.icon(
+              onPressed: _getImageFromCamera,
+              icon: const Icon(Icons.camera_alt),
+              label: const Text('Camera'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1F41BB),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              // Previous button with functionality
-              Positioned(
-                left: 166,
-                top: 786,
-                child: GestureDetector(
-                  onTap: _handlePrevious,
-                  child: Container(
-                    width: 102,
-                    height: 38,
-                    decoration: ShapeDecoration(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 2,
-                          color: const Color(0xFF1F41BB),
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Previous',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: const Color(0xFF1F41BB),
-                          fontSize: 20,
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+            ),
+            const SizedBox(width: 20),
+            ElevatedButton.icon(
+              onPressed: _getImageFromGallery,
+              icon: const Icon(Icons.photo),
+              label: const Text('Gallery'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1F41BB),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImagePreview() {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.file(
+            _image!,
+            fit: BoxFit.cover,
+          ),
+        ),
+        Positioned(
+          top: 12,
+          right: 12,
+          child: Material(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(24),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(24),
+              onTap: () {
+                setState(() {
+                  _image = null;
+                });
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 12,
+          right: 12,
+          child: Row(
+            children: [
+              Material(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(24),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(24),
+                  onTap: _getImageFromCamera,
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.camera_alt,
+                      color: Colors.white,
+                      size: 24,
                     ),
                   ),
                 ),
               ),
-              // Submit button with functionality
-              Positioned(
-                left: 282,
-                top: 786,
-                child: GestureDetector(
-                  onTap: _handleSubmit,
-                  child: Container(
-                    width: 102,
-                    height: 38,
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFF1F41BB),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 2,
-                          color: const Color(0xFF1F41BB),
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Submit',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontFamily: 'Roboto',
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
+              const SizedBox(width: 8),
+              Material(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(24),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(24),
+                  onTap: _getImageFromGallery,
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.photo,
+                      color: Colors.white,
+                      size: 24,
                     ),
                   ),
                 ),
