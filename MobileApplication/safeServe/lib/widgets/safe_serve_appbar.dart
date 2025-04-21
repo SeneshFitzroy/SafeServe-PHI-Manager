@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/Search_Page/Searchpage.dart';
 
 class SafeServeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double height;
@@ -51,7 +52,13 @@ class SafeServeAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: IconButton(
               icon: const Icon(Icons.search_rounded, color: Color(0xFF4964C7), size: 22),
               onPressed: () {
-                Navigator.pushNamed(context, '/search');
+                // Use the direct navigation with MaterialPageRoute instead of named route
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SearchPage(),
+                  ),
+                );
               },
             ),
           ),
