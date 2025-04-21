@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/Reports_Analytics.dart/Reports.dart';
 
 class SafeServeDrawer extends StatelessWidget {
   final String profileImageUrl;
@@ -33,7 +34,17 @@ class SafeServeDrawer extends StatelessWidget {
                   _buildDrawerItem(icon: Icons.description, label: 'Forms', onTap: () {}),
                   _buildDrawerItem(icon: Icons.map, label: 'Map View', onTap: () {}),
                   _buildDrawerItem(icon: Icons.notifications, label: 'Notifications', onTap: () {}),
-                  _buildDrawerItem(icon: Icons.assessment, label: 'Reports', onTap: () {}),
+                  _buildDrawerItem(
+                    icon: Icons.assessment,
+                    label: 'Reports',
+                    onTap: () {
+                      Navigator.pop(context); // Close drawer
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => const Reports()),
+                      );
+                    },
+                  ),
                   _buildDrawerItem(icon: Icons.settings, label: 'Settings', onTap: () {}),
                   _buildDrawerItem(icon: Icons.help_outline, label: 'Support', onTap: () {}),
                   _buildDrawerItem(icon: Icons.logout, label: 'Logout', onTap: () {}),
