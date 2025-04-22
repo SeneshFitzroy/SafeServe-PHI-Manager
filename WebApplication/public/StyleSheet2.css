@@ -447,3 +447,10 @@
     color: #555;
 }
 
+.error-message {
+    font-size: 16px;
+    margin-left: 20px;
+    margin-top: 10px;
+    color: red;
+  }
+  

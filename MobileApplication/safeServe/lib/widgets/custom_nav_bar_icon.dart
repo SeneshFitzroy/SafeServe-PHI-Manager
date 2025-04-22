@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
+import '../screens/registered_shops/registered_shops_screen.dart';
+import '../screens/map_view/map_view_screen.dart';
+
+/// Simple enum to identify which icon is which
+enum NavItem {
+  calendar,
+  shops,
+  dashboard,
+  form,
+  map, 
+  notifications,
+}
 
 class CustomNavBarIcon extends StatelessWidget {
   final IconData icon;
   final String label;
-  final String route;
+  final NavItem navItem;
   final bool selected;
 
   const CustomNavBarIcon({
-    super.key,
+    Key? key,
     required this.icon,
     required this.label,
-    required this.route,
+    required this.navItem,
     this.selected = false,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +33,44 @@ class CustomNavBarIcon extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        if (route.isNotEmpty && route != '/') {
-          Navigator.pushNamed(context, route);
+        switch (navItem) {
+          case NavItem.calendar:
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Calendar placeholder')),
+            );
+            break;
+          case NavItem.shops:
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const RegisteredShopsScreen()),
+            );
+            break;
+          case NavItem.dashboard:
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Dashboard placeholder')),
+            );
+            break;
+          case NavItem.form:
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Form placeholder')),
+            );
+            break;
+          case NavItem.map:
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const MapViewScreen()),
+            );
+            break;
+          case NavItem.notifications:
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Notifications placeholder')),
+            );
+            break;
         }
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 500),
-        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
         decoration: BoxDecoration(
           color: selected ? const Color(0xFFCDE6FE) : Colors.transparent,
           shape: BoxShape.circle,
