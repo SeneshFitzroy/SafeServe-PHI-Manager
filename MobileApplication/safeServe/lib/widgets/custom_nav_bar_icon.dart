@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/registered_shops/registered_shops_screen.dart';
+import '../screens/Dashboard/dashboard.dart'; // Add import for Dashboard
 
 /// Simple enum to identify which icon is which
 enum NavItem {
@@ -44,8 +45,10 @@ class CustomNavBarIcon extends StatelessWidget {
             );
             break;
           case NavItem.dashboard:
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Dashboard placeholder')),
+            // Navigate to Dashboard instead of showing a snackbar
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const Dashboard()),
             );
             break;
           case NavItem.form:
