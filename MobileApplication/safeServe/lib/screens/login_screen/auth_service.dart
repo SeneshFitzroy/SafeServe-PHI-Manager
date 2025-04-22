@@ -1,43 +1,64 @@
 // lib/services/auth_service.dart
 import 'package:firebase_auth/firebase_auth.dart';
 
-/// A small wrapper around [FirebaseAuth] so UI code stays clean.
+/// A simple wrapper around FirebaseAuth.
 class AuthService {
   AuthService._();
   static final AuthService instance = AuthService._();
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  /// Sign‑in with e‑mail & password.
-  /// Returns the logged‑in [User] on success. Throws a message string on error.
-  Future<User> signIn({required String email, required String password}) async {
+  /// Sign in with email & password.
+  /// Throws [AuthException] on any error, with .message set to the real exception.
+  Future<User> signIn({
+    required String email,
+    required String password,
+  }) async {
     try {
-      final credential = await _auth.signInWithEmailAndPassword(
-        email: email.trim(),
-        password: password.trim(),
+      final cred = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
       );
-      return credential.user!;
+      final user = cred.user;
+      if (user == null) {
+        throw const AuthException('no-user', 'No user returned');
+      }
+      return user;
     } on FirebaseAuthException catch (e) {
-      // Translate common error codes to readable text
+      // Map known codes
+      String msg;
       switch (e.code) {
         case 'invalid-email':
-          throw 'E‑mail address is malformed.';
+          msg = 'That email address is invalid.';
+          break;
         case 'user-disabled':
-          throw 'This user has been disabled.';
+          msg = 'This user has been disabled.';
+          break;
         case 'user-not-found':
-          throw 'No user found for that e‑mail.';
+          msg = 'No user found for that email.';
+          break;
         case 'wrong-password':
-          throw 'Incorrect password.';
+          msg = 'Wrong password provided.';
+          break;
         default:
-          throw e.message ?? 'Authentication error';
+          msg = e.message ?? 'Authentication error, please try again.';
       }
-    } catch (_) {
-      throw 'Unexpected error – please try again.';
+      throw AuthException(e.code, msg);
+    } catch (e, st) {
+      // Log full exception & stack for debugging:
+      // ignore: avoid_print
+      print('AuthService.signIn error: $e\n$st');
+      // surface the raw error to UI
+      throw AuthException('unknown', e.toString());
     }
   }
+}
 
-  /// Sign‑out
-  Future<void> signOut() => _auth.signOut();
-
-  /// Stream of auth changes (optional)
-  Stream<User?> get userChanges => _auth.userChanges();
+/// Carries a FirebaseAuth error code & a user‑facing message.
+class AuthException implements Exception {
+  final String code;
+  final String message;
+  const AuthException(this.code, this.message);
+  @override
+  String toString() => 'AuthException($code): $message';
 }

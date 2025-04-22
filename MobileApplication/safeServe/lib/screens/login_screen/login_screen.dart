@@ -5,175 +5,213 @@ import 'auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
-
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailCtrl    = TextEditingController();
-  final _passCtrl     = TextEditingController();
-  final _formKey      = GlobalKey<FormState>();
+  final _emailController    = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _formKey            = GlobalKey<FormState>();
 
-  bool _hidePass   = true;
-  bool _loading    = false;
-  String? _error;
+  bool _obscurePassword = true;
+  bool _isLoading       = false;
+  String? _errorMsg;
 
   @override
   void dispose() {
-    _emailCtrl.dispose();
-    _passCtrl.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _login() async {
+  Future<void> _handleLogin() async {
+    // dismiss keyboard
+    FocusScope.of(context).unfocus();
+
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
-      _loading = true;
-      _error   = null;
+      _isLoading = true;
+      _errorMsg  = null;
     });
 
     try {
-      await AuthService.instance
-          .signIn(email: _emailCtrl.text, password: _passCtrl.text);
+      // <<-- THE ACTUAL SIGN-IN CALL
+      await AuthService.instance.signIn(
+        email:    _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
       if (!mounted) return;
+      // Success: go to your main screen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const RegisteredShopsScreen()),
       );
-    } catch (e) {
-      setState(() => _error = e.toString());
+    } on AuthException catch (e) {
+      setState(() => _errorMsg = e.message);
+    } catch (e, st) {
+      // should never happen, but just in case
+      // ignore: avoid_print
+      print('Unexpected login error: $e\n$st');
+      setState(() => _errorMsg = 'Unexpected error: $e');
     } finally {
-      if (mounted) setState(() => _loading = false);
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    body: Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xFFE6F5FE), Color(0xFFF5ECF9)],
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFE6F5FE), Color(0xFFF5ECF9)],
+          ),
         ),
-      ),
-      child: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            width: 340,
-            padding:
-            const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Form(
-              key: _formKey,
-              child: Column(mainAxisSize: MainAxisSize.min, children: [
-                Image.asset('assets/images/other/logo.png',
-                    width: 100, height: 100),
-                const SizedBox(height: 25),
-                const Text('Welcome Back',
-                    style: TextStyle(
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              width: 340,
+              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      'assets/images/other/logo.png',
+                      width: 100,
+                      height: 100,
+                    ),
+                    const SizedBox(height: 25),
+                    const Text(
+                      'Welcome Back',
+                      style: TextStyle(
                         fontFamily: 'Roboto',
                         fontSize: 32,
-                        fontWeight: FontWeight.bold)),
-                const SizedBox(height: 8),
-                const Text(
-                  'Enter your username and password to log in',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: 'Roboto',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
-                      color: Color(0xFF696E72)),
-                ),
-                const SizedBox(height: 20),
-
-                // Email
-                _label('Email'),
-                _inputWrapper(
-                  child: TextFormField(
-                    controller: _emailCtrl,
-                    validator: (v) =>
-                    v != null && v.contains('@') ? null : 'Invalid e‑mail',
-                    decoration: _inputDeco('Enter your email'),
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // Password
-                _label('Password'),
-                _inputWrapper(
-                  child: TextFormField(
-                    controller: _passCtrl,
-                    obscureText: _hidePass,
-                    validator: (v) =>
-                    v != null && v.length >= 6 ? null : 'Min 6 chars',
-                    decoration: _inputDeco('Enter your password').copyWith(
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                            _hidePass ? Icons.visibility_off : Icons.visibility),
-                        onPressed: () =>
-                            setState(() => _hidePass = !_hidePass),
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-
-                if (_error != null) ...[
-                  Text(_error!,
-                      style: const TextStyle(color: Colors.red)),
-                  const SizedBox(height: 10),
-                ],
-
-                // Login button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1F41BB),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      padding:
-                      const EdgeInsets.symmetric(vertical: 14),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Enter your username and password to log in',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                        color: Color(0xFF696E72),
+                      ),
                     ),
-                    onPressed: _loading ? null : _login,
-                    child: _loading
-                        ? const SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: CircularProgressIndicator(
-                            strokeWidth: 2, color: Colors.white))
-                        : const Text('Login',
-                        style: TextStyle(
+                    const SizedBox(height: 20),
+
+                    // EMAIL LABEL + FIELD
+                    _label('Email'),
+                    _inputWrapper(
+                      child: TextFormField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (v) => (v != null && v.contains('@'))
+                            ? null
+                            : 'Invalid email address',
+                        decoration: _inputDeco('Enter your email'),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // PASSWORD LABEL + FIELD
+                    _label('Password'),
+                    _inputWrapper(
+                      child: TextFormField(
+                        controller: _passwordController,
+                        obscureText: _obscurePassword,
+                        validator: (v) => (v != null && v.length >= 6)
+                            ? null
+                            : 'Min 6 characters',
+                        decoration: _inputDeco('Enter your password').copyWith(
+                          suffixIcon: IconButton(
+                            icon: Icon(_obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility),
+                            onPressed: () => setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            }),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // ERROR MESSAGE, if any
+                    if (_errorMsg != null) ...[
+                      Text(_errorMsg!,
+                          style: const TextStyle(color: Colors.red)),
+                      const SizedBox(height: 12),
+                    ],
+
+                    // LOGIN BUTTON
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF1F41BB),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        onPressed: _isLoading ? null : _handleLogin,
+                        child: _isLoading
+                            ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                            : const Text(
+                          'Login',
+                          style: TextStyle(
                             fontFamily: 'Roboto',
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white)),
-                  ),
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ]),
+              ),
             ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 
-  // ---------- small helpers ----------
-  Widget _label(String txt) => Align(
+  // ————— Helpers —————
+
+  Widget _label(String text) => Align(
     alignment: Alignment.centerLeft,
-    child: Text(txt,
-        style: const TextStyle(
-            fontFamily: 'Roboto',
-            fontWeight: FontWeight.w500,
-            fontSize: 12,
-            color: Color(0xFF696E72))),
+    child: Text(
+      text,
+      style: const TextStyle(
+        fontFamily: 'Roboto',
+        fontWeight: FontWeight.w500,
+        fontSize: 12,
+        color: Color(0xFF696E72),
+      ),
+    ),
   );
 
   Widget _inputWrapper({required Widget child}) => Container(
@@ -187,6 +225,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   InputDecoration _inputDeco(String hint) => InputDecoration(
     hintText: hint,
+    hintStyle: const TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 14,
+      color: Colors.black54,
+    ),
     border: InputBorder.none,
     contentPadding:
     const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
