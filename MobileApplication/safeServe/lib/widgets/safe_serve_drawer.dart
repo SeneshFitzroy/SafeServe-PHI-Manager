@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safeserve/screens/Profileview/profile.dart';
 
 class SafeServeDrawer extends StatelessWidget {
   final String profileImageUrl;
@@ -27,6 +28,11 @@ class SafeServeDrawer extends StatelessWidget {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
+                  _buildDrawerItem(
+                    icon: Icons.person, 
+                    label: 'Profile', 
+                    onTap: () => _navigateToProfile(context)
+                  ),
                   _buildDrawerItem(icon: Icons.dashboard, label: 'Dashboard', onTap: () {}),
                   _buildDrawerItem(icon: Icons.calendar_today, label: 'Calendar', onTap: () {}),
                   _buildDrawerItem(icon: Icons.store, label: 'Shops', onTap: () {}),
@@ -47,41 +53,57 @@ class SafeServeDrawer extends StatelessWidget {
   }
 
   Widget _buildProfileHeader(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(16, 40, 16, 20),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.grey[300],
-            backgroundImage: (profileImageUrl.isNotEmpty) ? NetworkImage(profileImageUrl) : null,
-            child: (profileImageUrl.isEmpty)
-                ? const Icon(Icons.person, size: 40, color: Colors.black54)
-                : null,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  userName,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  userPost,
-                  style: const TextStyle(fontSize: 14, color: Colors.black87),
-                ),
-              ],
+    return GestureDetector(
+      onTap: () => _navigateToProfile(context),
+      child: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.fromLTRB(16, 40, 16, 20),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 30,
+              backgroundColor: Colors.grey[300],
+              backgroundImage: (profileImageUrl.isNotEmpty) ? NetworkImage(profileImageUrl) : null,
+              child: (profileImageUrl.isEmpty)
+                  ? const Icon(Icons.person, size: 40, color: Colors.black54)
+                  : null,
             ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.arrow_forward_ios, color: Color(0xFF1F41BB)),
-          )
-        ],
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    userName,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    userPost,
+                    style: const TextStyle(fontSize: 14, color: Colors.black87),
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              onPressed: () => _navigateToProfile(context),
+              icon: const Icon(Icons.arrow_forward_ios, color: Color(0xFF1F41BB)),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _navigateToProfile(BuildContext context) {
+    Navigator.of(context).pop(); // Close the drawer first
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ProfileScreen(
+          userName: userName,
+          profileImageUrl: profileImageUrl,
+          userPost: userPost,
+        ),
       ),
     );
   }

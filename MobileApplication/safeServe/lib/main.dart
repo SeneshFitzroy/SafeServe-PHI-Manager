@@ -75,8 +75,8 @@ class SafeServeApp extends StatelessWidget {
         // New route for FormSelectionScreen
         '/form_selection': (context) {
           final formData =
-              ModalRoute.of(context)?.settings.arguments as H800FormData?;
-          return FormSelectionScreen(formData: formData);
+              ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          return FormSelectionScreen(formData: formData ?? {});
         },
       },
     );
