@@ -157,4 +157,45 @@ class H800FormData {
         houseKeeping: json['houseKeeping'] ?? false,
         waterSupplySuitable: json['waterSupplySuitable'] ?? false,
       );
+
+  // Add this method inside the H800FormData class
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'suitabilityForBusiness': suitabilityForBusiness,
+      'generalCleanliness': generalCleanliness,
+      'hasPollutingConditions': hasPollutingConditions,
+      'hasAnimals': hasAnimals,
+      'hasSmokeOrAdverseEffects': hasSmokeOrAdverseEffects,
+      'natureOfBuilding': natureOfBuilding,
+      'space': space,
+      'lightAndVentilation': lightAndVentilation,
+      'conditionOfFloor': conditionOfFloor,
+      'conditionOfWall': conditionOfWall,
+      'conditionOfCeiling': conditionOfCeiling,
+      'hasHazards': hasHazards,
+      'generalCleanlinessPart3': generalCleanlinessPart3,
+      'safetyMeasuresForCleanliness': safetyMeasuresForCleanliness,
+      'hasFlies': hasFlies,
+      'hasPests': hasPests,
+      'hasFloor': hasFloor,
+      'maintenanceOfWalls': maintenanceOfWalls,
+      'maintenanceOfCeilingPart3': maintenanceOfCeilingPart3,
+      'spaceInWorkingArea': spaceInWorkingArea,
+      'dailyCleaning': dailyCleaning,
+      'riskOfContaminationFromToilets': riskOfContaminationFromToilets,
+      'adequateBins': adequateBins,
+      'hasUnnecessaryItems': hasUnnecessaryItems,
+      'cleaningToolsAvailable': cleaningToolsAvailable,
+      'hasObjectionableOdor': hasObjectionableOdor,
+      'hasOpenDrains': hasOpenDrains,
+      'areaUsedForSleeping': areaUsedForSleeping,
+      'separateChoppingBoards': separateChoppingBoards,
+      'cleanlinessOfEquipment': cleanlinessOfEquipment,
+      'suitabilityOfLayout': suitabilityOfLayout,
+      'lightAndVentilationPart3': lightAndVentilationPart3,
+      'houseKeeping': houseKeeping,
+      'waterSupplySuitable': waterSupplySuitable,
+    };
+  }
 }

@@ -21,8 +21,10 @@ class CustomNavBarIcon extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        if (route.isNotEmpty && route != '/') {
-          Navigator.pushNamed(context, route);
+        if (route.isNotEmpty && !selected) {
+          // First pop all routes to get back to root, then push the new route
+          Navigator.popUntil(context, (route) => route.isFirst);
+          Navigator.pushReplacementNamed(context, route);
         }
       },
       child: AnimatedContainer(
