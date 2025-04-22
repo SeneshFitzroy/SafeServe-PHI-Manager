@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../../widgets/safe_serve_appbar.dart';
-import '../../widgets/safe_serve_drawer.dart';
-import '../../widgets/custom_nav_bar_icon.dart';
-import 'dart:async';
-import '../registered_shops/registered_shops_screen.dart';
+import 'package:safeserve/widgets/safe_serve_drawer.dart';
 
-class MapViewScreen extends StatelessWidget {
-  const MapViewScreen({Key? key}) : super(key: key);
+class Reports extends StatelessWidget {
+  const Reports({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Map View'),
+        title: const Text('Reports'),
       ),
       drawer: SafeServeDrawer(
         profileImageUrl: '',
@@ -24,15 +19,15 @@ class MapViewScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.map, size: 80, color: Color(0xFF1F41BB)),
+            const Icon(Icons.assessment, size: 80, color: Color(0xFF1F41BB)),
             const SizedBox(height: 16),
             const Text(
-              'Map View',
+              'Reports',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
-              'Location tracking and visualization',
+              'View and generate inspection reports',
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
           ],

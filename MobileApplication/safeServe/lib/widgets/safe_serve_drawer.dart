@@ -1,4 +1,8 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
+import 'package:safeserve/screens/map_view/map_view_screen.dart'; // Use only this import for map view
+import 'package:safeserve/screens/reports_screen.dart'; // Use lowercase for package name
 
 class SafeServeDrawer extends StatelessWidget {
   final String profileImageUrl;
