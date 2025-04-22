@@ -36,21 +36,17 @@ class ShopCard extends StatelessWidget {
       ),
       child: Column(
         children: [
+          // Image container
           Container(
             margin: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
             ),
             clipBehavior: Clip.hardEdge,
-            child: Image.asset(
-              imagePath,
-              height: 131,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
+            child: _buildImage(),
           ),
 
-          // Title Row + Grade Badge
+          // Title + grade
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
@@ -72,7 +68,7 @@ class ShopCard extends StatelessWidget {
 
           // Address
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -82,19 +78,19 @@ class ShopCard extends StatelessWidget {
             ),
           ),
 
-          // Last Inspection
+          // Last inspection
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Last Inspection Date : $lastInspectionDate',
+                'Last Inspection Date: $lastInspectionDate',
                 style: const TextStyle(fontSize: 12, color: Colors.black),
               ),
             ),
           ),
 
-          // Detail Button
+          // Details button
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -107,7 +103,7 @@ class ShopCard extends StatelessWidget {
                     color: const Color(0xFF1F41BB),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Icon(
+                  child: const Icon(
                     MdiIcons.arrowRightCircleOutline,
                     color: Colors.white,
                     size: 24,
@@ -119,5 +115,25 @@ class ShopCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildImage() {
+    if (imagePath.startsWith('http')) {
+      // network URL from Firebase Storage
+      return Image.network(
+        imagePath,
+        height: 131,
+        width: double.infinity,
+        fit: BoxFit.cover,
+      );
+    } else {
+      // bundled asset
+      return Image.asset(
+        imagePath,
+        height: 131,
+        width: double.infinity,
+        fit: BoxFit.cover,
+      );
+    }
   }
 }

@@ -9,12 +9,33 @@ class ShopImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25),
-        child: Image.asset(
-          imagePath,
-          fit: BoxFit.cover,
-          height: 190,
-          width: double.infinity,
+      child: Container(
+        width: double.infinity,
+        height: 200,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: const Color(0xFF4289FC)),
         ),
+        clipBehavior: Clip.hardEdge,
+        child: _buildImage(),
+      ),
     );
+  }
+
+  Widget _buildImage() {
+    if (imagePath.startsWith('http')) {
+      return Image.network(
+        imagePath,
+        fit: BoxFit.cover,
+        width: double.infinity,
+      );
+    } else {
+      return Image.asset(
+        imagePath,
+        fit: BoxFit.cover,
+        width: double.infinity,
+      );
+    }
   }
 }

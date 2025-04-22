@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ShopInfoCard extends StatelessWidget {
   final Map<String, dynamic> shopData;
@@ -150,9 +151,10 @@ class ShopInfoCard extends StatelessWidget {
                 foregroundColor: Colors.white,
                 backgroundColor: const Color(0xFF1F41BB),
               ),
-              onPressed: () {
+              onPressed: () async {
                 Navigator.of(ctx).pop();
-                // perform delete operation here.
+                // perform delete operation
+                await _deleteShopDocument(shopData['name'] ?? '');
               },
               child: const Text('Yes'),
             ),
@@ -170,5 +172,19 @@ class ShopInfoCard extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _deleteShopDocument(String docId) async {
+    if (docId.isEmpty) return;
+    final shopsRef = FirebaseFirestore.instance.collection('shops');
+    try {
+      await shopsRef.doc(docId).delete();
+      // Optionally, also delete the image from Storage:
+      // final storageRef = FirebaseStorage.instance.ref('shops_images/$docId.jpg');
+      // await storageRef.delete();
+    } catch (e) {
+      // handle error if needed
+      print('Error deleting shop doc: $e');
+    }
   }
 }

@@ -1,14 +1,18 @@
+// lib/screens/registered_shops/registered_shops_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../widgets/safe_serve_appbar.dart';
 import '../../../widgets/safe_serve_drawer.dart';
 import '../../../widgets/custom_nav_bar_icon.dart';
 import '../register_shop/register_shop_form_data.dart';
 import '../register_shop/screen_one/register_shop_screen_one.dart';
 import 'widgets/shop_card.dart';
+import '../../../widgets/custom_nav_bar_icon.dart' show NavItem;
 
 class RegisteredShopsScreen extends StatefulWidget {
-  const RegisteredShopsScreen({super.key});
+  const RegisteredShopsScreen({Key? key}) : super(key: key);
 
   @override
   State<RegisteredShopsScreen> createState() => _RegisteredShopsScreenState();
@@ -19,6 +23,9 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _isNavVisible = true;
 
+  final CollectionReference shopsRef =
+  FirebaseFirestore.instance.collection('shops');
+
   @override
   void initState() {
     super.initState();
@@ -26,43 +33,34 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
   }
 
   void _scrollListener() {
-    if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-      if (_isNavVisible) {
-        setState(() => _isNavVisible = false);
-      }
-    } else if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
-      if (!_isNavVisible) {
-        setState(() => _isNavVisible = true);
-      }
+    final dir = _scrollController.position.userScrollDirection;
+    if (dir == ScrollDirection.reverse && _isNavVisible) {
+      setState(() => _isNavVisible = false);
+    } else if (dir == ScrollDirection.forward && !_isNavVisible) {
+      setState(() => _isNavVisible = true);
     }
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_scrollListener);
-    _scrollController.dispose();
+    _scrollController
+      ..removeListener(_scrollListener)
+      ..dispose();
     super.dispose();
   }
 
   Future<List<Map<String, dynamic>>> fetchShops() async {
-    // Simulating an async data call
-    await Future.delayed(const Duration(seconds: 1));
-    return [
-      {
-        'name': 'ABC Bakery & Café',
-        'address': '123 Main Street, Colombo 07',
-        'lastInspection': '01/02/2025',
-        'grade': 'A',
-        'image': 'assets/images/shop/shop1.png',
-      },
-      {
-        'name': 'LUX Gift Shop',
-        'address': '123 2nd Street, Colombo 07',
-        'lastInspection': '01/05/2024',
-        'grade': 'B',
-        'image': 'assets/images/shop/shop2.png',
-      },
-    ];
+    final snapshot = await shopsRef.get();
+    return snapshot.docs.map((doc) {
+      final data = doc.data()! as Map<String, dynamic>;
+      return {
+        'name': data['name'] ?? doc.id,
+        'address': data['address'] ?? 'No address',
+        'lastInspection': data['lastInspection'] ?? 'N/A',
+        'grade': data['grade'] ?? 'N/A',
+        'image': data['image'] ?? 'assets/images/shop/shop1.png',
+      };
+    }).toList();
   }
 
   @override
@@ -80,7 +78,6 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
       ),
       body: Stack(
         children: [
-          // Background Gradient
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -93,11 +90,20 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
 
           FutureBuilder<List<Map<String, dynamic>>>(
             future: fetchShops(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
+            builder: (ctx, snap) {
+              if (snap.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
-              final shops = snapshot.data!;
+              if (snap.hasError) {
+                return Center(
+                  child: Text(
+                    'Error loading shops:\n${snap.error}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                );
+              }
+              final shops = snap.data!;
               if (shops.isEmpty) {
                 return const Center(child: Text('No shops found'));
               }
@@ -105,11 +111,9 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
                 controller: _scrollController,
                 padding: const EdgeInsets.only(top: 15),
                 itemCount: shops.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return _buildBodyHeader();
-                  }
-                  final shop = shops[index - 1];
+                itemBuilder: (ctx, i) {
+                  if (i == 0) return _buildBodyHeader();
+                  final shop = shops[i - 1];
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(25, 0, 25, 30),
                     child: ShopCard(
@@ -132,107 +136,66 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
             },
           ),
 
-          // Floating bottom nav
           _buildFloatingNavBar(context),
         ],
       ),
     );
   }
 
-  Widget _buildBodyHeader() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(25, 0, 15, 20),
-      child: Row(
-        children: [
-          const Text(
-            'Registered Shops',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: 25,
-            ),
-          ),
-          const Spacer(),
-          IconButton(
-            icon: const Icon(Icons.filter_list, color: Color(0xFF1F41BB)),
-            onPressed: () {
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.add, color: Color(0xFF1F41BB)),
-            onPressed: () {
-              // Create an empty formData and go to screen 1
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (ctx) => RegisterShopScreenOne(
-                    formData: RegisterShopFormData(),
-                  ),
+  Widget _buildBodyHeader() => Padding(
+    padding: const EdgeInsets.fromLTRB(25, 0, 15, 20),
+    child: Row(
+      children: [
+        const Text(
+          'Registered Shops',
+          style: TextStyle(
+              color: Colors.black, fontSize: 25, fontWeight: FontWeight.bold),
+        ),
+        const Spacer(),
+        IconButton(
+          icon: const Icon(Icons.filter_list, color: Color(0xFF1F41BB)),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: const Icon(Icons.add, color: Color(0xFF1F41BB)),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => RegisterShopScreenOne(
+                  formData: RegisterShopFormData(),
                 ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
+              ),
+            );
+          },
+        ),
+      ],
+    ),
+  );
 
   Widget _buildFloatingNavBar(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double navWidth = screenWidth * 0.80;
-
+    final w = MediaQuery.of(context).size.width * 0.8;
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
       bottom: _isNavVisible ? 30 : -100,
-      left: (screenWidth - navWidth) / 2,
-      width: navWidth,
+      left: (MediaQuery.of(context).size.width - w) / 2,
+      width: w,
       child: Container(
         height: 60,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.15),
-              offset: const Offset(0, 2),
-              blurRadius: 6,
-            ),
-          ],
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 6)],
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            CustomNavBarIcon(
-              icon: Icons.event,
-              label: 'Calendar',
-              navItem: NavItem.calendar,
-              selected: false,
-            ),
-            CustomNavBarIcon(
-              icon: Icons.store,
-              label: 'Shops',
-              navItem: NavItem.shops,
-              selected: true,
-            ),
-            CustomNavBarIcon(
-              icon: Icons.dashboard,
-              label: 'Dashboard',
-              navItem: NavItem.dashboard,
-              selected: false,
-            ),
-            CustomNavBarIcon(
-              icon: Icons.description,
-              label: 'Form',
-              navItem: NavItem.form,
-              selected: false,
-            ),
-            CustomNavBarIcon(
-              icon: Icons.notifications,
-              label: 'Notifications',
-              navItem: NavItem.notifications,
-              selected: false,
-            ),
+          children: const [
+            CustomNavBarIcon(icon: Icons.event, label: 'Calendar', navItem: NavItem.calendar, selected: false),
+            CustomNavBarIcon(icon: Icons.store, label: 'Shops', navItem: NavItem.shops, selected: true),
+            CustomNavBarIcon(icon: Icons.dashboard, label: 'Dashboard', navItem: NavItem.dashboard),
+            CustomNavBarIcon(icon: Icons.description, label: 'Form', navItem: NavItem.form),
+            CustomNavBarIcon(icon: Icons.notifications, label: 'Notifications', navItem: NavItem.notifications),
           ],
         ),
       ),
