@@ -1,3 +1,6 @@
+// lib/main.dart
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:safeserve/screens/login_screen/login_screen.dart';
 import 'package:safeserve/screens/register_shop/register_shop_form_data.dart';
@@ -10,7 +13,9 @@ import 'package:safeserve/screens/h800_form/h800_form_data.dart';
 import 'package:safeserve/screens/view_shop_detail/view_shop_detail_screen.dart';
 import 'package:safeserve/screens/edit_shop_detail/edit_shop_detail_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const SafeServeApp());
 }
 
@@ -22,48 +27,47 @@ class SafeServeApp extends StatelessWidget {
     return MaterialApp(
       title: 'SafeServe',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Roboto',
-      ),
+      theme: ThemeData(fontFamily: 'Roboto'),
       home: const LoginScreen(),
       routes: {
-        '/search': (context) => const PlaceholderPage(title: 'Search'),
-        '/menu': (context) => const PlaceholderPage(title: 'Menu'),
-        '/add': (context) => const PlaceholderPage(title: 'Add'),
-        '/detail': (context) => const PlaceholderPage(title: 'Shop Detail'),
-        '/calendar': (context) => const PlaceholderPage(title: 'Calendar'),
-        '/dashboard': (context) => const PlaceholderPage(title: 'Dashboard'),
-        '/form': (context) => const PlaceholderPage(title: 'Form'),
-        '/notifications': (context) =>
-        const PlaceholderPage(title: 'Notifications'),
-        '/register_shop_screen_one': (context) {
-          final formData = ModalRoute.of(context)?.settings.arguments
+        '/search': (_) => const PlaceholderPage(title: 'Search'),
+        '/menu': (_) => const PlaceholderPage(title: 'Menu'),
+        '/add': (_) => const PlaceholderPage(title: 'Add'),
+        '/detail': (_) => const PlaceholderPage(title: 'Shop Detail'),
+        '/calendar': (_) => const PlaceholderPage(title: 'Calendar'),
+        '/dashboard': (_) => const PlaceholderPage(title: 'Dashboard'),
+        '/form': (_) => const PlaceholderPage(title: 'Form'),
+        '/notifications': (_) => const PlaceholderPage(title: 'Notifications'),
+        '/register_shop_screen_one': (ctx) {
+          final formData = ModalRoute.of(ctx)!.settings.arguments
           as RegisterShopFormData?;
           return RegisterShopScreenOne(
-              formData: formData ?? RegisterShopFormData());
+            formData: formData ?? RegisterShopFormData(),
+          );
         },
-        '/register_shop_screen_two': (context) {
-          final formData = ModalRoute.of(context)?.settings.arguments
+        '/register_shop_screen_two': (ctx) {
+          final formData = ModalRoute.of(ctx)!.settings.arguments
           as RegisterShopFormData?;
           return RegisterShopScreenTwo(
-              formData: formData ?? RegisterShopFormData());
+            formData: formData ?? RegisterShopFormData(),
+          );
         },
-        '/shop_detail': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as String?;
-          return ShopDetailScreen(shopId: args ?? '');
+        '/shop_detail': (ctx) {
+          final id = ModalRoute.of(ctx)!.settings.arguments as String?;
+          return ShopDetailScreen(shopId: id ?? '');
         },
-        '/h800_form_screen': (context) {
+        '/h800_form_screen': (ctx) {
           final formData =
-          ModalRoute.of(context)?.settings.arguments as H800FormData?;
+          ModalRoute.of(ctx)!.settings.arguments as H800FormData?;
           return H800FormScreen(formData: formData ?? H800FormData());
         },
-  '/h800_form_screen_two': (context) {
+        '/h800_form_screen_two': (ctx) {
           final formData =
-          ModalRoute.of(context)?.settings.arguments as H800FormData?;
+          ModalRoute.of(ctx)!.settings.arguments as H800FormData?;
           return H800FormScreenTwo(formData: formData ?? H800FormData());
         },
-        '/view_shop_detail': (context) => const ViewShopDetailScreen(),
-        '/edit_shop_detail': (context) => const EditShopDetailScreen(),
+        '/view_shop_detail': (_) => const ViewShopDetailScreen(),
+        '/edit_shop_detail': (_) => const EditShopDetailScreen(),
       },
     );
   }
@@ -74,10 +78,8 @@ class PlaceholderPage extends StatelessWidget {
   const PlaceholderPage({super.key, required this.title});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: Center(child: Text(title, style: const TextStyle(fontSize: 20))),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+    appBar: AppBar(title: Text(title)),
+    body: Center(child: Text(title, style: const TextStyle(fontSize: 20))),
+  );
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../widgets/safe_serve_appbar.dart';
 import '../../../widgets/safe_serve_drawer.dart';
 import '../../../widgets/custom_nav_bar_icon.dart';
@@ -8,9 +9,10 @@ import 'widgets/shop_image.dart';
 import 'widgets/shop_info_card.dart';
 import 'widgets/form_buttons.dart';
 import 'widgets/inspection_history.dart';
+import '../../../widgets/custom_nav_bar_icon.dart' show NavItem;
 
 class ShopDetailScreen extends StatefulWidget {
-  final String shopId;
+  final String shopId; // doc ID in Firestore
 
   const ShopDetailScreen({Key? key, required this.shopId}) : super(key: key);
 
@@ -23,54 +25,42 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
   final ScrollController _scrollController = ScrollController();
   bool _isNavVisible = true;
 
+  final CollectionReference shopsRef =
+  FirebaseFirestore.instance.collection('shops');
+
   Future<Map<String, dynamic>> fetchShopDetail() async {
-    await Future.delayed(const Duration(seconds: 1));
-
-    final shopData = <String, Map<String, dynamic>>{
-      'ABC Bakery & Café': {
-        'name': 'ABC Bakery & Café',
-        'grade': 'A',
+    // Attempt to read doc from Firestore
+    final docSnap = await shopsRef.doc(widget.shopId).get();
+    if (!docSnap.exists) {
+      // If doc doesn’t exist, return minimal default
+      return {
+        'name': widget.shopId,
+        'grade': 'N/A',
         'image': 'assets/images/shop/shop1.png',
-        'referenceNo': '15264568',
-        'phiArea': 'Biyagama',
-        'typeOfTrade': 'Bakery',
-        'address': '585/A Makola North Makola',
-        'ownerName': 'Leo Perera',
-        'telephone': '071249582',
-        'inspectionHistory': [
-          {'date': '2025/01/26', 'grade': 'A'},
-          {'date': '2024/12/15', 'grade': 'B'},
-          {'date': '2024/09/15', 'grade': 'A'},
-        ],
-      },
-      'LUX Gift Shop': {
-        'name': 'LUX Gift Shop',
-        'grade': 'B',
-        'image': 'assets/images/shop/shop2.png',
-        'referenceNo': '98765432',
-        'phiArea': 'Colombo',
-        'typeOfTrade': 'Retail',
-        'address': '123 Main Street, Colombo',
-        'ownerName': 'John Doe',
-        'telephone': '077999888',
-        'inspectionHistory': [
-          {'date': '2025/03/01', 'grade': 'A'},
-          {'date': '2024/10/09', 'grade': 'C'},
-        ],
-      },
-    };
+        'referenceNo': '------',
+        'phiArea': 'Unknown',
+        'typeOfTrade': 'Unknown',
+        'address': 'Unknown',
+        'ownerName': 'Unknown',
+        'telephone': '-----',
+        'inspectionHistory': [],
+      };
+    }
 
-    return shopData[widget.shopId] ?? {
-      'name': widget.shopId,
-      'grade': 'A',
-      'image': 'assets/images/shop/shop1.png',
-      'referenceNo': '------',
-      'phiArea': 'Unknown',
-      'typeOfTrade': 'Unknown',
-      'address': 'Unknown',
-      'ownerName': 'Unknown',
-      'telephone': '-----',
-      'inspectionHistory': [],
+    final data = docSnap.data() as Map<String, dynamic>;
+    // For the “inspectionHistory,” you might store it in Firestore, or default to empty
+    return {
+      'name': data['name'] ?? widget.shopId,
+      'grade': data['grade'] ?? 'N/A',
+      'image': data['image'] ?? 'assets/images/shop/shop1.png',
+      'referenceNo': data['referenceNo'] ?? '------',
+      'phiArea': data['phiArea'] ?? 'Unknown',
+      'typeOfTrade': data['typeOfTrade'] ?? 'Unknown',
+      'address': data['address'] ?? 'Unknown',
+      'ownerName': data['ownerName'] ?? 'Unknown',
+      'telephone': data['telephone'] ?? '-----',
+      // If you want to store an array of inspectionHistory, handle that here:
+      'inspectionHistory': data['inspectionHistory'] ?? [],
     };
   }
 
