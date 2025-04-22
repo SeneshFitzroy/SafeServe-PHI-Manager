@@ -33,6 +33,7 @@ dependencies:
   material_design_icons_flutter: ^5.0.6595
   image_picker: ^0.8.7+4
   intl: ^0.18.1
+  google_maps_flutter: ^2.5.0
 
   firebase_core: ^2.18.0
   firebase_auth: ^4.6.4

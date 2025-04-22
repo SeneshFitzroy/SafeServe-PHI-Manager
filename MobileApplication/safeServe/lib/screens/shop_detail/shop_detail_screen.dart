@@ -207,9 +207,9 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
               selected: false,
             ),
             CustomNavBarIcon(
-              icon: Icons.notifications,
-              label: 'Notifications',
-              navItem: NavItem.notifications,
+              icon: Icons.map,
+              label: 'Map',
+              navItem: NavItem.map,
               selected: false,
             ),
           ],
