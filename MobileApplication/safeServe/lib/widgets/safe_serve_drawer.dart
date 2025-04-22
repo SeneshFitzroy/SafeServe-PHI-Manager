@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../screens/Reports_Analytics.dart/Reports.dart';
+import '../screens/map_view/map_view_screen.dart';
+
 class SafeServeDrawer extends StatelessWidget {
   final String profileImageUrl;
   final String userName;

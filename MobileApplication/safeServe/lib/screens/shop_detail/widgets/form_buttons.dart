@@ -11,18 +11,37 @@ class FormButtons extends StatelessWidget {
         spacing: 12,
         runSpacing: 12,
         children: [
-          _buildFormButton('HC 800'),
-          _buildFormButton('Sandeshaya'),
-          _buildFormButton('Bond Form'),
+          _buildFormButton(
+            context,
+            'HC 800',
+                () => Navigator.pushNamed(context, '/h800_form_screen'),
+          ),
+          _buildFormButton(
+            context,
+            'Sandeshaya',
+                () {
+              // TODO: wire this one up
+            },
+          ),
+          _buildFormButton(
+            context,
+            'Bond Form',
+                () {
+              // TODO: wire this one up
+            },
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildFormButton(String label) {
+  Widget _buildFormButton(
+      BuildContext context,
+      String label,
+      VoidCallback onTap,
+      ) {
     return InkWell(
-      onTap: () {
-      },
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
         decoration: BoxDecoration(
@@ -31,7 +50,11 @@ class FormButtons extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ),
     );
