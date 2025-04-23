@@ -1,4 +1,4 @@
-// Dashboard.js
+
 // Handles dashboard functionality and chart data
 
 import { auth } from "./firebase-config.js";
