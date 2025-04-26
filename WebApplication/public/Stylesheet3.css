@@ -203,16 +203,14 @@ html, body {
 
 
 .error-message {
-    color: #e74c3c;
+    color: red;
     font-size: 13px;
-    margin-top: 4px;
-    margin-bottom: 10px;
+    margin-top: 5px;
+    margin-left: 25px;
     display: none;
   }
   
   .login-form input.invalid {
-    border: 2px solid #e74c3c !important;
-    background-color: #fff6f6 !important;
+    border: 2px solid red;
   }
-  
   
