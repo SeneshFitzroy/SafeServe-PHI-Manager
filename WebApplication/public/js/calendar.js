@@ -1,5 +1,5 @@
 import { auth, db } from './firebase-config.js';
-import { collection, getDocs, query, where, doc, getDoc, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+import { collection, getDocs, query, where, doc, getDoc, addDoc, updateDoc,deleteDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
 
 let calendar;
@@ -50,68 +50,45 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         
         eventClick: async function(info) {
-            const title = info.event.title || "";
-            const date = info.event.start ? info.event.start.toISOString().split('T')[0] : "";
+            const title = info.event.title || "No Title";
+            const date = info.event.start ? info.event.start.toISOString().split('T')[0] : "No Date";
             const notes = info.event.extendedProps && info.event.extendedProps.notes ? info.event.extendedProps.notes : "";
-            const taskId = info.event.id; // ✅ Firestore Document ID
         
-            const { value: formValues } = await Swal.fire({
+            const result = await Swal.fire({
                 title: 'Edit Task',
-                html:
-                    `<input id="edit-title" class="swal2-input" value="${title}" placeholder="Task Title">` +
-                    `<input id="edit-date" type="date" class="swal2-input" value="${date}" placeholder="Date">` +
-                    `<textarea id="edit-notes" class="swal2-textarea" placeholder="Notes (optional)" rows="3">${notes}</textarea>`,
-                focusConfirm: false,
+                html: `
+                    <input id="edit-task-title" class="swal2-input" placeholder="Task Title" value="${title}">
+                    <input id="edit-task-date" type="date" class="swal2-input" value="${date}">
+                    <textarea id="edit-task-notes" class="swal2-textarea" placeholder="Notes (optional)">${notes}</textarea>
+                `,
                 showCancelButton: true,
+                showDenyButton: true,
                 confirmButtonText: 'Save Changes',
+                denyButtonText: 'Delete Task',
                 cancelButtonText: 'Cancel',
+                focusConfirm: false,
                 preConfirm: () => {
-                    const newTitle = document.getElementById('edit-title').value.trim();
-                    const newDate = document.getElementById('edit-date').value;
-                    const newNotes = document.getElementById('edit-notes').value.trim();
+                    const newTitle = document.getElementById('edit-task-title').value.trim();
+                    const newDate = document.getElementById('edit-task-date').value;
+                    const newNotes = document.getElementById('edit-task-notes').value.trim();
         
                     if (!newTitle || !newDate) {
-                        Swal.showValidationMessage('Title and Date are required');
+                        Swal.showValidationMessage('Task title and date are required');
                         return false;
                     }
-        
                     return { newTitle, newDate, newNotes };
                 }
             });
         
-            if (formValues) {
-                try {
-                    const taskRef = doc(db, "tasks", taskId);
-                    await updateDoc(taskRef, {
-                        title: formValues.newTitle,
-                        date: new Date(formValues.newDate),
-                        notes: formValues.newNotes
-                    });
-        
-                    // ✅ Also update the event on calendar without reloading
-                    info.event.setProp('title', formValues.newTitle);
-                    info.event.setStart(formValues.newDate);
-                    info.event.setExtendedProp('notes', formValues.newNotes);
-        
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Task Updated!',
-                        timer: 1200,
-                        showConfirmButton: false
-                    });
-        
-                } catch (error) {
-                    console.error("Error updating task:", error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error!',
-                        text: 'Could not update task. Please try again.'
-                    });
-                }
+            if (result.isConfirmed && result.value) {
+                updateTask(info.event, result.value.newTitle, result.value.newDate, result.value.newNotes);
+            } else if (result.isDenied) {
+                deleteTask(info.event);
             }
+        }
         
-            info.jsEvent.preventDefault();
-        },
+        
+        
         
         
         
@@ -139,7 +116,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// 🛠️ Load manual tasks
 async function loadTasks(userId) {
     const events = [];
     try {
@@ -151,10 +127,10 @@ async function loadTasks(userId) {
             const task = docSnap.data();
             if (task.date) {
                 events.push({
-                    id: docSnap.id, // ✅ Save the Firestore document ID here
+                    id: docSnap.id, // ✅ Save the document ID
                     title: task.title || "Untitled Task",
                     start: task.date.toDate().toISOString().split('T')[0],
-                    color: '#3788d8', // Blue
+                    color: '#3788d8',
                     notes: task.notes || ""
                 });
             }
@@ -246,6 +222,87 @@ async function saveNewTask(dateStr, title, notes) {
             icon: 'error',
             title: 'Error!',
             text: 'Could not save task. Please try again.'
+        });
+    }
+}
+
+
+
+
+
+async function deleteTask(event) {
+    try {
+        const docId = event.id; // ✅ get the correct document ID
+        if (!docId) {
+            console.error("No document ID found for this event.");
+            return;
+        }
+
+        await deleteDoc(doc(db, "tasks", docId)); // ✅ delete by ID
+        event.remove(); // ✅ remove from calendar UI
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Deleted!',
+            timer: 1200,
+            showConfirmButton: false
+        });
+    } catch (error) {
+        console.error("Error deleting task:", error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Could not delete task. Please try again.'
+        });
+    }
+}
+
+
+
+async function updateTask(event, newTitle, newDate, newNotes) {
+    try {
+        const docId = event.id;
+        if (!docId) {
+            console.error("No document ID found for this event.");
+            return;
+        }
+
+        const oldDate = event.start ? event.start.toISOString().split('T')[0] : "";
+
+        const updateData = {
+            title: newTitle,
+            notes: newNotes
+        };
+
+        // ✅ Only update Firestore date if the user has changed the date
+        if (newDate !== oldDate) {
+            updateData.date = new Date(newDate + "T00:00:00"); // force midnight time
+        }
+
+        // ✅ Update Firestore
+        await updateDoc(doc(db, "tasks", docId), updateData);
+
+        // ✅ Update event directly without removing
+        event.setProp('title', newTitle);
+        event.setExtendedProp('notes', newNotes);
+
+        if (newDate !== oldDate) {
+            event.setStart(new Date(newDate + "T00:00:00")); // set correct start with time
+        }
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Updated!',
+            timer: 1200,
+            showConfirmButton: false
+        });
+
+    } catch (error) {
+        console.error("Error updating task:", error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Could not update task. Please try again.'
         });
     }
 }
