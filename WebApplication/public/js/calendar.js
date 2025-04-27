@@ -1,5 +1,6 @@
 import { auth, db } from './firebase-config.js';
-import { collection, getDocs, query, where, doc, getDoc, addDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+import { collection, getDocs, query, where, doc, getDoc, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+
 
 let calendar;
 
@@ -48,65 +49,66 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         },
         
-        eventClick: function(info) {
-            const title = info.event.title || "No Title";
-            const date = info.event.start ? info.event.start.toISOString().split('T')[0] : "No Date";
-            const notes = info.event.extendedProps && info.event.extendedProps.notes ? info.event.extendedProps.notes : "No Notes";
+        eventClick: async function(info) {
+            const title = info.event.title || "";
+            const date = info.event.start ? info.event.start.toISOString().split('T')[0] : "";
+            const notes = info.event.extendedProps && info.event.extendedProps.notes ? info.event.extendedProps.notes : "";
+            const taskId = info.event.id; // ✅ Firestore Document ID
         
-            Swal.fire({
-                html: `
-                    <div style="position: relative; padding: 10px;">
-                        <button id="closePopup" style="
-                            position: absolute;
-                            top: 10px;
-                            right: 10px;
-                            background: none;
-                            border: none;
-                            font-size: 20px;
-                            color: #888;
-                            cursor: pointer;
-                        ">&times;</button>
-                        
-                        <div style="
-                            font-size: 18px;
-                            font-weight: bold;
-                            margin-bottom: 10px;
-                            color: #333;
-                        ">${title}</div>
+            const { value: formValues } = await Swal.fire({
+                title: 'Edit Task',
+                html:
+                    `<input id="edit-title" class="swal2-input" value="${title}" placeholder="Task Title">` +
+                    `<input id="edit-date" type="date" class="swal2-input" value="${date}" placeholder="Date">` +
+                    `<textarea id="edit-notes" class="swal2-textarea" placeholder="Notes (optional)" rows="3">${notes}</textarea>`,
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonText: 'Save Changes',
+                cancelButtonText: 'Cancel',
+                preConfirm: () => {
+                    const newTitle = document.getElementById('edit-title').value.trim();
+                    const newDate = document.getElementById('edit-date').value;
+                    const newNotes = document.getElementById('edit-notes').value.trim();
         
-                        <div style="
-                            font-size: 14px;
-                            margin-bottom: 5px;
-                        "><strong>Date:</strong> ${date}</div>
-        
-                        <div style="
-                            font-size: 14px;
-                            margin-bottom: 5px;
-                        "><strong>Notes:</strong> ${notes}</div>
-                    </div>
-                `,
-                showConfirmButton: false,
-                background: '#ffffff',
-                width: 320,
-                padding: '1.5em',
-                customClass: {
-                    popup: 'small-calendar-popup'
-                },
-                didOpen: () => {
-                    const closeBtn = document.getElementById('closePopup');
-                    if (closeBtn) {
-                        closeBtn.addEventListener('mouseover', () => {
-                            closeBtn.style.color = '#000';
-                        });
-                        closeBtn.addEventListener('mouseout', () => {
-                            closeBtn.style.color = '#888';
-                        });
-                        closeBtn.addEventListener('click', () => {
-                            Swal.close();
-                        });
+                    if (!newTitle || !newDate) {
+                        Swal.showValidationMessage('Title and Date are required');
+                        return false;
                     }
+        
+                    return { newTitle, newDate, newNotes };
                 }
             });
+        
+            if (formValues) {
+                try {
+                    const taskRef = doc(db, "tasks", taskId);
+                    await updateDoc(taskRef, {
+                        title: formValues.newTitle,
+                        date: new Date(formValues.newDate),
+                        notes: formValues.newNotes
+                    });
+        
+                    // ✅ Also update the event on calendar without reloading
+                    info.event.setProp('title', formValues.newTitle);
+                    info.event.setStart(formValues.newDate);
+                    info.event.setExtendedProp('notes', formValues.newNotes);
+        
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Task Updated!',
+                        timer: 1200,
+                        showConfirmButton: false
+                    });
+        
+                } catch (error) {
+                    console.error("Error updating task:", error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Could not update task. Please try again.'
+                    });
+                }
+            }
         
             info.jsEvent.preventDefault();
         },
@@ -149,6 +151,7 @@ async function loadTasks(userId) {
             const task = docSnap.data();
             if (task.date) {
                 events.push({
+                    id: docSnap.id, // ✅ Save the Firestore document ID here
                     title: task.title || "Untitled Task",
                     start: task.date.toDate().toISOString().split('T')[0],
                     color: '#3788d8', // Blue
@@ -161,6 +164,7 @@ async function loadTasks(userId) {
     }
     return events;
 }
+
 
 // 🛠️ Load upcoming inspections
 async function loadInspections(userId) {
