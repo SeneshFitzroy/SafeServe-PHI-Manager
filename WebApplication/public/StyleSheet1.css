@@ -127,3 +127,23 @@
 }
 
 
+/* Make the calendar background white */
+.fc-col-header-cell {
+    background-color: #ADC1ED; 
+    font-weight: bold;
+    font-size: 16px;
+    border: 1px solid #ADC1ED;
+  }
+
+  .fc-toolbar-title {
+    text-align: left;
+    font-size: 24px;
+    font-weight: bold;
+    margin-left: 100px;
+  }
+
+
+  .fc-daygrid-day-frame {
+    background-color: white;
+    border: 1px solid #ADC1ED;
+  }
