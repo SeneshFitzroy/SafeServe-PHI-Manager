@@ -147,3 +147,8 @@
     background-color: white;
     border: 1px solid #ADC1ED;
   }
+
+  .calendar-popover {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+}
