@@ -1,9 +1,7 @@
 import { auth, db } from './firebase-config.js';
-import { collection, getDocs, query, where, doc, getDoc, addDoc, updateDoc,deleteDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
-
+import { collection, getDocs, query, where, doc, getDoc, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
 let calendar;
-
 
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
@@ -20,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
         fixedWeekCount: true,
         selectable: true,
         events: [],
-        dateClick: async function(info) {
+        dateClick: async function (info) {
             const { value: formValues } = await Swal.fire({
                 title: 'Add New Task',
                 html:
@@ -33,80 +31,82 @@ document.addEventListener('DOMContentLoaded', function () {
                 preConfirm: () => {
                     const title = document.getElementById('task-title').value.trim();
                     const notes = document.getElementById('task-notes').value.trim();
-        
+
                     if (!title) {
                         Swal.showValidationMessage('Task title is required');
                         return false;
                     }
-        
                     return { title, notes };
                 }
             });
-        
+
             if (formValues) {
-                // Save the new task to Firestore
                 saveNewTask(info.dateStr, formValues.title, formValues.notes);
             }
         },
-        
-        eventClick: async function(info) {
+        eventClick: async function (info) {
+            const eventType = info.event.extendedProps.type || "manual"; // Default to manual if not set
+
             const title = info.event.title || "No Title";
             const date = info.event.start ? info.event.start.toISOString().split('T')[0] : "No Date";
-            const notes = info.event.extendedProps && info.event.extendedProps.notes ? info.event.extendedProps.notes : "";
-        
-            const result = await Swal.fire({
-                title: 'Edit Task',
-                html: `
-                    <input id="edit-task-title" class="swal2-input" placeholder="Task Title" value="${title}">
-                    <input id="edit-task-date" type="date" class="swal2-input" value="${date}">
-                    <textarea id="edit-task-notes" class="swal2-textarea" placeholder="Notes (optional)">${notes}</textarea>
-                `,
-                showCancelButton: true,
-                showDenyButton: true,
-                confirmButtonText: 'Save Changes',
-                denyButtonText: 'Delete Task',
-                cancelButtonText: 'Cancel',
-                focusConfirm: false,
-                preConfirm: () => {
-                    const newTitle = document.getElementById('edit-task-title').value.trim();
-                    const newDate = document.getElementById('edit-task-date').value;
-                    const newNotes = document.getElementById('edit-task-notes').value.trim();
-        
-                    if (!newTitle || !newDate) {
-                        Swal.showValidationMessage('Task title and date are required');
-                        return false;
+            const notes = info.event.extendedProps && info.event.extendedProps.notes ? info.event.extendedProps.notes : "No Notes";
+
+            if (eventType === 'inspection') {
+                // 🛡 Only simple popup for inspections
+                await Swal.fire({
+                    title: 'Upcoming Inspection',
+                    html: `
+                        <div style="font-weight:bold; font-size:18px;">${title}</div>
+                        <div style="margin-top:10px;">Date: ${date}</div>
+                    `,
+                    confirmButtonText: 'Close'
+                });
+            } else {
+                // 🛠 Editable popup for manual tasks
+                const result = await Swal.fire({
+                    title: 'Edit Task',
+                    html: `
+                        <input id="edit-task-title" class="swal2-input" placeholder="Task Title" value="${title}">
+                        <input id="edit-task-date" type="date" class="swal2-input" value="${date}">
+                        <textarea id="edit-task-notes" class="swal2-textarea" placeholder="Notes (optional)">${notes}</textarea>
+                    `,
+                    showCancelButton: true,
+                    showDenyButton: true,
+                    confirmButtonText: 'Save Changes',
+                    denyButtonText: 'Delete Task',
+                    cancelButtonText: 'Cancel',
+                    focusConfirm: false,
+                    preConfirm: () => {
+                        const newTitle = document.getElementById('edit-task-title').value.trim();
+                        const newDate = document.getElementById('edit-task-date').value;
+                        const newNotes = document.getElementById('edit-task-notes').value.trim();
+
+                        if (!newTitle || !newDate) {
+                            Swal.showValidationMessage('Task title and date are required');
+                            return false;
+                        }
+                        return { newTitle, newDate, newNotes };
                     }
-                    return { newTitle, newDate, newNotes };
+                });
+
+                if (result.isConfirmed && result.value) {
+                    updateTask(info.event, result.value.newTitle, result.value.newDate, result.value.newNotes);
+                } else if (result.isDenied) {
+                    deleteTask(info.event);
                 }
-            });
-        
-            if (result.isConfirmed && result.value) {
-                updateTask(info.event, result.value.newTitle, result.value.newDate, result.value.newNotes);
-            } else if (result.isDenied) {
-                deleteTask(info.event);
             }
         }
-        
-        
-        
-        
-        
-        
-        
     });
-    
 
     calendar.render();
 
-    // Load events after rendering
     auth.onAuthStateChanged(async (user) => {
         if (user) {
             try {
                 const manualTasks = await loadTasks(user.uid);
                 const inspections = await loadInspections(user.uid);
-
-                const allEvents = [...manualTasks, ...inspections]; // merge
-                calendar.addEventSource(allEvents); // add all to calendar
+                const allEvents = [...manualTasks, ...inspections];
+                calendar.addEventSource(allEvents);
             } catch (error) {
                 console.error("Error loading events:", error);
             }
@@ -127,11 +127,12 @@ async function loadTasks(userId) {
             const task = docSnap.data();
             if (task.date) {
                 events.push({
-                    id: docSnap.id, // ✅ Save the document ID
+                    id: docSnap.id,
                     title: task.title || "Untitled Task",
                     start: task.date.toDate().toISOString().split('T')[0],
                     color: '#3788d8',
-                    notes: task.notes || ""
+                    notes: task.notes || "",
+                    type: 'manual' // 👈 Tag manual task
                 });
             }
         });
@@ -141,12 +142,9 @@ async function loadTasks(userId) {
     return events;
 }
 
-
-// 🛠️ Load upcoming inspections
 async function loadInspections(userId) {
     const events = [];
     try {
-        // First get the PHI user's GN Divisions
         const userDocRef = doc(db, "users", userId);
         const userDocSnap = await getDoc(userDocRef);
 
@@ -163,18 +161,17 @@ async function loadInspections(userId) {
             return [];
         }
 
-        // Now fetch all shops
         const shopsRef = collection(db, "shops");
         const shopsSnapshot = await getDocs(shopsRef);
 
         shopsSnapshot.forEach((docSnap) => {
             const shop = docSnap.data();
-
             if (shop.upcomingInspection && gnDivisions.includes(shop.gnDivision)) {
                 events.push({
                     title: `Inspection: ${shop.name || "Unnamed Shop"}`,
                     start: shop.upcomingInspection.toDate().toISOString().split('T')[0],
-                    color: '#3DB952' // Green
+                    color: '#3DB952',
+                    type: 'inspection' // 👈 Tag inspection task
                 });
             }
         });
@@ -184,8 +181,6 @@ async function loadInspections(userId) {
     }
     return events;
 }
-
-
 
 async function saveNewTask(dateStr, title, notes) {
     try {
@@ -209,7 +204,6 @@ async function saveNewTask(dateStr, title, notes) {
             showConfirmButton: false
         });
 
-        // ✅ Also show the newly added task instantly on the calendar
         calendar.addEvent({
             title: title,
             start: dateStr,
@@ -226,39 +220,6 @@ async function saveNewTask(dateStr, title, notes) {
     }
 }
 
-
-
-
-
-async function deleteTask(event) {
-    try {
-        const docId = event.id; // ✅ get the correct document ID
-        if (!docId) {
-            console.error("No document ID found for this event.");
-            return;
-        }
-
-        await deleteDoc(doc(db, "tasks", docId)); // ✅ delete by ID
-        event.remove(); // ✅ remove from calendar UI
-
-        Swal.fire({
-            icon: 'success',
-            title: 'Deleted!',
-            timer: 1200,
-            showConfirmButton: false
-        });
-    } catch (error) {
-        console.error("Error deleting task:", error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'Could not delete task. Please try again.'
-        });
-    }
-}
-
-
-
 async function updateTask(event, newTitle, newDate, newNotes) {
     try {
         const docId = event.id;
@@ -274,20 +235,17 @@ async function updateTask(event, newTitle, newDate, newNotes) {
             notes: newNotes
         };
 
-        // ✅ Only update Firestore date if the user has changed the date
         if (newDate !== oldDate) {
-            updateData.date = new Date(newDate + "T00:00:00"); // force midnight time
+            updateData.date = new Date(newDate + "T00:00:00");
         }
 
-        // ✅ Update Firestore
         await updateDoc(doc(db, "tasks", docId), updateData);
 
-        // ✅ Update event directly without removing
         event.setProp('title', newTitle);
         event.setExtendedProp('notes', newNotes);
 
         if (newDate !== oldDate) {
-            event.setStart(new Date(newDate + "T00:00:00")); // set correct start with time
+            event.setStart(new Date(newDate + "T00:00:00"));
         }
 
         Swal.fire({
@@ -303,6 +261,34 @@ async function updateTask(event, newTitle, newDate, newNotes) {
             icon: 'error',
             title: 'Error!',
             text: 'Could not update task. Please try again.'
+        });
+    }
+}
+
+async function deleteTask(event) {
+    try {
+        const docId = event.id;
+        if (!docId) {
+            console.error("No document ID found for this event.");
+            return;
+        }
+
+        await deleteDoc(doc(db, "tasks", docId));
+        event.remove();
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Deleted!',
+            timer: 1200,
+            showConfirmButton: false
+        });
+
+    } catch (error) {
+        console.error("Error deleting task:", error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Could not delete task. Please try again.'
         });
     }
 }
