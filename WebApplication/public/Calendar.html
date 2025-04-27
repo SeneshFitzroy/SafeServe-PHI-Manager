@@ -6,11 +6,11 @@
 
         <link rel="stylesheet" href="Navigation.css" />
         <link rel="stylesheet" href="StyleSheet1.css" />
+        
         <!-- FullCalendar Core CSS -->
         <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet" />
         <!-- FullCalendar DayGrid Plugin CSS -->
         <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/daygrid/main.min.css" rel="stylesheet" />
-
         <!-- SweetAlert2 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 
@@ -88,16 +88,16 @@
         
         <div class="main-header">Calendar</div>
 
-        <div class="middle-container" >
+        <div class="middle-container" style="width:1130px;">
             <div id="calendar" style="height: 100%;"></div>
         </div>
 
 
         <script>
             function logoutUser(e) {
-                e.preventDefault(); // prevent form reload
+                e.preventDefault(); 
                 sessionStorage.clear();
-                window.location.href = "login.html"; // or your login page name
+                window.location.href = "login.html"; 
             }
 
         </script>
@@ -109,7 +109,7 @@
         <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/daygrid/main.min.js"></script>
         <!-- SweetAlert2 JS -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <!-- THEN import your own JS -->
+
         <script type="module" src="js/calendar.js"></script>
             
 

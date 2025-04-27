@@ -21,17 +21,33 @@ document.addEventListener('DOMContentLoaded', function () {
         dateClick: async function (info) {
             const { value: formValues } = await Swal.fire({
                 title: 'Add New Task',
-                html:
-                    '<input id="task-title" class="swal2-input" placeholder="Task Title">' +
-                    '<textarea id="task-notes" class="swal2-textarea" placeholder="Notes (optional)" rows="3"></textarea>',
-                focusConfirm: false,
+                html: `
+                    <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
+        
+                        <div style="display: flex; flex-direction: column;">
+                            <label for="task-title" style="font-weight: bold; font-size: 14px; margin-bottom: 5px; margin-left: -170px; width: 100%;">Task Title</label>
+                            <input id="task-title" class="swal2-input" placeholder="Enter task title" style="margin-left:-5px; width: 105%; height: 35px; font-size: 14px;">
+                        </div>
+        
+                        <div style="display: flex; flex-direction: column;">
+                            <label for="task-notes" style="font-weight: bold; font-size: 14px; margin-bottom: 5px; margin-left: -150px; width: 100%;">Notes (optional)</label>
+                            <textarea id="task-notes" class="swal2-textarea" placeholder="Enter notes" style="margin-left:-5px; width: 105%; height: 80px; font-size: 14px; resize: none;"></textarea>
+                        </div>
+        
+                    </div>
+                `,
+                width: 500,
+                padding: '1.5em',
+                background: '#f9f9f9',
                 showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
                 confirmButtonText: 'Save',
                 cancelButtonText: 'Cancel',
+                focusConfirm: false,
                 preConfirm: () => {
                     const title = document.getElementById('task-title').value.trim();
                     const notes = document.getElementById('task-notes').value.trim();
-
                     if (!title) {
                         Swal.showValidationMessage('Task title is required');
                         return false;
@@ -39,39 +55,74 @@ document.addEventListener('DOMContentLoaded', function () {
                     return { title, notes };
                 }
             });
-
+        
             if (formValues) {
                 saveNewTask(info.dateStr, formValues.title, formValues.notes);
             }
         },
+        
+        
         eventClick: async function (info) {
-            const eventType = info.event.extendedProps.type || "manual"; // Default to manual if not set
-
+            const eventType = info.event.extendedProps.type || "manual";
+        
             const title = info.event.title || "No Title";
             const date = info.event.start ? info.event.start.toISOString().split('T')[0] : "No Date";
             const notes = info.event.extendedProps && info.event.extendedProps.notes ? info.event.extendedProps.notes : "No Notes";
-
+        
             if (eventType === 'inspection') {
-                // 🛡 Only simple popup for inspections
+                // Inspection Task (only view)
+                const referenceNo = info.event.extendedProps.referenceNo || "N/A";
+                const gnDivision = info.event.extendedProps.gnDivision || "N/A";
+
                 await Swal.fire({
                     title: 'Upcoming Inspection',
                     html: `
-                        <div style="font-weight:bold; font-size:18px;">${title}</div>
-                        <div style="margin-top:10px;">Date: ${date}</div>
+                        <div style="text-align:left; font-weight:bold; font-size:18px; margin-bottom:15px;">${title}</div>
+                        <div style="text-align:left; font-size:14px; margin-bottom:5px;"><strong>Date:</strong> ${date}</div>
+                        <div style="text-align:left; font-size:14px; margin-bottom:5px;"><strong>Reference No:</strong> ${referenceNo}</div>
+                        <div style="text-align:left; font-size:14px;"><strong>GN Division:</strong> ${gnDivision}</div>
                     `,
+                    background: '#f9f9f9',
+                    confirmButtonColor: '#3085d6',
                     confirmButtonText: 'Close'
                 });
+
             } else {
-                // 🛠 Editable popup for manual tasks
+                // Manual Task (editable)
                 const result = await Swal.fire({
                     title: 'Edit Task',
                     html: `
-                        <input id="edit-task-title" class="swal2-input" placeholder="Task Title" value="${title}">
-                        <input id="edit-task-date" type="date" class="swal2-input" value="${date}">
-                        <textarea id="edit-task-notes" class="swal2-textarea" placeholder="Notes (optional)">${notes}</textarea>
+                        <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
+
+                            <div style="display: flex; flex-direction: column; ">
+                                <label for="edit-task-title" style="font-weight: bold; font-size: 14px; margin-bottom: 5px;margin-left:-170px; width: 100%;">Task Title</label>
+                                <input id="edit-task-title" class="swal2-input" placeholder="Enter task title" value="${title}" style="margin-left:-5px;width: 105%; height: 35px; font-size: 14px;">
+                            </div>
+
+                            <div style="display: flex; flex-direction: column; ">
+                                <label for="edit-task-date" style="font-weight: bold; font-size: 14px; margin-bottom: 5px;margin-left:-185px; width: 100%;">Date</label>
+                                <input id="edit-task-date" type="date" class="swal2-input" value="${date}" style="margin-left:-5px;width: 105%; height: 35px; font-size: 14px;">
+                            </div>
+
+                            <div style="display: flex; flex-direction: column; ">
+                                <label for="edit-task-notes" style="font-weight: bold; font-size: 14px; margin-bottom: 5px;margin-left:-150px;width: 100%;">Notes (optional)</label>
+                                <textarea id="edit-task-notes" class="swal2-textarea" placeholder="Enter notes" style="margin-left:-5px;width: 105%; height: 80px; font-size: 14px; resize: none;">${notes}</textarea>
+                            </div>
+
+                        </div>
                     `,
+
+
+
+
+                    width: 500, 
+                    padding: '1.5em',
+                    background: '#f9f9f9',
                     showCancelButton: true,
                     showDenyButton: true,
+                    confirmButtonColor: '#3085d6',
+                    denyButtonColor: '#e74c3c',
+                    cancelButtonColor: '#6c757d',
                     confirmButtonText: 'Save Changes',
                     denyButtonText: 'Delete Task',
                     cancelButtonText: 'Cancel',
@@ -80,7 +131,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         const newTitle = document.getElementById('edit-task-title').value.trim();
                         const newDate = document.getElementById('edit-task-date').value;
                         const newNotes = document.getElementById('edit-task-notes').value.trim();
-
                         if (!newTitle || !newDate) {
                             Swal.showValidationMessage('Task title and date are required');
                             return false;
@@ -88,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         return { newTitle, newDate, newNotes };
                     }
                 });
-
+        
                 if (result.isConfirmed && result.value) {
                     updateTask(info.event, result.value.newTitle, result.value.newDate, result.value.newNotes);
                 } else if (result.isDenied) {
@@ -96,6 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         }
+        
     });
 
     calendar.render();
@@ -132,7 +183,7 @@ async function loadTasks(userId) {
                     start: task.date.toDate().toISOString().split('T')[0],
                     color: '#3788d8',
                     notes: task.notes || "",
-                    type: 'manual' // 👈 Tag manual task
+                    type: 'manual' 
                 });
             }
         });
@@ -171,7 +222,9 @@ async function loadInspections(userId) {
                     title: `Inspection: ${shop.name || "Unnamed Shop"}`,
                     start: shop.upcomingInspection.toDate().toISOString().split('T')[0],
                     color: '#3DB952',
-                    type: 'inspection' // 👈 Tag inspection task
+                    type: 'inspection',
+                    referenceNo: shop.referenceNo || "N/A",   
+                    gnDivision: shop.gnDivision || "N/A"       
                 });
             }
         });

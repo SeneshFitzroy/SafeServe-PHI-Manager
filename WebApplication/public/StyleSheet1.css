@@ -136,19 +136,18 @@
   }
 
   .fc-toolbar-title {
-    text-align: left;
     font-size: 24px;
     font-weight: bold;
-    margin-left: 100px;
+    left: 0px;
   }
 
 
-  .fc-daygrid-day-frame {
+.fc-daygrid-day-frame {
     background-color: white;
     border: 1px solid #ADC1ED;
-  }
+}
 
-  .calendar-popover {
+.calendar-popover {
     font-family: 'Roboto', sans-serif;
     font-size: 14px;
 }
