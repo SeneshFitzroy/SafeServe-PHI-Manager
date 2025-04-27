@@ -6,13 +6,18 @@
 
         <link rel="stylesheet" href="Navigation.css" />
         <link rel="stylesheet" href="StyleSheet1.css" />
+        <!-- FullCalendar Core CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet" />
+        <!-- FullCalendar DayGrid Plugin CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/daygrid/main.min.css" rel="stylesheet" />
+
+
+
         
         <script type="module" src="js/firebase-config.js"></script>
         <script type="module" src="js/session-guard.js"></script>
         <script type="module" src="js/nav-access.js"></script>
         <script type="module" src="js/user-info.js"></script>
-
-
 
 
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -84,7 +89,7 @@
         <div class="main-header">Calendar</div>
 
         <div class="middle-container" >
-
+            <div id="calendar" style="height: 100%;"></div>
         </div>
 
 
@@ -94,7 +99,16 @@
                 sessionStorage.clear();
                 window.location.href = "login.html"; // or your login page name
             }
+
         </script>
+
+
+        <!-- FullCalendar Core JS -->
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+        <!-- FullCalendar DayGrid Plugin JS -->
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/daygrid/main.min.js"></script>
+        <!-- THEN import your own JS -->
+        <script src="js/calendar.js"></script>
             
 
 </body>
