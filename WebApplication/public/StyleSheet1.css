@@ -127,3 +127,27 @@
 }
 
 
+/* Make the calendar background white */
+.fc-col-header-cell {
+    background-color: #ADC1ED; 
+    font-weight: bold;
+    font-size: 16px;
+    border: 1px solid #ADC1ED;
+  }
+
+  .fc-toolbar-title {
+    font-size: 24px;
+    font-weight: bold;
+    left: 0px;
+  }
+
+
+.fc-daygrid-day-frame {
+    background-color: white;
+    border: 1px solid #ADC1ED;
+}
+
+.calendar-popover {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+}
