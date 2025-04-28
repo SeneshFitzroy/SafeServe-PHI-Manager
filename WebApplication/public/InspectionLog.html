@@ -7,10 +7,12 @@
         <link rel="stylesheet" href="Navigation.css" />
         <link rel="stylesheet" href="StyleSheet6.css" />
         
+        
         <script type="module" src="js/firebase-config.js"></script>
         <script type="module" src="js/session-guard.js"></script>
         <script type="module" src="js/nav-access.js"></script>
         <script type="module" src="js/user-info.js"></script>
+        <script type="module" src="js/inspection-log.js"></script>
 
 
 
@@ -102,132 +104,9 @@
             </div>
             
             <div class="content-container" >
-                <div class="container-row">
-                    <p class="element-1">13236</p>
-                    <p class="element-2">ABC Cafe & Bakery</p>
-                    <p class="element-3">Biyagama</p>
-                    <p class="element-4">A</p>
-                    <div class="actions">
-                        <!-- view button -->
-                        <div class="view" onclick="showViewSlider()">
-                            <img src="images/view-icon.png">
-                        </div>
-                        <!-- EDIT button -->
-                        <a href="FormHistory.html">
-                            <div class="edit">
-                                <img src="images/log-icon.png" alt="Edit">
-                            </div>
-                        </a>
-                    </div> 
-                </div>
-                <div class="container-row">
-                    <p class="element-1">13236</p>
-                    <p class="element-2">ABC Cafe & Bakery</p>
-                    <p class="element-3">Biyagama</p>
-                    <p class="element-4">D</p>
-                    <div class="actions">
-                        <!-- view button -->
-                        <div class="view" onclick="showViewSlider()">
-                            <img src="images/view-icon.png">
-                        </div>
-                        <!-- EDIT button -->
-                        <a href="FormHistory.html">
-                            <div class="edit">
-                                <img src="images/log-icon.png" alt="Edit">
-                            </div>
-                        </a>
-                    </div> 
-                </div>
-                <div class="container-row">
-                    <p class="element-1">13236</p>
-                    <p class="element-2">ABC Cafe & Bakery</p>
-                    <p class="element-3">Biyagama</p>
-                    <p class="element-4">A</p>
-                    <div class="actions">
-                        <!-- view button -->
-                        <div class="view" onclick="showViewSlider()">
-                            <img src="images/view-icon.png">
-                        </div>
-                        <!-- EDIT button -->
-                        <a href="FormHistory.html">
-                            <div class="edit">
-                                <img src="images/log-icon.png" alt="Edit">
-                            </div>
-                        </a>
-                    </div> 
-                </div>
-                <div class="container-row">
-                    <p class="element-1">13236</p>
-                    <p class="element-2">ABC Cafe & Bakery</p>
-                    <p class="element-3">Biyagama</p>
-                    <p class="element-4">B</p>
-                    <div class="actions">
-                        <!-- view button -->
-                        <div class="view" onclick="showViewSlider()">
-                            <img src="images/view-icon.png">
-                        </div>
-                        <!-- EDIT button -->
-                        <a href="FormHistory.html">
-                            <div class="edit">
-                                <img src="images/log-icon.png" alt="Edit">
-                            </div>
-                        </a>
-                    </div> 
-                </div>
-                <div class="container-row">
-                    <p class="element-1">13236</p>
-                    <p class="element-2">ABC Cafe & Bakery</p>
-                    <p class="element-3">Biyagama</p>
-                    <p class="element-4">C</p>
-                    <div class="actions">
-                        <!-- view button -->
-                        <div class="view" onclick="showViewSlider()">
-                            <img src="images/view-icon.png">
-                        </div>
-                        <!-- EDIT button -->
-                        <a href="FormHistory.html">
-                            <div class="edit">
-                                <img src="images/log-icon.png" alt="Edit">
-                            </div>
-                        </a>
-                    </div> 
-                </div>
-                <div class="container-row">
-                    <p class="element-1">13236</p>
-                    <p class="element-2">ABC Cafe & Bakery</p>
-                    <p class="element-3">Biyagama</p>
-                    <p class="element-4">A</p>
-                    <div class="actions">
-                        <!-- view button -->
-                        <div class="view" onclick="showViewSlider()">
-                            <img src="images/view-icon.png">
-                        </div>
-                        <!-- EDIT button -->
-                        <a href="FormHistory.html">
-                            <div class="edit">
-                                <img src="images/log-icon.png" alt="Edit">
-                            </div>
-                        </a>
-                    </div> 
-                </div>
-                <div class="container-row">
-                    <p class="element-1">13236</p>
-                    <p class="element-2">ABC Cafe & Bakery</p>
-                    <p class="element-3">Biyagama</p>
-                    <p class="element-4">B</p>
-                    <div class="actions">
-                        <!-- view button -->
-                        <div class="view" onclick="showViewSlider()">
-                            <img src="images/view-icon.png">
-                        </div>
-                        <!-- EDIT button -->
-                        <a href="FormHistory.html">
-                            <div class="edit">
-                                <img src="images/log-icon.png" alt="Edit">
-                            </div>
-                        </a>
-                    </div> 
-                </div>
+                
+
+  
             </div>
         </div>
 
@@ -321,68 +200,8 @@
         </div>
 
 
+        
 
-
-        <script>
-            function logoutUser(e) {
-                e.preventDefault(); // prevent form reload
-                sessionStorage.clear();
-                window.location.href = "login.html"; // or your login page name
-            }
-
-
-
-            function showViewSlider() {
-                document.getElementById('viewSlider').classList.add('active');
-            }
-
-            function hideViewSlider() {
-                document.getElementById('viewSlider').classList.remove('active');
-            }
-
-
-            window.onload = function () {
-              const rankings = document.querySelectorAll('.element-4');
-          
-              rankings.forEach(function (rankElement) {
-                const grade = rankElement.textContent.trim();
-          
-                // Common circle styles
-                rankElement.style.width = '30px';
-                rankElement.style.height = '30px';
-                rankElement.style.borderRadius = '50%';
-                rankElement.style.display = 'flex';
-                rankElement.style.alignItems = 'center';
-                rankElement.style.justifyContent = 'center';
-                rankElement.style.fontWeight = 'bold';
-                rankElement.style.fontFamily = 'Arial, sans-serif';
-          
-                // Grade-specific styles
-                switch (grade) {
-                  case 'A':
-                    rankElement.style.backgroundColor = '#3DB952'; // Green
-                    rankElement.style.color = 'black';
-                    break;
-                  case 'B':
-                    rankElement.style.backgroundColor = '#F1D730'; // Yellow
-                    rankElement.style.color = 'black';
-                    break;
-                  case 'C':
-                    rankElement.style.backgroundColor = '#FF8514'; // Orange
-                    rankElement.style.color = 'black';
-                    break;
-                  case 'D':
-                    rankElement.style.backgroundColor = '#BB1F22'; // Red
-                    rankElement.style.color = 'black';
-                    break;
-                  default:
-                    rankElement.style.backgroundColor = '#ccc';
-                    rankElement.style.color = 'black';
-                }
-              });
-            };
-          </script>
-          
 
 </body>
 </html>
