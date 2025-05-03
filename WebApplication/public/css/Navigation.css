@@ -154,7 +154,7 @@ html, body {
 /* user profile view Container styling */
 .user-profile {
     position: absolute;
-    left: 85%;
+    left: 86%;
     top:15px;
     display: flex;
     border: 2px solid #1F41BB; 
