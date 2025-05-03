@@ -104,10 +104,38 @@ class ShopCard extends StatelessWidget {
   }
 
   Widget _imageWidget() {
-    return imagePath.startsWith('http')
-        ? Image.network(imagePath,
-        height: 131, width: double.infinity, fit: BoxFit.cover)
-        : Image.asset(imagePath,
-        height: 131, width: double.infinity, fit: BoxFit.cover);
+    // If it's a network image, use errorBuilder to fall back to placeholder on load failure.
+    if (imagePath.startsWith('http')) {
+      return Image.network(
+        imagePath,
+        height: 131,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset(
+            'assets/images/other/placeholder.jpg',
+            height: 131,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          );
+        },
+      );
+    }
+
+    // For asset images, also guard with errorBuilder.
+    return Image.asset(
+      imagePath,
+      height: 131,
+      width: double.infinity,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Image.asset(
+          'assets/images/other/placeholder.jpg',
+          height: 131,
+          width: double.infinity,
+          fit: BoxFit.cover,
+        );
+      },
+    );
   }
 }
