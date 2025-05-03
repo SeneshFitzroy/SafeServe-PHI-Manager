@@ -136,6 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: TextStyle(
                               fontFamily: 'Roboto',
                               fontSize: 22,
+                              color: Colors.white,
                               fontWeight: FontWeight.bold)),
                     ),
                   ),
