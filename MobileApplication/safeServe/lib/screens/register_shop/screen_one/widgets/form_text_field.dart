@@ -13,7 +13,7 @@ class FormTextField extends StatelessWidget {
     required this.isInvalid,
     required this.initialValue,
     required this.onChanged,
-    this.inputType = TextInputType.text,
+    this.inputType = TextInputType.text, int? maxLength,
   }) : super(key: key);
 
   @override
