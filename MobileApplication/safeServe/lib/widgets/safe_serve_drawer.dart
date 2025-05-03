@@ -2,7 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:safeserve/screens/map_view/map_view_screen.dart'; // Use only this import for map view
-import 'package:safeserve/screens/reports_screen.dart'; // Use lowercase for package name
+import 'package:safeserve/screens/reports_screen.dart';
+
+import '../screens/login_screen/login_screen.dart';
+import '../services/logout_service.dart'; 
 
 class SafeServeDrawer extends StatelessWidget {
   final String profileImageUrl;
@@ -58,7 +61,18 @@ class SafeServeDrawer extends StatelessWidget {
                   ),
                   _buildDrawerItem(icon: Icons.settings, label: 'Settings', onTap: () {}),
                   _buildDrawerItem(icon: Icons.help_outline, label: 'Support', onTap: () {}),
-                  _buildDrawerItem(icon: Icons.logout, label: 'Logout', onTap: () {}),
+                  _buildDrawerItem(
+                    icon: Icons.logout,
+                    label: 'Logout',
+                    onTap: () async {
+                      await LogoutService.instance.signOut();
+
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
+                            (route) => false,
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
