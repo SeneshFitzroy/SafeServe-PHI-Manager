@@ -18,154 +18,172 @@ class RegisteredShopsScreen extends StatefulWidget {
 }
 
 class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
-  final _scroll = ScrollController();
-  bool  _navVisible = true;
+  // Scaffold key to open the end drawer
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  final _shopsRef = FirebaseFirestore.instance.collection('shops');
+  // Scroll controller to hide/show the nav bar
+  final ScrollController _scrollController = ScrollController();
+  bool _isNavVisible = true;
+
+  // Firestore reference
+  final CollectionReference _shopsRef =
+  FirebaseFirestore.instance.collection('shops');
 
   @override
   void initState() {
     super.initState();
-    _scroll.addListener(_scrollListener);
+    _scrollController.addListener(_scrollListener);
   }
 
   void _scrollListener() {
-    final dir = _scroll.position.userScrollDirection;
-    if (dir == ScrollDirection.reverse && _navVisible) {
-      setState(() => _navVisible = false);
-    } else if (dir == ScrollDirection.forward && !_navVisible) {
-      setState(() => _navVisible = true);
+    final direction = _scrollController.position.userScrollDirection;
+    if (direction == ScrollDirection.reverse && _isNavVisible) {
+      setState(() => _isNavVisible = false);
+    } else if (direction == ScrollDirection.forward && !_isNavVisible) {
+      setState(() => _isNavVisible = true);
     }
   }
 
   @override
   void dispose() {
-    _scroll.removeListener(_scrollListener);
-    _scroll.dispose();
+    _scrollController
+      ..removeListener(_scrollListener)
+      ..dispose();
     super.dispose();
   }
-
-  //---------------------------------------------------------------------------
-  // UI
-  //---------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey, // attach the key here
       appBar: SafeServeAppBar(
         height: 70,
-        onMenuPressed: () =>
-            Scaffold.of(context).openEndDrawer(),
+        onMenuPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
       ),
       endDrawer: const SafeServeDrawer(
         profileImageUrl: '',
         userName: 'Kamal Rathanasighe',
         userPost: 'PHI',
       ),
-      body: Stack(children: [
-        // gradient
-        Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xFFE6F5FE), Color(0xFFF5ECF9)],
+      body: Stack(
+        children: [
+          // Background gradient
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xFFE6F5FE), Color(0xFFF5ECF9)],
+              ),
             ),
           ),
-        ),
 
-        // Live list of shops
-        StreamBuilder<QuerySnapshot>(
-          stream: _shopsRef.snapshots(),            // works online & offline
-          builder: (ctx, snap) {
-            if (!snap.hasData) {
-              return const Center(child: CircularProgressIndicator());
-            }
+          // Live list of shops
+          StreamBuilder<QuerySnapshot>(
+            stream: _shopsRef.snapshots(),
+            builder: (ctx, snap) {
+              if (!snap.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              final docs = snap.data!.docs;
+              if (docs.isEmpty) {
+                return const Center(child: Text('No shops found'));
+              }
+              return ListView.builder(
+                controller: _scrollController,
+                padding: const EdgeInsets.only(top: 15),
+                itemCount: docs.length + 1,
+                itemBuilder: (ctx, i) {
+                  if (i == 0) return _buildHeader(ctx);
+                  final doc = docs[i - 1];
+                  final data = doc.data()! as Map<String, dynamic>;
 
-            final docs = snap.data!.docs;
-            if (docs.isEmpty) {
-              return const Center(child: Text('No shops found'));
-            }
+                  // extract lastInspection timestamp
+                  final lastArr =
+                      data['lastInspection'] as List<dynamic>? ?? [];
+                  DateTime? lastDate;
+                  if (lastArr.isNotEmpty && lastArr.first is Timestamp) {
+                    lastDate = (lastArr.first as Timestamp).toDate();
+                  }
 
-            return ListView.builder(
-              controller: _scroll,
-              padding: const EdgeInsets.only(top: 15),
-              itemCount: docs.length + 1,
-              itemBuilder: (ctx, i) {
-                if (i == 0) return _header(context);
-                final data = docs[i - 1].data()! as Map<String, dynamic>;
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(25, 0, 25, 30),
+                    child: ShopCard(
+                      name: data['name'] ?? doc.id,
+                      address: data['establishmentAddress'] ?? 'No address',
+                      lastInspection: lastDate,
+                      grade: data['grade'] ?? 'N/A',
+                      imagePath: data['image'] ??
+                          'assets/images/shop/shop1.png',
+                      onDetailsTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          '/shop_detail',
+                          arguments: doc.id,
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            },
+          ),
 
-                // Extract & format
-                final lastArr = data['lastInspection'] as List<dynamic>? ?? [];
-                DateTime? lastDate;
-                if (lastArr.isNotEmpty && lastArr.first is Timestamp) {
-                  lastDate = (lastArr.first as Timestamp).toDate();
-                }
-
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(25, 0, 25, 30),
-                  child: ShopCard(
-                    name:  data['name']  ?? docs[i - 1].id,
-                    address: data['establishmentAddress'] ?? 'No address',
-                    lastInspection: lastDate,
-                    grade: data['grade'] ?? 'N/A',
-                    imagePath: data['image'] ?? 'assets/images/shop/shop1.png',
-                    onDetailsTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/shop_detail',
-                        arguments: docs[i - 1].id,
-                      );
-                    },
-                  ),
-                );
-              },
-            );
-          },
-        ),
-
-        _bottomNav(context),
-      ]),
+          _buildBottomNav(context),
+        ],
+      ),
     );
   }
 
-  //---------------------------------------------------------------------------
-  // Widgets
-  //---------------------------------------------------------------------------
-
-  Widget _header(BuildContext ctx) => Padding(
-    padding: const EdgeInsets.fromLTRB(25, 0, 15, 20),
-    child: Row(children: [
-      const Text('Registered Shops',
-          style:
-          TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
-      const Spacer(),
-      IconButton(
-          icon: const Icon(Icons.filter_list, color: Color(0xFF1F41BB)),
-          onPressed: () {}),
-      IconButton(
-        icon: const Icon(Icons.add, color: Color(0xFF1F41BB)),
-        onPressed: () {
-          Navigator.push(
-            ctx,
-            MaterialPageRoute(
-              builder: (_) =>
-                  RegisterShopScreenOne(formData: RegisterShopFormData()),
+  Widget _buildHeader(BuildContext ctx) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(25, 0, 15, 20),
+      child: Row(
+        children: [
+          const Text(
+            'Registered Shops',
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
             ),
-          );
-        },
-      )
-    ]),
-  );
+          ),
+          const Spacer(),
+          IconButton(
+            icon: const Icon(
+              Icons.filter_list,
+              color: Color(0xFF1F41BB),
+            ),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.add,
+              color: Color(0xFF1F41BB),
+            ),
+            onPressed: () {
+              Navigator.push(
+                ctx,
+                MaterialPageRoute(
+                  builder: (_) => RegisterShopScreenOne(
+                    formData: RegisterShopFormData(),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
-  Widget _bottomNav(BuildContext ctx) {
-    final w = MediaQuery.of(ctx).size.width * 0.8;
+  Widget _buildBottomNav(BuildContext ctx) {
+    final width = MediaQuery.of(ctx).size.width * 0.8;
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
-      bottom: _navVisible ? 30 : -100,
-      left: (MediaQuery.of(ctx).size.width - w) / 2,
-      width: w,
+      bottom: _isNavVisible ? 30 : -100,
+      left: (MediaQuery.of(ctx).size.width - width) / 2,
+      width: width,
       child: Container(
         height: 60,
         decoration: BoxDecoration(
@@ -173,34 +191,41 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withOpacity(0.15), blurRadius: 6)
+              color: Colors.black.withOpacity(0.15),
+              blurRadius: 6,
+            )
           ],
         ),
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             CustomNavBarIcon(
-                icon: Icons.event,
-                label: 'Calendar',
-                navItem: NavItem.calendar,
-                selected: false),
+              icon: Icons.event,
+              label: 'Calendar',
+              navItem: NavItem.calendar,
+              selected: false,
+            ),
             CustomNavBarIcon(
-                icon: Icons.store,
-                label: 'Shops',
-                navItem: NavItem.shops,
-                selected: true),
+              icon: Icons.store,
+              label: 'Shops',
+              navItem: NavItem.shops,
+              selected: true,
+            ),
             CustomNavBarIcon(
-                icon: Icons.dashboard,
-                label: 'Dashboard',
-                navItem: NavItem.dashboard),
+              icon: Icons.dashboard,
+              label: 'Dashboard',
+              navItem: NavItem.dashboard,
+            ),
             CustomNavBarIcon(
-                icon: Icons.description,
-                label: 'Form',
-                navItem: NavItem.form),
+              icon: Icons.description,
+              label: 'Form',
+              navItem: NavItem.form,
+            ),
             CustomNavBarIcon(
-                icon: Icons.notifications,
-                label: 'Notifications',
-                navItem: NavItem.notifications),
+              icon: Icons.notifications,
+              label: 'Notifications',
+              navItem: NavItem.notifications,
+            ),
           ],
         ),
       ),
