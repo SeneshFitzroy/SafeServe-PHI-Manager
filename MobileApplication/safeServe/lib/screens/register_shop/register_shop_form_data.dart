@@ -4,10 +4,10 @@ class RegisterShopFormData {
   String businessRegNumber  = '';
   String establishmentName  = '';
   String establishmentAddress = '';
-  String district           = ''; // prefilled, read‑only
-  String gnDivision         = ''; // from dropdown
+  String district           = '';
+  String gnDivision         = '';
   String licenseNumber      = '';
-  String licensedDate       = ''; // yyyy‑MM‑dd
+  String licensedDate       = '';
   String typeOfTrade        = '';
   String numberOfEmployees  = '';
   String ownerName          = '';
@@ -15,11 +15,9 @@ class RegisterShopFormData {
   String privateAddress     = '';
   String telephone          = '';
 
-  // Screen 2
-  String? photoPath;  // local path
+  String? photoPath;
   double? lat;
   double? lng;
 
-  // Derived
-  String? photoUrl;   // filled online or on flush
+  String? photoUrl;
 }

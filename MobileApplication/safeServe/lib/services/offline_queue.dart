@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 class ShopCreationJob {
   final String docId;
   final Map<String, dynamic> data;
-  final String imagePath; // local file path
+  final String imagePath;
 
   ShopCreationJob(this.docId, this.data, this.imagePath);
 }
@@ -44,7 +44,7 @@ class OfflineQueue {
           'image': url,
         });
       } catch (_) {
-        _jobs.addAll(pending); // push them back
+        _jobs.addAll(pending);
         break;
       }
     }

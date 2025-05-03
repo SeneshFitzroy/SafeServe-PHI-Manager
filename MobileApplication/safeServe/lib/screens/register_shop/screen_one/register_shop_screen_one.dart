@@ -140,7 +140,6 @@ class _RegisterShopScreenOneState extends State<RegisterShopScreenOne> {
     );
   }
 
-  // ---------------- widgets helpers ----------------
   Widget _header(BuildContext ctx)=>Padding(
     padding: const EdgeInsets.symmetric(horizontal:25),
     child: Row(children:[
