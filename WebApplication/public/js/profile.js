@@ -102,3 +102,64 @@ function populateEditForm(user) {
   document.getElementById("edit-email").value = user.email;
   document.getElementById("edit-address").value = user.personalAddress || user.personal_address;
 }
+
+document.getElementById("change-password-btn").addEventListener("click", async () => {
+    const oldPassword = document.getElementById("old-password").value.trim();
+    const newPassword = document.getElementById("new-password").value.trim();
+    const confirmPassword = document.getElementById("confirm-password").value.trim();
+  
+    // Clear previous errors
+    document.getElementById("old-password-error").innerText = "";
+    document.getElementById("new-password-error").innerText = "";
+    document.getElementById("confirm-password-error").innerText = "";
+  
+    let hasError = false;
+  
+    if (!oldPassword) {
+      document.getElementById("old-password-error").innerText = "Please enter your current password.";
+      hasError = true;
+    }
+  
+    if (!newPassword) {
+      document.getElementById("new-password-error").innerText = "Please enter a new password.";
+      hasError = true;
+    }
+  
+    if (!confirmPassword) {
+      document.getElementById("confirm-password-error").innerText = "Please re-enter the new password.";
+      hasError = true;
+    } else if (newPassword !== confirmPassword) {
+      document.getElementById("confirm-password-error").innerText = "Passwords do not match.";
+      hasError = true;
+    }
+  
+    if (hasError) return;
+  
+    const user = auth.currentUser;
+  
+    if (!user || !user.email) {
+      alert("User not authenticated.");
+      return;
+    }
+  
+    const credential = EmailAuthProvider.credential(user.email, oldPassword);
+  
+    try {
+      await reauthenticateWithCredential(user, credential);
+      await updatePassword(user, newPassword);
+      closeModal();
+    } catch (error) {
+        console.error("Password change error:", error);
+        const oldError = document.getElementById("old-password-error");
+      
+        if (error.code === "auth/wrong-password") {
+          oldError.innerText = "Incorrect current password.";
+        } else if (error.code === "auth/weak-password") {
+          document.getElementById("new-password-error").innerText = "Password should be at least 6 characters.";
+        } else {
+          // Display all other errors inline (not alert)
+          oldError.innerText = "Error: " + error.message;
+        }
+      }
+  });
+  

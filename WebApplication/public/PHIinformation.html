@@ -161,18 +161,21 @@
                     <div class="edit-form">
                         <div class="form-row">
                             <label class="form-label">Enter Your Last Password</label>
-                            <input class="form-text" type="text" id="" />
+                            <input class="form-text" type="password" id="old-password" />
+                            <div class="error-msg" id="old-password-error"></div>
                         </div>
                         <div class="form-row">
                             <label class="form-label">Enter New Password</label>
-                            <input class="form-text" type="password" id="" />
+                            <input class="form-text" type="password" id="new-password" />
+                            <div class="error-msg" id="new-password-error"></div>
                         </div>
                         <div class="form-row">
                             <label class="form-label">Re-Enter New Password</label>
-                            <input class="form-text" type="password" id="" />
+                            <input class="form-text" type="password" id="confirm-password" />
+                            <div class="error-msg" id="confirm-password-error"></div>
                         </div>
                     </div>
-                    <button class="modal-but" type="submit" style="margin-bottom: 20px">Change Password</button>
+                    <button class="modal-but" type="button" style="margin-bottom: 20px" id="change-password-btn">Change Password</button>
                 </form>
             </div>
         </div>

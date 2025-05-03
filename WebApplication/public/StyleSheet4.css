@@ -300,3 +300,11 @@ h3 {
 .form-save-but:hover {
     background-color: #1F41BB; 
 }
+
+.error-msg {
+    color: red;
+    font-size: 13px;
+    margin-left: 10px;
+    margin-top: 5px;
+  }
+  
