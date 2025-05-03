@@ -1,13 +1,15 @@
-// lib/screens/edit_shop_detail/edit_shop_detail_screen.dart
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
+
 import '../../widgets/safe_serve_appbar.dart';
 import '../register_shop/screen_one/widgets/form_text_field.dart';
-import '../register_shop/screen_one/widgets/trade_dropdown.dart';
+import '../register_shop/screen_one/widgets/licensed_year_field.dart';
+import '../register_shop/screen_one/widgets/searchable_trade_dropdown.dart';
 
 class EditShopDetailScreen extends StatefulWidget {
   const EditShopDetailScreen({Key? key}) : super(key: key);
@@ -18,68 +20,107 @@ class EditShopDetailScreen extends StatefulWidget {
 
 class _EditShopDetailScreenState extends State<EditShopDetailScreen> {
   late Map<String, dynamic> shopData;
+  final _formKey = GlobalKey<FormState>();
 
-  final _refNoCtrl  = TextEditingController();
-  final _phiAreaCtrl= TextEditingController();
-  final _ownerCtrl  = TextEditingController();
-  final _addressCtrl= TextEditingController();
-  final _nicCtrl    = TextEditingController();
-  final _telCtrl    = TextEditingController();
-  final _nameCtrl   = TextEditingController();
-  final _licNumCtrl = TextEditingController();
-  final _licDateCtrl= TextEditingController();
-  final _busRegCtrl = TextEditingController();
-  final _numEmpCtrl = TextEditingController();
+  // Controllers
+  final _referenceCtrl        = TextEditingController();
+  final _businessRegCtrl      = TextEditingController();
+  final _establishmentNameCtrl= TextEditingController();
+  final _establishmentAddrCtrl= TextEditingController();
+  final _licenseNumCtrl       = TextEditingController();
+  final _licensedDateCtrl     = TextEditingController();
+  final _numEmployeesCtrl     = TextEditingController();
+  final _ownerNameCtrl        = TextEditingController();
+  final _nicCtrl              = TextEditingController();
+  final _privateAddrCtrl      = TextEditingController();
+  final _telephoneCtrl        = TextEditingController();
 
+  String _district = '';
+  List<String> _gnDivisions = [];
+  String _gnDivision = '';
   String _typeOfTrade = '';
-  String? _capturedImagePath;
 
-  final shopsRef = FirebaseFirestore.instance.collection('shops');
+  String? _capturedImagePath;
+  double? _lat;
+  double? _lng;
+
+  final _shopsRef = FirebaseFirestore.instance.collection('shops');
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final args = ModalRoute.of(context)!.settings.arguments;
-    shopData = (args is Map<String, dynamic>) ? args : {};
-    _populateFields(shopData);
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is Map<String, dynamic>) {
+      shopData = args;
+    } else {
+      shopData = {};
+    }
+    _loadInitial();
   }
 
-  void _populateFields(Map<String, dynamic> data) {
-    _refNoCtrl.text   = data['referenceNo'] ?? '';
-    _phiAreaCtrl.text = data['phiArea'] ?? '';
-    _typeOfTrade      = data['typeOfTrade'] ?? '';
-    _ownerCtrl.text   = data['ownerName'] ?? '';
-    _addressCtrl.text = data['address'] ?? '';
-    _nicCtrl.text     = data['nicNumber'] ?? '';
-    _telCtrl.text     = data['telephone'] ?? '';
-    _nameCtrl.text    = data['name'] ?? '';
-    _licNumCtrl.text  = data['licenseNumber'] ?? '';
-    _licDateCtrl.text = data['licensedDate'] ?? '';
-    _busRegCtrl.text  = data['businessRegNumber'] ?? '';
-    _numEmpCtrl.text  = data['numberOfEmployees'] ?? '';
+  Future<void> _loadInitial() async {
+    // Text fields
+    _referenceCtrl.text        = shopData['referenceNo'] ?? '';
+    _businessRegCtrl.text      = shopData['businessRegNumber'] ?? '';
+    _establishmentNameCtrl.text= shopData['name'] ?? '';
+    _establishmentAddrCtrl.text= shopData['establishmentAddress'] ?? '';
+    _licenseNumCtrl.text       = shopData['licenseNumber'] ?? '';
+    final licDate = shopData['licensedDate'];
+    if (licDate is Timestamp) {
+      _licensedDateCtrl.text = DateFormat('yyyy-MM-dd').format(licDate.toDate());
+    } else {
+      _licensedDateCtrl.text = licDate?.toString() ?? '';
+    }
+    _numEmployeesCtrl.text     = (shopData['numberOfEmployees'] ?? '').toString();
+    _ownerNameCtrl.text        = shopData['ownerName'] ?? '';
+    _nicCtrl.text              = shopData['nicNumber'] ?? '';
+    _privateAddrCtrl.text      = shopData['privateAddress'] ?? '';
+    _telephoneCtrl.text        = shopData['telephone'] ?? '';
+
+    // District & GN from shopData
+    _district = shopData['district'] ?? '';
+    final gnList = (shopData['gnDivisions'] as List?)?.cast<String>() ?? [];
+    setState(() {
+      _gnDivisions = gnList;
+      _gnDivision = shopData['gnDivision'] ?? (gnList.isNotEmpty ? gnList.first : '');
+    });
+
+    // Trade
+    _typeOfTrade = shopData['typeOfTrade'] ?? '';
+
+    // Image & location
+    final loc = shopData['location'];
+    if (loc is GeoPoint) {
+      _lat = loc.latitude;
+      _lng = loc.longitude;
+    }
   }
 
   @override
   void dispose() {
-    _refNoCtrl.dispose();
-    _phiAreaCtrl.dispose();
-    _ownerCtrl.dispose();
-    _addressCtrl.dispose();
+    _referenceCtrl.dispose();
+    _businessRegCtrl.dispose();
+    _establishmentNameCtrl.dispose();
+    _establishmentAddrCtrl.dispose();
+    _licenseNumCtrl.dispose();
+    _licensedDateCtrl.dispose();
+    _numEmployeesCtrl.dispose();
+    _ownerNameCtrl.dispose();
     _nicCtrl.dispose();
-    _telCtrl.dispose();
-    _nameCtrl.dispose();
-    _licNumCtrl.dispose();
-    _licDateCtrl.dispose();
-    _busRegCtrl.dispose();
-    _numEmpCtrl.dispose();
+    _privateAddrCtrl.dispose();
+    _telephoneCtrl.dispose();
     super.dispose();
   }
 
   Future<void> _captureImage() async {
-    final picker = ImagePicker();
-    final XFile? picked = await picker.pickImage(source: ImageSource.camera);
+    final picked = await ImagePicker().pickImage(source: ImageSource.camera);
     if (picked != null) {
-      setState(() => _capturedImagePath = picked.path);
+      final pos = await Geolocator.getCurrentPosition();
+      setState(() {
+        _capturedImagePath = picked.path;
+        _lat = pos.latitude;
+        _lng = pos.longitude;
+      });
     }
   }
 
@@ -91,62 +132,190 @@ class _EditShopDetailScreenState extends State<EditShopDetailScreen> {
     return Scaffold(
       appBar: SafeServeAppBar(height: 70, onMenuPressed: () {}),
       body: Container(
-        decoration: _buildGradient(),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFE6F5FE), Color(0xFFF5ECF9)],
+          ),
+        ),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               _buildHeader(),
               const SizedBox(height: 20),
+
+              // 1 Reference No
               FormTextField(
-                label: 'Reference No',
+                label: 'Reference Number',
                 isInvalid: false,
-                initialValue: _refNoCtrl.text,
-                onChanged: (v) => _refNoCtrl.text = v,
+                initialValue: _referenceCtrl.text,
+                inputType: TextInputType.number,
+                maxLength: 6,
+                onChanged: (v) => _referenceCtrl.text = v,
               ),
+
+              // 2 Business Reg
               FormTextField(
-                label: 'PHI Area',
+                label: 'Business Registration Number',
                 isInvalid: false,
-                initialValue: _phiAreaCtrl.text,
-                onChanged: (v) => _phiAreaCtrl.text = v,
+                initialValue: _businessRegCtrl.text,
+                inputType: TextInputType.number,
+                maxLength: 6,
+                onChanged: (v) => _businessRegCtrl.text = v,
               ),
-              TradeDropdown(
-                label: 'Type of Trade',
+
+              // 3 Establishment Name
+              FormTextField(
+                label: 'Name of the Establishment',
                 isInvalid: false,
-                initialValue: _typeOfTrade,
-                onChanged: (v) => _typeOfTrade = v,
+                initialValue: _establishmentNameCtrl.text,
+                onChanged: (v) => _establishmentNameCtrl.text = v,
               ),
-              // … other text fields …
+
+              // 4 Establishment Address
+              FormTextField(
+                label: 'Address of the Establishment',
+                isInvalid: false,
+                initialValue: _establishmentAddrCtrl.text,
+                onChanged: (v) => _establishmentAddrCtrl.text = v,
+              ),
+
+              // 5 District (read-only)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const Text('District', style: TextStyle(fontSize: 18)),
+                  const SizedBox(height: 6),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(_district, style: const TextStyle(fontSize: 16)),
+                  ),
+                ]),
+              ),
+
+              // 6 GN Division
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const Text('GN Division', style: TextStyle(fontSize: 18)),
+                  const SizedBox(height: 6),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: const Color(0xFF4289FC)),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: _gnDivision,
+                        isExpanded: true,
+                        items: _gnDivisions
+                            .map((g) => DropdownMenuItem(value: g, child: Text(g)))
+                            .toList(),
+                        onChanged: (v) => setState(() => _gnDivision = v!),
+                      ),
+                    ),
+                  ),
+                ]),
+              ),
+
+              // 7 License Number
+              FormTextField(
+                label: 'License Number',
+                isInvalid: false,
+                initialValue: _licenseNumCtrl.text,
+                inputType: TextInputType.number,
+                maxLength: 6,
+                onChanged: (v) => _licenseNumCtrl.text = v,
+              ),
+
+              // 8 Licensed Date
+              LicensedYearField(
+                label: 'Licensed Date',
+                isInvalid: false,
+                initialValue: _licensedDateCtrl.text,
+                onDatePicked: (v) => _licensedDateCtrl.text = v,
+              ),
+
+              // 9 Type of Trade
+              SearchableTradeDropdown(
+                initial: _typeOfTrade,
+                onSelected: (v) => setState(() {
+                  _typeOfTrade = v;
+                }),
+              ),
+
+              // 10 Number of Employees
+              FormTextField(
+                label: 'Number of Employees',
+                isInvalid: false,
+                initialValue: _numEmployeesCtrl.text,
+                inputType: TextInputType.number,
+                onChanged: (v) => _numEmployeesCtrl.text = v,
+              ),
+
+              // 11 Name of Owner
+              FormTextField(
+                label: 'Name of the Owner',
+                isInvalid: false,
+                initialValue: _ownerNameCtrl.text,
+                onChanged: (v) => _ownerNameCtrl.text = v,
+              ),
+
+              // 12 NIC Number
+              FormTextField(
+                label: 'NIC Number',
+                isInvalid: false,
+                initialValue: _nicCtrl.text,
+                onChanged: (v) => _nicCtrl.text = v,
+              ),
+
+              // 13 Private Address
+              FormTextField(
+                label: 'Private Address',
+                isInvalid: false,
+                initialValue: _privateAddrCtrl.text,
+                onChanged: (v) => _privateAddrCtrl.text = v,
+              ),
+
+              // 14 Telephone Number
+              FormTextField(
+                label: 'Telephone Number',
+                isInvalid: false,
+                initialValue: _telephoneCtrl.text,
+                inputType: TextInputType.phone,
+                maxLength: 10,
+                onChanged: (v) => _telephoneCtrl.text = v,
+              ),
+
               const SizedBox(height: 15),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
-                child: Text('Image of the Shop',
-                    style: TextStyle(fontSize: 18, color: Colors.black)),
+                child: Text('Image of the Shop', style: TextStyle(fontSize: 18)),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: GestureDetector(
                   onTap: _captureImage,
                   child: Container(
-                    width: double.infinity,
                     height: 200,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: const Color(0xFF4289FC)),
                     ),
                     clipBehavior: Clip.hardEdge,
-                    child: displayPath.isNotEmpty
-                        ? ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: displayPath.startsWith('http')
-                          ? Image.network(displayPath, fit: BoxFit.cover)
-                          : displayPath.startsWith('assets/')
-                          ? Image.asset(displayPath, fit: BoxFit.cover)
-                          : Image.file(File(displayPath), fit: BoxFit.cover),
-                    )
-                        : const Center(child: Text('Tap to capture an image')),
+                    child: displayImage(displayPath),
                   ),
                 ),
               ),
@@ -159,16 +328,13 @@ class _EditShopDetailScreenState extends State<EditShopDetailScreen> {
                     OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         foregroundColor: const Color(0xFF1F41BB),
-                        backgroundColor: Colors.white,
                         side: const BorderSide(color: Color(0xFF1F41BB)),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 28, vertical: 12),
                       ),
-                      onPressed: () => Navigator.pushReplacementNamed(
-                          context, '/shop_detail',
-                          arguments: shopData['name'] ?? ''),
+                      onPressed: () => Navigator.pop(context),
                       child: const Text('Cancel',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
@@ -192,89 +358,89 @@ class _EditShopDetailScreenState extends State<EditShopDetailScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 10),
-            ],
+              const SizedBox(height: 20),
+            ]),
           ),
         ),
       ),
     );
   }
 
+  Widget displayImage(String path) {
+    if (path.isEmpty) return const Center(child: Text('Tap to capture'));
+    if (path.startsWith('http')) {
+      return Image.network(path, fit: BoxFit.cover);
+    }
+    if (path.startsWith('assets/')) {
+      return Image.asset(path, fit: BoxFit.cover);
+    }
+    return Image.file(File(path), fit: BoxFit.cover);
+  }
+
   Widget _buildHeader() => Padding(
     padding: const EdgeInsets.symmetric(horizontal: 25),
-    child: Row(
-      children: [
-        InkWell(
-          onTap: () => Navigator.pop(context),
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: const Color(0xFFCDE6FE),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: const Icon(Icons.arrow_back_rounded,
-                color: Color(0xFF1F41BB)),
+    child: Row(children: [
+      InkWell(
+        onTap: () => Navigator.pop(context),
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: const Color(0xFFCDE6FE),
+            borderRadius: BorderRadius.circular(6),
           ),
+          child: const Icon(Icons.arrow_back_rounded,
+              color: Color(0xFF1F41BB)),
         ),
-        const SizedBox(width: 12),
-        const Text('Edit Shop Details',
-            style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.black)),
-      ],
-    ),
-  );
-
-  BoxDecoration _buildGradient() => const BoxDecoration(
-    gradient: LinearGradient(
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      colors: [Color(0xFFE6F5FE), Color(0xFFF5ECF9)],
-    ),
+      ),
+      const SizedBox(width: 12),
+      const Text('Edit Shop Details',
+          style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Colors.black)),
+    ]),
   );
 
   Future<void> _handleSave() async {
-    final docId = shopData['name'] ?? '';
+    final docId = _referenceCtrl.text.trim();
     if (docId.isEmpty) {
-      Navigator.pushReplacementNamed(context, '/shop_detail', arguments: docId);
+      Navigator.pop(context);
       return;
     }
 
-    try {
-      String? downloadURL;
-      if (_capturedImagePath != null) {
-        final filePath = 'shops_images/$docId.jpg';
-        final file = File(_capturedImagePath!);
-        final uploadTask = FirebaseStorage.instance
-            .ref(filePath)
-            .putFile(file, SettableMetadata(contentType: 'image/jpeg'));
-        final snap = await uploadTask;
-        downloadURL = await snap.ref.getDownloadURL();
-      }
-
-      final data = {
-        'referenceNo': _refNoCtrl.text.trim(),
-        'phiArea': _phiAreaCtrl.text.trim(),
-        'typeOfTrade': _typeOfTrade,
-        'ownerName': _ownerCtrl.text.trim(),
-        'address': _addressCtrl.text.trim(),
-        'nicNumber': _nicCtrl.text.trim(),
-        'telephone': _telCtrl.text.trim(),
-        'name': _nameCtrl.text.trim(),
-        'licenseNumber': _licNumCtrl.text.trim(),
-        'licensedDate': _licDateCtrl.text.trim(),
-        'businessRegNumber': _busRegCtrl.text.trim(),
-        'numberOfEmployees': _numEmpCtrl.text.trim(),
-      };
-      if (downloadURL != null) data['image'] = downloadURL;
-
-      await shopsRef.doc(docId).update(data);
-
-      Navigator.pushReplacementNamed(context, '/shop_detail', arguments: docId);
-    } catch (e) {
-      debugPrint('Error updating shop: $e');
-      Navigator.pushReplacementNamed(context, '/shop_detail', arguments: docId);
+    String? imageUrl;
+    if (_capturedImagePath != null) {
+      final snap = await FirebaseStorage.instance
+          .ref('shops_images/$docId.jpg')
+          .putFile(File(_capturedImagePath!),
+          SettableMetadata(contentType: 'image/jpeg'));
+      imageUrl = await snap.ref.getDownloadURL();
     }
+
+    final data = {
+      'referenceNo': _referenceCtrl.text.trim(),
+      'businessRegNumber': _businessRegCtrl.text.trim(),
+      'name': _establishmentNameCtrl.text.trim(),
+      'establishmentAddress': _establishmentAddrCtrl.text.trim(),
+      'district': _district,
+      'gnDivision': _gnDivision,
+      'licenseNumber': _licenseNumCtrl.text.trim(),
+      'licensedDate': Timestamp.fromDate(
+        DateFormat('yyyy-MM-dd').parse(_licensedDateCtrl.text.trim()),
+      ),
+      'typeOfTrade': _typeOfTrade,
+      'numberOfEmployees': int.tryParse(_numEmployeesCtrl.text) ?? 0,
+      'ownerName': _ownerNameCtrl.text.trim(),
+      'nicNumber': _nicCtrl.text.trim(),
+      'privateAddress': _privateAddrCtrl.text.trim(),
+      'telephone': _telephoneCtrl.text.trim(),
+    };
+    if (imageUrl != null) data['image'] = imageUrl;
+    if (_lat != null && _lng != null) {
+      data['location'] = GeoPoint(_lat!, _lng!);
+    }
+
+    await _shopsRef.doc(docId).update(data);
+    Navigator.pushReplacementNamed(context, '/shop_detail', arguments: docId);
   }
 }
