@@ -2,17 +2,23 @@
 import { auth, db } from "./firebase-config.js";
 import {
   onAuthStateChanged,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword
 } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 import {
   doc,
   getDoc,
+  updateDoc
 } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+
+let currentUserId = null;
 
 document.addEventListener("DOMContentLoaded", () => {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      const uid = user.uid;
-      const userRef = doc(db, "users", uid);
+      currentUserId = user.uid;
+      const userRef = doc(db, "users", currentUserId);
       const docSnap = await getDoc(userRef);
 
       if (docSnap.exists()) {
@@ -25,6 +31,33 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       // Not logged in
       window.location.href = "login.html";
+    }
+  });
+
+  // Event listener for "Update" button
+  document.getElementById("save-profile-btn").addEventListener("click", async () => {
+    if (!currentUserId) return;
+
+    const name = document.getElementById("edit-name").value.trim();
+    const phone = document.getElementById("edit-phone").value.trim();
+    const email = document.getElementById("edit-email").value.trim();
+    const address = document.getElementById("edit-address").value.trim();
+
+    const userRef = doc(db, "users", currentUserId);
+
+    try {
+      await updateDoc(userRef, {
+        full_name: name,
+        phone: phone,
+        email: email,
+        personalAddress: address
+      });
+
+      hideEditSlider();
+      location.reload(); // Refresh to show updated values
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile. Please try again.");
     }
   });
 });
@@ -58,7 +91,7 @@ function populateProfile(user) {
     </div>
   `;
 
-  // Top-right avatar name
+  // Top-right avatar
   document.querySelector(".user-name").innerText = user.full_name;
   document.querySelector(".user-role").innerText = user.role;
 }
