@@ -5,14 +5,14 @@ class ViewTradeDropdown extends StatelessWidget {
   final String value;
 
   const ViewTradeDropdown({
-    Key? key,
+    super.key,
     required this.label,
     required this.value,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    final List<String> _tradeOptions = [
+    final List<String> tradeOptions = [
       'Restaurants',
       'Eateries',
       'Bakeries',
@@ -42,9 +42,9 @@ class ViewTradeDropdown extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
-                value: _tradeOptions.contains(value) ? value : null,
+                value: tradeOptions.contains(value) ? value : null,
                 isExpanded: true,
-                items: _tradeOptions.map((option) {
+                items: tradeOptions.map((option) {
                   return DropdownMenuItem<String>(
                     value: option,
                     child: Text(option),

@@ -7,7 +7,7 @@ import 'dart:async';
 import '../registered_shops/registered_shops_screen.dart';
 
 class MapViewScreen extends StatefulWidget {
-  const MapViewScreen({Key? key}) : super(key: key);
+  const MapViewScreen({super.key});
 
   @override
   State<MapViewScreen> createState() => _MapViewScreenState();

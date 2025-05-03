@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "727349367277",
+    "firebase_url": "https://safe-serve-8de99-default-rtdb.firebaseio.com",
+    "project_id": "safe-serve-8de99",
+    "storage_bucket": "safe-serve-8de99.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727349367277:android:ef08c06fdd0428b8d257e4",
+        "android_client_info": {
+          "package_name": "com.example.safeserve"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiI4gN2cMw549a0JW_FZpqsmhgDG6eJiA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

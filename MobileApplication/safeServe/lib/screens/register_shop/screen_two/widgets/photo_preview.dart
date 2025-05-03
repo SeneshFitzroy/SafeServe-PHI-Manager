@@ -8,11 +8,11 @@ class PhotoPreview extends StatelessWidget {
   final VoidCallback onTap;
 
   const PhotoPreview({
-    Key? key,
+    super.key,
     required this.photoPath,
     required this.isMissing,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

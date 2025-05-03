@@ -19,12 +19,12 @@ class CustomNavBarIcon extends StatelessWidget {
   final bool selected;
 
   const CustomNavBarIcon({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.navItem,
     this.selected = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ import '../register_shop/screen_one/widgets/form_text_field.dart';
 import '../register_shop/screen_one/widgets/trade_dropdown.dart';
 
 class EditShopDetailScreen extends StatefulWidget {
-  const EditShopDetailScreen({Key? key}) : super(key: key);
+  const EditShopDetailScreen({super.key});
 
   @override
   State<EditShopDetailScreen> createState() => _EditShopDetailScreenState();

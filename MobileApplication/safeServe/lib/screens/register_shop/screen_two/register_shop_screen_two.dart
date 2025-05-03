@@ -1,5 +1,4 @@
 // lib/screens/register_shop/screen_two/register_shop_screen_two.dart
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../widgets/safe_serve_appbar.dart';
@@ -11,7 +10,7 @@ import '../register_shop_form_data.dart';
 class RegisterShopScreenTwo extends StatefulWidget {
   final RegisterShopFormData formData;
 
-  const RegisterShopScreenTwo({Key? key, required this.formData}) : super(key: key);
+  const RegisterShopScreenTwo({super.key, required this.formData});
 
   @override
   State<RegisterShopScreenTwo> createState() => _RegisterShopScreenTwoState();

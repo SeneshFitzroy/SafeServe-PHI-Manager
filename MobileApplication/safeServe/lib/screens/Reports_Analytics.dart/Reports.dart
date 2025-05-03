@@ -4,7 +4,7 @@ import '../../widgets/custom_nav_bar_icon.dart';
 import '../../widgets/safe_serve_drawer.dart';
 
 class Reports extends StatefulWidget {
-  const Reports({Key? key}) : super(key: key);
+  const Reports({super.key});
 
   @override
   State<Reports> createState() => _ReportsState();
@@ -390,12 +390,12 @@ class BarChart extends StatelessWidget {
   final Color highlightColor;
 
   const BarChart({
-    Key? key,
+    super.key,
     required this.data,
     required this.selectedMonth,
     required this.barColor,
     required this.highlightColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
