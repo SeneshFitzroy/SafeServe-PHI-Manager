@@ -4,13 +4,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Profile View</title>
 
-    <link rel="stylesheet" href="css/Navigation.css">
-    <link rel="stylesheet" href="css/StyleSheet4.css">
+    <link rel="stylesheet" href="Navigation.css">
+    <link rel="stylesheet" href="StyleSheet4.css">
     
     <script type="module" src="js/firebase-config.js"></script>
     <script type="module" src="js/session-guard.js"></script>
     <script type="module" src="js/nav-access.js"></script>
     <script type="module" src="js/user-info.js"></script>
+    <script type="module" src="js/profile.js"></script>
+
 
 
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -87,28 +89,13 @@
 
       <div class="info">
         <div class="info-card">
-          <h3>Personal Information</h3>
-          <p><span>PHI ID</span> <span>12453778</span></p>
-          <p><span>Full Name</span> <span>Leo Perera</span></p>
-          <p><span>NIC</span> <span>74658936782v</span></p>
-          <p><span>Role</span> <span>PHI</span></p>
-          <p><span>Phone Number</span> <span>07210453678</span></p>
-          <p><span>Email</span> <span>leoperera@gmail.com</span></p>
-          <p><span>Personal Address</span> <span>67, Colombo North, Colombo</span></p>
-          <button class="edit-button" onclick="showEditSlider()">
-              <img src="images/edit-icon.png">
-          </button>
+            <h3>Personal Information</h3>
+            <!-- Profile details will be populated by profile.js -->
         </div>
 
         <div class="info-card">
-          <h3>Work Information</h3>
-          <p><span>District</span> <span>Colombo</span></p>
-          <p><span>Office Location</span> <span>456/A Colombo Rd, Kottawa</span></p>
-          <p>Assigned Grama Niladhari Divisions</p>
-          <div class="division-list">
-          <div class="division">Kadawatha</div>
-          <div class="division">Kottawa</div>
-          <div class="division">Biyagama</div>
+            <h3>Work Information</h3>
+            <!-- Work details will be populated by profile.js -->
         </div>
       </div>
       </div>
@@ -136,21 +123,21 @@
                     <div class="edit-form">
                         <div class="form-row">
                             <label class="form-label">Full Name</label>
-                            <input class="form-text" type="text" id="" />
+                            <input class="form-text" type="text" id="edit-name" />
                         </div>
                         <div class="form-row">
-                          <label class="form-label">Phone Number</label>
-                          <input class="form-text" type="text" id="" />
+                            <label class="form-label">Phone Number</label>
+                            <input class="form-text" type="text" id="edit-phone" />
                         </div>
                         <div class="form-row">
-                          <label class="form-label">Email</label>
-                          <input class="form-text" type="text" id="" />
+                            <label class="form-label">Email</label>
+                            <input class="form-text" type="text" id="edit-email" />
                         </div>
                         <div class="form-row">
-                          <label class="form-label">Personal Address</label>
-                          <input class="form-text" type="text" id="" />
+                            <label class="form-label">Personal Address</label>
+                            <input class="form-text" type="text" id="edit-address" />
                         </div>
-                        <button class="form-save-but" style="margin-top:0px;" type="submit" onclick="hideEditSlider()">Update</button>
+                        <button class="form-save-but" id="save-profile-btn" type="button">Update</button>
                     </div>
                 </form>
             </div>  
@@ -174,18 +161,21 @@
                     <div class="edit-form">
                         <div class="form-row">
                             <label class="form-label">Enter Your Last Password</label>
-                            <input class="form-text" type="text" id="" />
+                            <input class="form-text" type="password" id="old-password" />
+                            <div class="error-msg" id="old-password-error"></div>
                         </div>
                         <div class="form-row">
                             <label class="form-label">Enter New Password</label>
-                            <input class="form-text" type="password" id="" />
+                            <input class="form-text" type="password" id="new-password" />
+                            <div class="error-msg" id="new-password-error"></div>
                         </div>
                         <div class="form-row">
                             <label class="form-label">Re-Enter New Password</label>
-                            <input class="form-text" type="password" id="" />
+                            <input class="form-text" type="password" id="confirm-password" />
+                            <div class="error-msg" id="confirm-password-error"></div>
                         </div>
                     </div>
-                    <button class="modal-but" type="submit" style="margin-bottom: 20px">Change Password</button>
+                    <button class="modal-but" type="button" style="margin-bottom: 20px" id="change-password-btn">Change Password</button>
                 </form>
             </div>
         </div>
