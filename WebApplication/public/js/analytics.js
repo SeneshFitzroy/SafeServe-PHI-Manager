@@ -1,10 +1,12 @@
+// js/analytics.js
 import { db, auth } from "./firebase-config.js";
 import {
   collection,
   query,
   where,
   getDocs,
-  doc
+  doc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
 import {
@@ -18,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (user) {
       console.log("✅ Logged in UID:", user.uid);
       await loadYearlyInspectionData(user.uid);
+      await loadHighRiskShops(user.uid);
     } else {
       console.warn("⚠️ User not authenticated.");
     }
@@ -48,38 +51,32 @@ function setupTabs() {
 
 // Loads total inspections this year and updates chart
 async function loadYearlyInspectionData(phiUid) {
-    const currentYear = new Date().getFullYear();
-    const monthlyCounts = Array(12).fill(0);
-    const phiRef = doc(db, "users", phiUid); // Still correct
-  
-    try {
-      const formRef = collection(db, "h800_forms");
-      const q = query(formRef, where("userId", "==", phiRef)); // 👈 updated here
-      const querySnapshot = await getDocs(q);
-  
-      let totalCount = 0;
-  
-      querySnapshot.forEach(docSnap => {
-        const data = docSnap.data();
-        console.log("📄 Form data:", data);
-        console.log("All keys:", Object.keys(data));
-  
-        const date = data.Inspectiondate?.toDate?.();
-        console.log("📅 Parsed Inspectiondate:", date);
-  
-        if (date && date.getFullYear() === currentYear) {
-          totalCount++;
-          const month = date.getMonth();
-          monthlyCounts[month]++;
-        }
-      });
-  
-      updateChart(totalCount, monthlyCounts);
-    } catch (error) {
-      console.error("❌ Error loading inspections:", error);
-    }
+  const currentYear = new Date().getFullYear();
+  const monthlyCounts = Array(12).fill(0);
+
+  try {
+    const formRef = collection(db, "h800_forms");
+    const q = query(formRef, where("phiId", "==", phiUid));
+    const querySnapshot = await getDocs(q);
+
+    let totalCount = 0;
+
+    querySnapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      const date = data.submittedAt?.toDate?.();
+
+      if (date && date.getFullYear() === currentYear) {
+        totalCount++;
+        const month = date.getMonth();
+        monthlyCounts[month]++;
+      }
+    });
+
+    updateChart(totalCount, monthlyCounts);
+  } catch (error) {
+    console.error("❌ Error loading inspections:", error);
   }
-  
+}
 
 // Updates total inspections text and bar chart
 function updateChart(total, monthlyData) {
@@ -136,3 +133,58 @@ window.monthlyInspectionsChart = new Chart(ctx, {
     }
   }
 });
+
+// Loads high-risk shops (grade C or D in assigned GN Divisions)
+async function loadHighRiskShops(phiUid) {
+  try {
+    const userDoc = await getDoc(doc(db, "users", phiUid));
+    if (!userDoc.exists()) {
+      console.warn("⚠️ PHI user document not found");
+      return;
+    }
+
+    const gnDivisions = userDoc.data().gnDivisions || [];
+    if (!Array.isArray(gnDivisions) || gnDivisions.length === 0) {
+      console.warn("⚠️ No GN Divisions found for PHI");
+      return;
+    }
+
+    const shopsRef = collection(db, "shops");
+    const q = query(
+      shopsRef,
+      where("gnDivision", "in", gnDivisions),
+      where("grade", "in", ["C", "D"])
+    );
+
+    const snapshot = await getDocs(q);
+    const shopListContainer = document.querySelector("#High-Risk\\ Level\\ Shops .content-container");
+    shopListContainer.innerHTML = "";
+
+    snapshot.forEach((docSnap) => {
+      const shop = docSnap.data();
+
+      const lastInspections = shop.lastInspection || [];
+      const latestInspectionDate = lastInspections.length > 0
+        ? lastInspections[lastInspections.length - 1].toDate().toLocaleDateString()
+        : "N/A";
+
+      const upcoming = shop.upcomingInspection?.toDate?.().toLocaleDateString() || "N/A";
+
+      const row = document.createElement("div");
+      row.className = "content-row";
+
+      row.innerHTML = `
+        <p class="element-1">${shop.referenceNo || "-"}</p>
+        <p class="element-2">${shop.name || "-"}</p>
+        <p class="element-3">${shop.gnDivision || "-"}</p>
+        <p class="element-4">${latestInspectionDate}</p>
+        <p class="element-5">${upcoming}</p>
+      `;
+
+      shopListContainer.appendChild(row);
+    });
+
+  } catch (err) {
+    console.error("❌ Failed to load high-risk shops:", err);
+  }
+}
