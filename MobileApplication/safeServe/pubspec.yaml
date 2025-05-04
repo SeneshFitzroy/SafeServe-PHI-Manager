@@ -34,10 +34,6 @@ dependencies:
   image_picker: ^1.0.7
   intl: ^0.18.1
   google_maps_flutter: ^2.5.0
-  firebase_core: ^3.13.0
-  firebase_auth: ^5.5.3
-  cloud_firestore: ^5.6.7
-
   firebase_core: ^2.27.0
   firebase_auth: ^4.17.0
   cloud_firestore: ^4.15.0

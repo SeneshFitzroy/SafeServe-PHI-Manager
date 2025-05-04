@@ -66,11 +66,6 @@ class SafeServeDrawer extends StatelessWidget {
                     icon: Icons.assessment,
                     label: 'Reports',
                     onTap: () {
-                      Navigator.pop(context); // Close drawer
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => const Reports()),
-                      );
                     },
                   ),
                   _buildDrawerItem(icon: Icons.settings, label: 'Settings', onTap: () {}),
