@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Redirect based on role
       if (role === "SPHI") {
-        window.location.href = "Registration.html";
+        window.location.href = "Dashboard.html";
       } else if (role === "PHI") {
         window.location.href = "Dashboard.html";
       } else {
@@ -83,7 +83,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (error) {
       console.error("Login Error:", error);
-      messageDiv.innerText = "Login failed: " + error.message;
+    
+      const errorCode = error.code;
+    
+      // Reset styles
+      messageDiv.innerText = "";
+      emailError.innerText = "";
+      passwordError.innerText = "";
+      document.getElementById("username").classList.remove("invalid");
+      document.getElementById("password").classList.remove("invalid");
+    
+      if (errorCode === "auth/user-not-found") {
+        emailError.innerText = "No user found with this email.";
+        emailError.style.display = "block";
+        document.getElementById("username").classList.add("invalid");
+      } else if (errorCode === "auth/wrong-password") {
+        passwordError.innerText = "Incorrect password.";
+        passwordError.style.display = "block";
+        document.getElementById("password").classList.add("invalid");
+      } else {
+        messageDiv.innerText = "Login failed: " + error.message;
+        messageDiv.style.display = "block";
+      }
     }
+    
   });
 });

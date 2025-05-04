@@ -1,9 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
+
 import '../../widgets/safe_serve_appbar.dart';
 import '../register_shop/screen_one/widgets/form_text_field.dart';
-import '../register_shop/screen_one/widgets/trade_dropdown.dart';
+import '../register_shop/screen_one/widgets/licensed_year_field.dart';
+import '../register_shop/screen_one/widgets/searchable_trade_dropdown.dart';
 
 class EditShopDetailScreen extends StatefulWidget {
   const EditShopDetailScreen({super.key});
@@ -13,192 +19,306 @@ class EditShopDetailScreen extends StatefulWidget {
 }
 
 class _EditShopDetailScreenState extends State<EditShopDetailScreen> {
-  // We'll store the original shop data
   late Map<String, dynamic> shopData;
+  final _formKey = GlobalKey<FormState>();
 
-  // Text controllers for each editable field
-  final TextEditingController _referenceNoController = TextEditingController();
-  final TextEditingController _phiAreaController = TextEditingController();
-  final TextEditingController _ownerNameController = TextEditingController();
-  final TextEditingController _privateAddressController = TextEditingController();
-  final TextEditingController _nicNumberController = TextEditingController();
-  final TextEditingController _telephoneController = TextEditingController();
-  final TextEditingController _nameOfEstablishmentController = TextEditingController();
-  final TextEditingController _addressOfEstablishmentController = TextEditingController();
-  final TextEditingController _licenseNumberController = TextEditingController();
-  final TextEditingController _licensedDateController = TextEditingController();
-  final TextEditingController _businessRegNumberController = TextEditingController();
-  final TextEditingController _numberOfEmployeesController = TextEditingController();
+  // Controllers
+  final _referenceCtrl        = TextEditingController();
+  final _businessRegCtrl      = TextEditingController();
+  final _establishmentNameCtrl= TextEditingController();
+  final _establishmentAddrCtrl= TextEditingController();
+  final _licenseNumCtrl       = TextEditingController();
+  final _licensedDateCtrl     = TextEditingController();
+  final _numEmployeesCtrl     = TextEditingController();
+  final _ownerNameCtrl        = TextEditingController();
+  final _nicCtrl              = TextEditingController();
+  final _privateAddrCtrl      = TextEditingController();
+  final _telephoneCtrl        = TextEditingController();
 
+  String _district = '';
+  List<String> _gnDivisions = [];
+  String _gnDivision = '';
   String _typeOfTrade = '';
 
   String? _capturedImagePath;
+  double? _lat;
+  double? _lng;
+
+  final _shopsRef = FirebaseFirestore.instance.collection('shops');
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final args = ModalRoute.of(context)!.settings.arguments;
-    if (args != null && args is Map<String, dynamic>) {
+    final args = ModalRoute.of(context)?.settings.arguments;
+    if (args is Map<String, dynamic>) {
       shopData = args;
     } else {
       shopData = {};
     }
-    _populateFields(shopData);
+    _loadInitial();
   }
 
-  void _populateFields(Map<String, dynamic> data) {
-    _referenceNoController.text = data['referenceNo'] ?? '';
-    _phiAreaController.text = data['phiArea'] ?? '';
-    _typeOfTrade = data['typeOfTrade'] ?? '';
-    _ownerNameController.text = data['ownerName'] ?? '';
-    // We'll consider "private address" as data['address']
-    _privateAddressController.text = data['address'] ?? '';
-    _nicNumberController.text = data['nicNumber'] ?? '';
-    _telephoneController.text = data['telephone'] ?? '';
-    _nameOfEstablishmentController.text = data['name'] ?? '';
-    _addressOfEstablishmentController.text = data['address'] ?? '';
-    _licenseNumberController.text = data['licenseNumber'] ?? '';
-    _licensedDateController.text = data['licensedDate'] ?? '';
-    _businessRegNumberController.text = data['businessRegNumber'] ?? '';
-    _numberOfEmployeesController.text = data['numberOfEmployees'] ?? '';
-  }
+  Future<void> _loadInitial() async {
+    // Text fields
+    _referenceCtrl.text        = shopData['referenceNo'] ?? '';
+    _businessRegCtrl.text      = shopData['businessRegNumber'] ?? '';
+    _establishmentNameCtrl.text= shopData['name'] ?? '';
+    _establishmentAddrCtrl.text= shopData['establishmentAddress'] ?? '';
+    _licenseNumCtrl.text       = shopData['licenseNumber'] ?? '';
+    final licDate = shopData['licensedDate'];
+    if (licDate is Timestamp) {
+      _licensedDateCtrl.text = DateFormat('yyyy-MM-dd').format(licDate.toDate());
+    } else {
+      _licensedDateCtrl.text = licDate?.toString() ?? '';
+    }
+    _numEmployeesCtrl.text     = (shopData['numberOfEmployees'] ?? '').toString();
+    _ownerNameCtrl.text        = shopData['ownerName'] ?? '';
+    _nicCtrl.text              = shopData['nicNumber'] ?? '';
+    _privateAddrCtrl.text      = shopData['privateAddress'] ?? '';
+    _telephoneCtrl.text        = shopData['telephone'] ?? '';
 
-  Future<void> _captureImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.camera);
-    if (pickedFile != null) {
-      setState(() {
-        _capturedImagePath = pickedFile.path; // Real file path from camera
-      });
+    // District & GN from shopData
+    _district = shopData['district'] ?? '';
+    final gnList = (shopData['gnDivisions'] as List?)?.cast<String>() ?? [];
+    setState(() {
+      _gnDivisions = gnList;
+      _gnDivision = shopData['gnDivision'] ?? (gnList.isNotEmpty ? gnList.first : '');
+    });
+
+    // Trade
+    _typeOfTrade = shopData['typeOfTrade'] ?? '';
+
+    // Image & location
+    final loc = shopData['location'];
+    if (loc is GeoPoint) {
+      _lat = loc.latitude;
+      _lng = loc.longitude;
     }
   }
 
   @override
   void dispose() {
-    _referenceNoController.dispose();
-    _phiAreaController.dispose();
-    _ownerNameController.dispose();
-    _privateAddressController.dispose();
-    _nicNumberController.dispose();
-    _telephoneController.dispose();
-    _nameOfEstablishmentController.dispose();
-    _addressOfEstablishmentController.dispose();
-    _licenseNumberController.dispose();
-    _licensedDateController.dispose();
-    _businessRegNumberController.dispose();
-    _numberOfEmployeesController.dispose();
+    _referenceCtrl.dispose();
+    _businessRegCtrl.dispose();
+    _establishmentNameCtrl.dispose();
+    _establishmentAddrCtrl.dispose();
+    _licenseNumCtrl.dispose();
+    _licensedDateCtrl.dispose();
+    _numEmployeesCtrl.dispose();
+    _ownerNameCtrl.dispose();
+    _nicCtrl.dispose();
+    _privateAddrCtrl.dispose();
+    _telephoneCtrl.dispose();
     super.dispose();
+  }
+
+  Future<void> _captureImage() async {
+    final picked = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (picked != null) {
+      final pos = await Geolocator.getCurrentPosition();
+      setState(() {
+        _capturedImagePath = picked.path;
+        _lat = pos.latitude;
+        _lng = pos.longitude;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final currentImage = shopData['image'] as String? ?? '';
+    final displayPath  = _capturedImagePath ?? currentImage;
+
     return Scaffold(
-      appBar: SafeServeAppBar(
-        height: 70,
-        onMenuPressed: () {
-        },
-      ),
+      appBar: SafeServeAppBar(height: 70, onMenuPressed: () {}),
       body: Container(
-        decoration: _buildGradientBackgroundDecoration(),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(context),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFE6F5FE), Color(0xFFF5ECF9)],
+          ),
+        ),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              _buildHeader(),
               const SizedBox(height: 20),
-              // Editable form fields:
+
+              // 1 Reference No
               FormTextField(
-                label: 'Reference No',
+                label: 'Reference Number',
                 isInvalid: false,
-                initialValue: _referenceNoController.text,
-                onChanged: (val) => _referenceNoController.text = val,
-              ),
-              FormTextField(
-                label: 'PHI Area',
-                isInvalid: false,
-                initialValue: _phiAreaController.text,
-                onChanged: (val) => _phiAreaController.text = val,
-              ),
-              TradeDropdown(
-                label: 'Type of Trade',
-                isInvalid: false,
-                initialValue: _typeOfTrade,
-                onChanged: (val) => _typeOfTrade = val,
-              ),
-              FormTextField(
-                label: 'Name of the Owner',
-                isInvalid: false,
-                initialValue: _ownerNameController.text,
-                onChanged: (val) => _ownerNameController.text = val,
-              ),
-              FormTextField(
-                label: 'Private Address',
-                isInvalid: false,
-                initialValue: _privateAddressController.text,
-                onChanged: (val) => _privateAddressController.text = val,
-              ),
-              FormTextField(
-                label: 'NIC Number',
-                isInvalid: false,
-                initialValue: _nicNumberController.text,
-                onChanged: (val) => _nicNumberController.text = val,
-              ),
-              FormTextField(
-                label: 'Telephone NO',
-                isInvalid: false,
-                initialValue: _telephoneController.text,
-                inputType: TextInputType.phone,
-                onChanged: (val) => _telephoneController.text = val,
-              ),
-              FormTextField(
-                label: 'Name of the Establishment',
-                isInvalid: false,
-                initialValue: _nameOfEstablishmentController.text,
-                onChanged: (val) => _nameOfEstablishmentController.text = val,
-              ),
-              FormTextField(
-                label: 'Address of the Establishment',
-                isInvalid: false,
-                initialValue: _addressOfEstablishmentController.text,
-                onChanged: (val) => _addressOfEstablishmentController.text = val,
-              ),
-              FormTextField(
-                label: 'License Number',
-                isInvalid: false,
-                initialValue: _licenseNumberController.text,
+                initialValue: _referenceCtrl.text,
                 inputType: TextInputType.number,
-                onChanged: (val) => _licenseNumberController.text = val,
+                maxLength: 6,
+                onChanged: (v) => _referenceCtrl.text = v,
               ),
-              FormTextField(
-                label: 'Licensed Date',
-                isInvalid: false,
-                initialValue: _licensedDateController.text,
-                onChanged: (val) => _licensedDateController.text = val,
-              ),
+
+              // 2 Business Reg
               FormTextField(
                 label: 'Business Registration Number',
                 isInvalid: false,
-                initialValue: _businessRegNumberController.text,
-                onChanged: (val) => _businessRegNumberController.text = val,
+                initialValue: _businessRegCtrl.text,
+                inputType: TextInputType.number,
+                maxLength: 6,
+                onChanged: (v) => _businessRegCtrl.text = v,
               ),
+
+              // 3 Establishment Name
+              FormTextField(
+                label: 'Name of the Establishment',
+                isInvalid: false,
+                initialValue: _establishmentNameCtrl.text,
+                onChanged: (v) => _establishmentNameCtrl.text = v,
+              ),
+
+              // 4 Establishment Address
+              FormTextField(
+                label: 'Address of the Establishment',
+                isInvalid: false,
+                initialValue: _establishmentAddrCtrl.text,
+                onChanged: (v) => _establishmentAddrCtrl.text = v,
+              ),
+
+              // 5 District (read-only)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const Text('District', style: TextStyle(fontSize: 18)),
+                  const SizedBox(height: 6),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(_district, style: const TextStyle(fontSize: 16)),
+                  ),
+                ]),
+              ),
+
+              // 6 GN Division
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const Text('GN Division', style: TextStyle(fontSize: 18)),
+                  const SizedBox(height: 6),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: const Color(0xFF4289FC)),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: _gnDivision,
+                        isExpanded: true,
+                        items: _gnDivisions
+                            .map((g) => DropdownMenuItem(value: g, child: Text(g)))
+                            .toList(),
+                        onChanged: (v) => setState(() => _gnDivision = v!),
+                      ),
+                    ),
+                  ),
+                ]),
+              ),
+
+              // 7 License Number
+              FormTextField(
+                label: 'License Number',
+                isInvalid: false,
+                initialValue: _licenseNumCtrl.text,
+                inputType: TextInputType.number,
+                maxLength: 6,
+                onChanged: (v) => _licenseNumCtrl.text = v,
+              ),
+
+              // 8 Licensed Date
+              LicensedYearField(
+                label: 'Licensed Date',
+                isInvalid: false,
+                initialValue: _licensedDateCtrl.text,
+                onDatePicked: (v) => _licensedDateCtrl.text = v,
+              ),
+
+              // 9 Type of Trade
+              SearchableTradeDropdown(
+                initial: _typeOfTrade,
+                onSelected: (v) => setState(() {
+                  _typeOfTrade = v;
+                }),
+              ),
+
+              // 10 Number of Employees
               FormTextField(
                 label: 'Number of Employees',
                 isInvalid: false,
-                initialValue: _numberOfEmployeesController.text,
+                initialValue: _numEmployeesCtrl.text,
                 inputType: TextInputType.number,
-                onChanged: (val) => _numberOfEmployeesController.text = val,
+                onChanged: (v) => _numEmployeesCtrl.text = v,
               ),
+
+              // 11 Name of Owner
+              FormTextField(
+                label: 'Name of the Owner',
+                isInvalid: false,
+                initialValue: _ownerNameCtrl.text,
+                onChanged: (v) => _ownerNameCtrl.text = v,
+              ),
+
+              // 12 NIC Number
+              FormTextField(
+                label: 'NIC Number',
+                isInvalid: false,
+                initialValue: _nicCtrl.text,
+                onChanged: (v) => _nicCtrl.text = v,
+              ),
+
+              // 13 Private Address
+              FormTextField(
+                label: 'Private Address',
+                isInvalid: false,
+                initialValue: _privateAddrCtrl.text,
+                onChanged: (v) => _privateAddrCtrl.text = v,
+              ),
+
+              // 14 Telephone Number
+              FormTextField(
+                label: 'Telephone Number',
+                isInvalid: false,
+                initialValue: _telephoneCtrl.text,
+                inputType: TextInputType.phone,
+                maxLength: 10,
+                onChanged: (v) => _telephoneCtrl.text = v,
+              ),
+
               const SizedBox(height: 15),
-              // Image capture field:
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 25, vertical: 8),
-                child: Text(
-                  'Image of the Shop',
-                  style: TextStyle(fontSize: 18, color: Colors.black),
+                child: Text('Image of the Shop', style: TextStyle(fontSize: 18)),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: GestureDetector(
+                  onTap: _captureImage,
+                  child: Container(
+                    height: 200,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: const Color(0xFF4289FC)),
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: displayImage(displayPath),
+                  ),
                 ),
               ),
-              _buildImageCaptureArea(),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -208,155 +328,119 @@ class _EditShopDetailScreenState extends State<EditShopDetailScreen> {
                     OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         foregroundColor: const Color(0xFF1F41BB),
-                        backgroundColor: Colors.white,
                         side: const BorderSide(color: Color(0xFF1F41BB)),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                            borderRadius: BorderRadius.circular(20)),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 28, vertical: 12),
                       ),
-                      onPressed: () {
-                        Navigator.pushReplacementNamed(
-                          context,
-                          '/shop_detail',
-                          arguments: shopData['name'] ?? '',
-                        );
-                      },
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(
-                          fontFamily: 'Roboto',
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Cancel',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF1F41BB),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                            borderRadius: BorderRadius.circular(20)),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 28, vertical: 12),
                       ),
                       onPressed: _handleSave,
-                      child: const Text(
-                        'Save',
-                        style: TextStyle(
-                          fontFamily: 'Roboto',
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                      child: const Text('Save',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white)),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 10),
-            ],
+              const SizedBox(height: 20),
+            ]),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: Row(
-        children: [
-          InkWell(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: const Color(0xFFCDE6FE),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: const Icon(
-                Icons.arrow_back_rounded,
-                color: Color(0xFF1F41BB),
-              ),
-            ),
+  Widget displayImage(String path) {
+    if (path.isEmpty) return const Center(child: Text('Tap to capture'));
+    if (path.startsWith('http')) {
+      return Image.network(path, fit: BoxFit.cover);
+    }
+    if (path.startsWith('assets/')) {
+      return Image.asset(path, fit: BoxFit.cover);
+    }
+    return Image.file(File(path), fit: BoxFit.cover);
+  }
+
+  Widget _buildHeader() => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 25),
+    child: Row(children: [
+      InkWell(
+        onTap: () => Navigator.pop(context),
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: const Color(0xFFCDE6FE),
+            borderRadius: BorderRadius.circular(6),
           ),
-          const SizedBox(width: 12),
-          const Text(
-            'Edit Shop Details',
-            style: TextStyle(
+          child: const Icon(Icons.arrow_back_rounded,
+              color: Color(0xFF1F41BB)),
+        ),
+      ),
+      const SizedBox(width: 12),
+      const Text('Edit Shop Details',
+          style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-        ],
+              color: Colors.black)),
+    ]),
+  );
+
+  Future<void> _handleSave() async {
+    final docId = _referenceCtrl.text.trim();
+    if (docId.isEmpty) {
+      Navigator.pop(context);
+      return;
+    }
+
+    String? imageUrl;
+    if (_capturedImagePath != null) {
+      final snap = await FirebaseStorage.instance
+          .ref('shops_images/$docId.jpg')
+          .putFile(File(_capturedImagePath!),
+          SettableMetadata(contentType: 'image/jpeg'));
+      imageUrl = await snap.ref.getDownloadURL();
+    }
+
+    final data = {
+      'referenceNo': _referenceCtrl.text.trim(),
+      'businessRegNumber': _businessRegCtrl.text.trim(),
+      'name': _establishmentNameCtrl.text.trim(),
+      'establishmentAddress': _establishmentAddrCtrl.text.trim(),
+      'district': _district,
+      'gnDivision': _gnDivision,
+      'licenseNumber': _licenseNumCtrl.text.trim(),
+      'licensedDate': Timestamp.fromDate(
+        DateFormat('yyyy-MM-dd').parse(_licensedDateCtrl.text.trim()),
       ),
-    );
-  }
+      'typeOfTrade': _typeOfTrade,
+      'numberOfEmployees': int.tryParse(_numEmployeesCtrl.text) ?? 0,
+      'ownerName': _ownerNameCtrl.text.trim(),
+      'nicNumber': _nicCtrl.text.trim(),
+      'privateAddress': _privateAddrCtrl.text.trim(),
+      'telephone': _telephoneCtrl.text.trim(),
+    };
+    if (imageUrl != null) data['image'] = imageUrl;
+    if (_lat != null && _lng != null) {
+      data['location'] = GeoPoint(_lat!, _lng!);
+    }
 
-  BoxDecoration _buildGradientBackgroundDecoration() {
-    return const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          Color(0xFFE6F5FE),
-          Color(0xFFF5ECF9),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildImageCaptureArea() {
-    final oldImagePath = shopData['image'] ?? '';
-    final displayPath = _capturedImagePath ?? oldImagePath;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: GestureDetector(
-        onTap: _captureImage,
-        child: Container(
-          width: double.infinity,
-          height: 200,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: const Color(0xFF4289FC),
-            ),
-          ),
-          child: displayPath.isNotEmpty
-              ? ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: displayPath.startsWith('assets/')
-                ? Image.asset(
-              displayPath,
-              fit: BoxFit.cover,
-              width: double.infinity,
-            )
-                : Image.file(
-              File(displayPath),
-              fit: BoxFit.cover,
-              width: double.infinity,
-            ),
-          )
-              : const Center(child: Text('Tap to capture an image')),
-        ),
-      ),
-    );
-  }
-
-  void _handleSave() {
-    final newName = _nameOfEstablishmentController.text.trim();
-    final fallbackName = shopData['name'] ?? '';
-
-    Navigator.pushReplacementNamed(
-      context,
-      '/shop_detail',
-      arguments: newName.isNotEmpty ? newName : fallbackName,
-    );
+    await _shopsRef.doc(docId).update(data);
+    Navigator.pushReplacementNamed(context, '/shop_detail', arguments: docId);
   }
 }

@@ -1,4 +1,12 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
+import 'package:safeserve/screens/map_view/map_view_screen.dart'; // Use only this import for map view
+import 'package:safeserve/screens/reports_screen.dart';
+
+import '../screens/calendar/calendar_screen.dart';
+import '../screens/login_screen/login_screen.dart';
+import '../services/logout_service.dart'; 
 
 import '../screens/Reports_Analytics.dart/Reports.dart';
 import '../screens/map_view/map_view_screen.dart';
@@ -31,7 +39,17 @@ class SafeServeDrawer extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 children: [
                   _buildDrawerItem(icon: Icons.dashboard, label: 'Dashboard', onTap: () {}),
-                  _buildDrawerItem(icon: Icons.calendar_today, label: 'Calendar', onTap: () {}),
+                  _buildDrawerItem(
+                    icon: Icons.calendar_today,
+                    label: 'Calendar',
+                    onTap: () {
+                      Navigator.pop(context);              // close drawer
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => const CalendarScreen()),
+                      );
+                    },
+                  ),
                   _buildDrawerItem(icon: Icons.store, label: 'Shops', onTap: () {}),
                   _buildDrawerItem(icon: Icons.description, label: 'Forms', onTap: () {}),
                   _buildDrawerItem(
@@ -57,7 +75,18 @@ class SafeServeDrawer extends StatelessWidget {
                   ),
                   _buildDrawerItem(icon: Icons.settings, label: 'Settings', onTap: () {}),
                   _buildDrawerItem(icon: Icons.help_outline, label: 'Support', onTap: () {}),
-                  _buildDrawerItem(icon: Icons.logout, label: 'Logout', onTap: () {}),
+                  _buildDrawerItem(
+                    icon: Icons.logout,
+                    label: 'Logout',
+                    onTap: () async {
+                      await LogoutService.instance.signOut();
+
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
+                            (route) => false,
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
