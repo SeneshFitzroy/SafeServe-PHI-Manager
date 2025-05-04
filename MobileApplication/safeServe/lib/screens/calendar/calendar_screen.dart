@@ -17,9 +17,14 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
-  final _tasksRef = FirebaseFirestore.instance.collection('tasks');
+  final CollectionReference<Map<String, dynamic>> _tasksRef =
+  FirebaseFirestore.instance.collection('tasks');
+  final CollectionReference<Map<String, dynamic>> _shopsRef =
+  FirebaseFirestore.instance.collection('shops');
+
   late final String _uid;
-  late final DocumentReference _userRef;
+  late final DocumentReference<Map<String, dynamic>> _userRef;
+  List<String> _userGnDivisions = [];
 
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -37,29 +42,62 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final profile = await AuthService.instance.getCachedProfile();
     _uid = profile?['uid'] ?? '';
     _userRef = FirebaseFirestore.instance.collection('users').doc(_uid);
-    await _fetchTasks();
+
+    final userSnap = await _userRef.get();
+    final userData = userSnap.data();
+    _userGnDivisions =
+        (userData?['gnDivisions'] as List<dynamic>? ?? []).cast<String>();
+
+    await _fetchData();
   }
 
-  Future<void> _fetchTasks() async {
-    final q = await _tasksRef.where('phiId', isEqualTo: _userRef).get();
+  Future<void> _fetchData() async {
     final map = <DateTime, List<Map<String, dynamic>>>{};
-    for (final doc in q.docs) {
+
+    // Load normal tasks
+    final tasksQ = await _tasksRef.where('phiId', isEqualTo: _userRef).get();
+    for (final doc in tasksQ.docs) {
       final data = doc.data();
-      final dt = (data['date'] as Timestamp).toDate();
-      final day = DateTime(dt.year, dt.month, dt.day);
-      map.putIfAbsent(day, () => []).add(data);
+      final ts = data['date'] as Timestamp;
+      final day =
+      DateTime(ts.toDate().year, ts.toDate().month, ts.toDate().day);
+      map.putIfAbsent(day, () => []).add({
+        ...data,
+        'isInspection': false,
+      });
     }
+
+    // Load upcoming inspections
+    if (_userGnDivisions.isNotEmpty) {
+      final batch = _userGnDivisions.length > 10
+          ? _userGnDivisions.sublist(0, 10)
+          : _userGnDivisions;
+      final shopsQ =
+      await _shopsRef.where('gnDivision', whereIn: batch).get();
+      for (final doc in shopsQ.docs) {
+        final data = doc.data();
+        final Timestamp? upTs = data['upcomingInspection'] as Timestamp?;
+        if (upTs == null) continue;
+        final dt = upTs.toDate();
+        final day = DateTime(dt.year, dt.month, dt.day);
+        map.putIfAbsent(day, () => []).add({
+          'title': 'Shop Inspection',
+          'shopName': data['name'] ?? '',
+          'notes': data['establishmentAddress'] ?? '',
+          'date': upTs,
+          'isInspection': true,
+        });
+      }
+    }
+
     setState(() => _tasksByDay = map);
   }
 
   List<Map<String, dynamic>> _getTasksFor(DateTime d) {
-    final day = DateTime(d.year, d.month, d.day);
-    final list = _tasksByDay[day] ?? [];
-    list.sort((a, b) {
-      return (a['date'] as Timestamp)
-          .toDate()
-          .compareTo((b['date'] as Timestamp).toDate());
-    });
+    final key = DateTime(d.year, d.month, d.day);
+    final list = _tasksByDay[key] ?? [];
+    list.sort((a, b) =>
+        (a['date'] as Timestamp).toDate().compareTo((b['date'] as Timestamp).toDate()));
     return list;
   }
 
@@ -87,7 +125,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
         userPost: 'PHI',
       ),
       body: Stack(children: [
-        // Background gradient
         Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -98,7 +135,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
           ),
         ),
         Column(children: [
-          // Calendar
           const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -114,7 +150,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
               onDaySelected: (sel, foc) {
                 setState(() {
                   _selectedDay = sel;
-                  _focusedDay  = foc;
+                  _focusedDay = foc;
                 });
               },
               eventLoader: _getTasksFor,
@@ -143,17 +179,37 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   color: Color(0xFF1F41BB),
                   shape: BoxShape.circle,
                 ),
-                markerDecoration: BoxDecoration(
-                  color: Color(0xFFF1D730),
-                  shape: BoxShape.circle,
-                ),
                 outsideDaysVisible: false,
               ),
               calendarFormat: CalendarFormat.month,
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (context, date, events) {
+                  if (events.isEmpty) return const SizedBox();
+                  final evts = events.cast<Map<String, dynamic>>();
+                  final hasInspection =
+                  evts.any((e) => e['isInspection'] == true);
+                  final dotColor =
+                  hasInspection ? Colors.red : const Color(0xFFF1D730);
+                  return Positioned(
+                    bottom: 1,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: evts.map((_) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 0.5),
+                          width: 7,
+                          height: 7,
+                          decoration:
+                          BoxDecoration(color: dotColor, shape: BoxShape.circle),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
           const SizedBox(height: 16),
-          // Timeline list
           Expanded(child: _buildTimeline()),
         ]),
         _buildBottomNav(context),
@@ -161,12 +217,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-
   Widget _buildTimeline() {
     final tasks = _getTasksFor(_selectedDay ?? _focusedDay);
-    if (tasks.isEmpty) {
-      return const Center(child: Text('No tasks'));
-    }
+    if (tasks.isEmpty) return const Center(child: Text('No tasks'));
     return NotificationListener<ScrollNotification>(
       onNotification: (n) {
         if (n is ScrollUpdateNotification) {
@@ -186,63 +239,54 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 60,
-                  child: Text(
-                    start,
-                    style: const TextStyle(fontSize: 16, color: Colors.black54),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: InkWell(
-                    onTap: () => _showTaskPopup(t, start, color),
-                    child: Container(
-                      height: 80, // ← fixed height
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: color,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center, // center vertically
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            t['title'] ?? '',
-                            style: const TextStyle(
+            child: Row(children: [
+              SizedBox(
+                width: 60,
+                child: Text(start,
+                    style: const TextStyle(fontSize: 16, color: Colors.black54)),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: InkWell(
+                  onTap: () => _showTaskPopup(t, start, color),
+                  child: Container(
+                    height: 80,
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          t['isInspection'] == true
+                              ? '${t['title']} – ${t['shopName']}'
+                              : t['title'] ?? '',
+                          style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            t['notes'] ?? '',
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(t['notes'] ?? '',
                             style: const TextStyle(color: Colors.white70),
                             maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
+                            overflow: TextOverflow.ellipsis),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ]),
           );
         },
       ),
     );
   }
 
-  void _showTaskPopup(
-      Map<String, dynamic> task,
-      String start,
-      Color color,
-      ) {
+  void _showTaskPopup(Map<String, dynamic> task, String start, Color color) {
     final dt = (task['date'] as Timestamp).toDate();
     final dateStr = DateFormat('yyyy/MM/dd').format(dt);
 
@@ -258,40 +302,30 @@ class _CalendarScreenState extends State<CalendarScreen> {
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
-            // HEADER BAR
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
               decoration: BoxDecoration(
-                color: color,
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(16),
-                ),
-              ),
+                  color: color,
+                  borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(16))),
               child: Text(
                 task['title'] ?? '',
                 style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                    color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-
-            // DATE & TIME
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               child: Row(children: [
-                const Icon(Icons.calendar_today, size: 20, color: Colors.black54),
+                const Icon(Icons.calendar_today,
+                    size: 20, color: Colors.black54),
                 const SizedBox(width: 8),
-                Text(
-                  '$dateStr • $start',
-                  style: const TextStyle(color: Colors.black87, fontSize: 14),
-                ),
+                Text('$dateStr • $start',
+                    style:
+                    const TextStyle(color: Colors.black87, fontSize: 14)),
               ]),
             ),
-
-            // NOTES PANEL
             if ((task['notes'] as String?)?.isNotEmpty ?? false)
               Container(
                 width: double.infinity,
@@ -301,17 +335,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   color: const Color(0xFFF5F5F5),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Text(
-                  task['notes'],
-                  style: const TextStyle(color: Colors.black87, fontSize: 14),
-                ),
+                child: Text(task['notes']!,
+                    style:
+                    const TextStyle(color: Colors.black87, fontSize: 14)),
               ),
-
             const SizedBox(height: 20),
-
-            // CLOSE BUTTON
             Padding(
-              padding: const EdgeInsets.only(right: 20, bottom: 16, left: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               child: Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: color, width: 1.5),
@@ -321,16 +351,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   onPressed: () => Navigator.pop(context),
                   style: TextButton.styleFrom(
                     foregroundColor: color,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                    backgroundColor: Colors.transparent,
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                        borderRadius: BorderRadius.circular(10)),
                   ),
-                  child: const Text(
-                    'CLOSE',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
+                  child: const Text('CLOSE',
+                      style:
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 ),
               ),
             ),
@@ -352,16 +380,26 @@ class _CalendarScreenState extends State<CalendarScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 6)],
+          boxShadow: [
+            BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 6)
+          ],
         ),
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            CustomNavBarIcon(icon: Icons.event, label: 'Calendar', navItem: NavItem.calendar, selected: true),
+            CustomNavBarIcon(
+                icon: Icons.event,
+                label: 'Calendar',
+                navItem: NavItem.calendar,
+                selected: true),
             CustomNavBarIcon(icon: Icons.store, label: 'Shops', navItem: NavItem.shops),
-            CustomNavBarIcon(icon: Icons.dashboard, label: 'Dashboard', navItem: NavItem.dashboard),
+            CustomNavBarIcon(
+                icon: Icons.dashboard, label: 'Dashboard', navItem: NavItem.dashboard),
             CustomNavBarIcon(icon: Icons.map, label: 'Map', navItem: NavItem.map),
-            CustomNavBarIcon(icon: Icons.notifications, label: 'Notifications', navItem: NavItem.notifications),
+            CustomNavBarIcon(
+                icon: Icons.notifications,
+                label: 'Notifications',
+                navItem: NavItem.notifications),
           ],
         ),
       ),
