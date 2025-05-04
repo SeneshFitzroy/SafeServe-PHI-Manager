@@ -8,7 +8,7 @@ if (!role) {
   const PHI_BLOCKED = ["Registration.html"];
 
   if (role === "SPHI" && !SPHI_ALLOWED.includes(path)) {
-    window.location.href = "Registration.html";
+    window.location.href = "Dashboard.html";
   }
 
   if (role === "PHI" && PHI_BLOCKED.includes(path)) {

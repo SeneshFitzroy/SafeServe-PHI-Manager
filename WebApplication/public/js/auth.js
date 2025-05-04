@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Redirect based on role
       if (role === "SPHI") {
-        window.location.href = "Registration.html";
+        window.location.href = "Dashboard.html";
       } else if (role === "PHI") {
         window.location.href = "Dashboard.html";
       } else {
