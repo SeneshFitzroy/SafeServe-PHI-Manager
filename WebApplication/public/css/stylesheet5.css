@@ -332,8 +332,8 @@
 }
 
 .shop-chart .chartjs-legend ul li span {
-    width: 10px !important;
-    height: 10px !important;
+    width: 10px ;
+    height: 10px ;
     margin-right: 6px;
     border-radius: 2px;
 }

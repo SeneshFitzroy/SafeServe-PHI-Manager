@@ -13,8 +13,6 @@
         <script type="module" src="js/nav-access.js"></script>
         <script type="module" src="js/user-info.js"></script>
 
-
-
     </head>
     <body>
         <div class="navigation">
@@ -103,39 +101,7 @@
                     </div>
                     <div class="content-container" >
                         <div class="content-row">
-                            <p class="element-1">13236</p>
-                            <p class="element-2">ABC Cafe & Bakery</p>
-                            <p class="element-3">Biyagama</p>
-                            <p class="element-4">2024-10-05</p>
-                            <p class="element-5">2025-01-04</p>
-                        </div>
-                        <div class="content-row">
-                            <p class="element-1">13236</p>
-                            <p class="element-2">ABC Cafe & Bakery</p>
-                            <p class="element-3">Biyagama</p>
-                            <p class="element-4">2024-10-05</p>
-                            <p class="element-5">2025-01-04</p>
-                        </div>
-                        <div class="content-row">
-                            <p class="element-1">13236</p>
-                            <p class="element-2">ABC Cafe & Bakery</p>
-                            <p class="element-3">Biyagama</p>
-                            <p class="element-4">2024-10-05</p>
-                            <p class="element-5">2025-01-04</p>
-                        </div>
-                        <div class="content-row">
-                            <p class="element-1">13236</p>
-                            <p class="element-2">ABC Cafe & Bakery</p>
-                            <p class="element-3">Biyagama</p>
-                            <p class="element-4">2024-10-05</p>
-                            <p class="element-5">2025-01-04</p>
-                        </div>
-                        <div class="content-row">
-                            <p class="element-1">13236</p>
-                            <p class="element-2">ABC Cafe & Bakery</p>
-                            <p class="element-3">Biyagama</p>
-                            <p class="element-4">2024-10-05</p>
-                            <p class="element-5">2025-01-04</p>
+                            
                         </div>
                     </div>
                 </div>
@@ -146,7 +112,7 @@
                 <div id="Total Inspections this Year" class="report-slide active">
                     <div class="chart-container">
                         <h2>Total Inspections:</h2>
-                        <div class="red-text">1500</div>
+                        <div class="red-text"></div>
                         <canvas id="YearlyInspections"></canvas>
                     </div>
                 </div>
@@ -161,10 +127,18 @@
                         <div class="filter-row">
                             <label for="shopCategory" class="filter-label">Select Shop Category</label>
                             <select id="shopCategory" class="shop-category-select">
-                                <option>Super Market</option>
-                                <option>Bakery</option>
-                                <option>Restaurant</option>
-                                <option>Grocery</option>
+                                <option >Restaurants</option>
+                                <option>Eateries</option>
+                                <option selected>Bakeries</option>
+                                <option>Hotels</option>
+                                <option>Cafés</option>
+                                <option>Mobile Food Carts</option>
+                                <option>Street Vendors</option>
+                                <option>Supermarkets</option>
+                                <option>Fast‑Food Outlets</option>
+                                <option>Catering Services</option>
+                                <option>Food Processing</option>
+                                <option>Ice‑cream Parlors</option>
                             </select>
                             <button class="search-button">Search</button>
                         </div>
@@ -184,34 +158,7 @@
                                 <!-- Table Rows Container -->
                                 <div class="shop-table-body">
                                     <div class="shop-table-row">
-                                        <p class="col-1">13236</p>
-                                        <p class="col-2">ABC Cafe & Bakery</p>
-                                        <p class="col-3">Biyagama</p>
-                                    </div>
-                                    <div class="shop-table-row">
-                                        <p class="col-1">13237</p>
-                                        <p class="col-2">Super Mart</p>
-                                        <p class="col-3">Malabe</p>
-                                    </div>
-                                    <div class="shop-table-row">
-                                        <p class="col-1">13236</p>
-                                        <p class="col-2">ABC Cafe & Bakery</p>
-                                        <p class="col-3">Biyagama</p>
-                                    </div>
-                                    <div class="shop-table-row">
-                                        <p class="col-1">13237</p>
-                                        <p class="col-2">Super Mart</p>
-                                        <p class="col-3">Malabe</p>
-                                    </div>
-                                    <div class="shop-table-row">
-                                        <p class="col-1">13236</p>
-                                        <p class="col-2">ABC Cafe & Bakery</p>
-                                        <p class="col-3">Biyagama</p>
-                                    </div>
-                                    <div class="shop-table-row">
-                                        <p class="col-1">13237</p>
-                                        <p class="col-2">Super Mart</p>
-                                        <p class="col-3">Malabe</p>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -219,7 +166,7 @@
                             <!-- Doughnut Chart -->
                             <div class="shop-chart">
                                 <h3>Risk Levels by Shop Type</h3>
-                                <canvas id="riskLevelChart"></canvas>
+                                <canvas id="RiskLevelChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -228,122 +175,8 @@
             </div>
         </div>
 
+        <script type="module" src="js/analytics.js"></script>
                 
-                
-        
-        <script>
-            function logoutUser(e) {
-                e.preventDefault(); // prevent form reload
-                sessionStorage.clear();
-                window.location.href = "login.html"; // or your login page name
-            }
-
-
-            document.addEventListener("DOMContentLoaded", () => {
-                const navButtons = document.querySelectorAll(".report-nav button");
-                const slides = document.querySelectorAll(".report-slide"); 
-
-                // Add click event to each navigation button
-                navButtons.forEach((button) => {
-                    button.addEventListener("click", () => {
-                        const targetId = button.getAttribute("data-target");
-
-                        navButtons.forEach((btn) => btn.classList.remove("active"));
-                        button.classList.add("active");
-
-                        slides.forEach((slide) => {
-                            slide.classList.remove("active");
-                            if (slide.id === targetId) {
-                                slide.classList.add("active");
-                            }
-                        });
-                    });
-                });
-            });
-
-
-
-            const ctx = document.getElementById('YearlyInspections').getContext('2d');
-
-            const monthlyInspectionsChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: [
-                        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-                    ],
-                    datasets: [{
-                        label: 'Inspections',
-                        data: [120, 135, 160, 145, 170, 130, 90, 110, 100, 125, 115, 100],
-                        backgroundColor: '#007bff',
-                        borderRadius: 5,
-                        barPercentage: 0.6,
-                        categoryPercentage: 0.8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                precision: 0
-                            },
-                            grid: {
-                                display: false 
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false 
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-
-
-            // Doughnut Chart for Shop Category Based Risk Levels
-            const doughnutCtx = document.getElementById('riskLevelChart').getContext('2d');
-
-            const riskLevelChart = new Chart(doughnutCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['A Grade', 'B Grade', 'C Grade', 'D Grade'],
-                    datasets: [{
-                        data: [40, 25, 20, 15],
-                        backgroundColor: ['#28a745', '#fd7e14', '#ffc107', '#dc3545'], 
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                font: {
-                                    family: 'Arial',
-                                    size: 14
-                                },
-                                boxWidth: 12,
-                                boxHeight: 12,
-                                borderRadius: 2,
-                                padding: 10
-                            }
-                        }
-                    }
-
-                }
-            });
-
-        </script>
 
 </body>
 </html>

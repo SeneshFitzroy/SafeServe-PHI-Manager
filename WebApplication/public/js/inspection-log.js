@@ -122,15 +122,14 @@ window.addEventListener("DOMContentLoaded", async () => {
                 }
             });
 
-            // Color the ranking circles
             colorGrades();
 
             // Add event listeners to view buttons
             document.querySelectorAll('.view').forEach((btn) => {
                 btn.addEventListener('click', () => {
-                    showViewSlider(); // We'll fill the form in Step 3
+                    showViewSlider(); 
                     const shopId = btn.getAttribute('data-id');
-                    loadShopDetails(shopId); // Defined in next step
+                    loadShopDetails(shopId); 
                 });
             });
         });
@@ -162,7 +161,7 @@ async function loadShopDetails(shopId) {
             formFields[3].value = shop.ownerName || '';
             formFields[4].value = shop.privateAddress || '';
             formFields[5].value = shop.nicNumber || '';
-            formFields[6].value = shop.privateAddress || ''; // Personal address same as private?
+            formFields[6].value = shop.privateAddress || ''; 
             formFields[7].value = shop.telephone || '';
             formFields[8].value = shop.name || '';
             formFields[9].value = shop.district || '';

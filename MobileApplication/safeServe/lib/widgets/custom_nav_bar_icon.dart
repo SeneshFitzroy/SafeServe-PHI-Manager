@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/calendar/calendar_screen.dart';
+import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/registered_shops/registered_shops_screen.dart';
 import '../screens/map_view/map_view_screen.dart';
 
@@ -20,12 +21,12 @@ class CustomNavBarIcon extends StatelessWidget {
   final bool selected;
 
   const CustomNavBarIcon({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.navItem,
     this.selected = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +49,9 @@ class CustomNavBarIcon extends StatelessWidget {
             );
             break;
           case NavItem.dashboard:
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Dashboard placeholder')),
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) =>  DashboardScreen()),
             );
             break;
           case NavItem.form:

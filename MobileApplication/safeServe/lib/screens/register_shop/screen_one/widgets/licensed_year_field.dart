@@ -9,12 +9,12 @@ class LicensedYearField extends StatefulWidget {
   final ValueChanged<String> onDatePicked;
 
   const LicensedYearField({
-    Key? key,
+    super.key,
     required this.label,
     required this.isInvalid,
     required this.initialValue,
     required this.onDatePicked,
-  }) : super(key: key);
+  });
 
   @override
   State<LicensedYearField> createState() => _LicensedYearFieldState();
