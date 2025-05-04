@@ -1,8 +1,5 @@
-// lib/screens/h800_form/h800_form_data.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Holds every answer of the ten‑part HC‑800 form.
-/// *All properties are mutable* so each screen can assign directly.
 class H800FormData {
   // ─────────────────────────────────────────── Part‑1 (5) ──────────────
   String? suitabilityForBusiness;
@@ -109,12 +106,9 @@ class H800FormData {
   String? shopId;          // will be turned into a reference on submit
   String? phiId;           // will be turned into a reference on submit
 
-  /// Constructor – no required params so `H800FormData()` is valid.
   H800FormData();
 
   // ──────────────────────────────── copyWith (optional) ────────────────
-  /// Creates a new instance while overriding only the supplied fields.
-  /// You can keep using the mutable pattern and ignore this helper if you like.
   H800FormData copyWith({
     String? suitabilityForBusiness,
     String? generalCleanliness,
@@ -483,8 +477,6 @@ class H800FormData {
     ..shopId                        = json['shopId']
     ..phiId                         = json['phiId'];
 
-  // ───────────────────────────── total / grade helper ──────────────────
-  /// Paste your scoring algorithm here.
   int calculateTotalScore() {
     int total = 0;
 

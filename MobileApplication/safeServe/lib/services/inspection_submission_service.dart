@@ -10,7 +10,6 @@ class InspectionSubmissionService {
   final _storage = FirebaseStorage.instance;
   final _uuid    = const Uuid();
 
-  /// Saves HC‑800 form + photos, updates grade / last‑ & next‑inspection.
   Future<void> submit({
     required H800FormData   data,
     required List<File>     images,
@@ -18,7 +17,6 @@ class InspectionSubmissionService {
     required String         shopId,
     required String         phiId,
   }) async {
-    // ───────── 1. upload pictures ───────────────────────────────────────
     final meta = SettableMetadata(contentType: 'image/jpeg');
     final urls = <String>[];
 
@@ -29,7 +27,6 @@ class InspectionSubmissionService {
       urls.add(await ref.getDownloadURL());
     }
 
-    // ───────── 2. build Firestore payload ───────────────────────────────
     final shopRef = _fs.collection('shops').doc(shopId);
     final phiRef  = _fs.collection('users').doc(phiId);
 
@@ -38,17 +35,16 @@ class InspectionSubmissionService {
     final now     = Timestamp.now();
 
     await _fs.collection('h800_forms').add({
-      ...data.toJson(),                                   // every answer
+      ...data.toJson(),
       'totalScore'     : total,
       'grade'          : grade,
-      'shopId'         : shopRef,                         // 🔗 reference
-      'phiId'          : phiRef,                          // 🔗 reference
+      'shopId'         : shopRef,
+      'phiId'          : phiRef,
       'photoUrls'      : urls,
       'submittedAt'    : now,
       'location'       : GeoPoint(position.latitude, position.longitude),
     });
 
-    // ───────── 3. update shop doc ───────────────────────────────────────
     final next = Timestamp.fromDate(
       now.toDate().add(_durationForGrade(grade)),
     );
