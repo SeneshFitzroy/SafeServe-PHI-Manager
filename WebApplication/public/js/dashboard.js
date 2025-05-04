@@ -19,6 +19,8 @@ import {
 let currentUser = null;
 let userRole = "";
 let userGNDivisions = [];
+let dailyChartInstance = null;
+
 
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -39,6 +41,7 @@ onAuthStateChanged(auth, async (user) => {
       await loadUpcomingInspections();
       await loadHighRiskShops();
       await loadRiskLevelChart();
+      await loadWeeklyInspectionData(); 
 
 
       // TODO: Add remaining steps here...
@@ -65,46 +68,50 @@ window.logoutUser = function (e) {
 };
 
 // 📊 Daily Inspection Chart
-function renderDailyInspectionChart(labels = ["01", "02", "03", "04", "05", "06", "07"], data = [45, 15, 80, 20, 10, 35, 30]) {
-    console.log("🟢 Rendering Doughnut Chart with Data:", data);
-  const ctx = document.getElementById("dailyInspectionChart").getContext("2d");
-  new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: labels,
-      datasets: [{
-        label: "Daily Inspection Rate",
-        data: data,
-        borderColor: "#2B50FF",
-        backgroundColor: "rgba(43, 80, 255, 0.2)",
-        borderWidth: 2,
-        pointRadius: 5,
-        pointBackgroundColor: "#85C1E9",
-        tension: 0.4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        x: {
-          title: { display: true, text: "Day" },
-          grid: { display: true, drawBorder: false }
-        },
-        y: {
-          title: { display: true, text: "Inspection Rate" },
-          beginAtZero: true,
-          grid: { drawBorder: false }
-        }
-      },
-      plugins: {
-        legend: { display: false },
-        tooltip: { enabled: true }
-      }
+function renderDailyInspectionChart(labels = [], data = []) {
+    const ctx = document.getElementById("dailyInspectionChart").getContext("2d");
+  
+    if (dailyChartInstance) {
+      dailyChartInstance.destroy();
     }
-  });
-}
-
+  
+    dailyChartInstance = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: [{
+          label: "Daily Inspection Rate",
+          data: data,
+          borderColor: "#2B50FF",
+          backgroundColor: "rgba(43, 80, 255, 0.2)",
+          borderWidth: 2,
+          pointRadius: 5,
+          pointBackgroundColor: "#85C1E9",
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            title: { display: true, text: "Day" },
+            grid: { display: true, drawBorder: false }
+          },
+          y: {
+            title: { display: true, text: "Inspection Rate" },
+            beginAtZero: true,
+            grid: { drawBorder: false }
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: true }
+        }
+      }
+    });
+  }
+  
 // 🥧 Risk Level Doughnut Chart
 function renderRiskLevelChart(data = [60, 20, 10, 10]) {
   const ctxPie = document.getElementById("riskLevelsChart").getContext("2d");
@@ -332,3 +339,84 @@ async function loadUpcomingInspections() {
     console.error("❌ Error loading risk level chart:", err);
   }
 }
+
+async function loadWeeklyInspectionData() {
+    try {
+      const formsRef = collection(db, "h800_forms");
+      const startOfWeek = getStartOfWeekTimestamp();
+      const endOfToday = new Date();
+  
+      let snapshot;
+  
+      if (userRole === "PHI") {
+        const q = query(
+          formsRef,
+          where("phiId", "==", doc(db, "users", currentUser.uid))
+        );
+        snapshot = await getDocs(q);
+      } else if (userRole === "SPHI") {
+        // Step 1: Get all PHIs in assigned GN divisions
+        const usersRef = collection(db, "users");
+        const batchPromises = [];
+        for (let i = 0; i < userGNDivisions.length; i += 10) {
+          const batch = query(
+            usersRef,
+            where("gnDivisions", "array-contains-any", userGNDivisions.slice(i, i + 10)),
+            where("role", "==", "PHI")
+          );
+          batchPromises.push(getDocs(batch));
+        }
+  
+        const userSnapshots = await Promise.all(batchPromises);
+        const phiRefs = userSnapshots.flatMap(snap => snap.docs.map(doc => doc.ref));
+  
+        if (phiRefs.length === 0) {
+          renderDailyInspectionChart(); // empty chart
+          return;
+        }
+  
+        // Step 2: Get all forms submitted by those PHIs
+        const formBatches = [];
+        for (let i = 0; i < phiRefs.length; i += 10) {
+          const batch = query(
+            formsRef,
+            where("phiId", "in", phiRefs.slice(i, i + 10))
+          );
+          formBatches.push(getDocs(batch));
+        }
+  
+        const formSnapshots = await Promise.all(formBatches);
+        snapshot = {
+          docs: formSnapshots.flatMap(snap => snap.docs)
+        };
+      }
+  
+      // Step 3: Group by weekday
+      const dayCounts = Array(7).fill(0);
+  
+      snapshot.docs.forEach(doc => {
+        const data = doc.data();
+        const submittedDate = data.submittedAt?.toDate();
+  
+        if (submittedDate && submittedDate >= startOfWeek && submittedDate <= endOfToday) {
+          const dayIndex = submittedDate.getDay();
+          dayCounts[dayIndex]++;
+        }
+      });
+  
+      const weekLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      renderDailyInspectionChart(weekLabels, dayCounts);
+      console.log("📆 Weekly Inspections by Day:", dayCounts);
+  
+    } catch (err) {
+      console.error("❌ Error loading weekly inspections:", err);
+    }
+  }
+  
+  // 📅 Helper: Start of current week (Sunday)
+function getStartOfWeekTimestamp() {
+    const now = new Date();
+    const dayOfWeek = now.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek);
+  }
+  
