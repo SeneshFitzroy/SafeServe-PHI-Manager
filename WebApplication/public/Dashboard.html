@@ -4,9 +4,13 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Safe Serve - Dashboard</title>
 
-        <link rel="stylesheet" href="Navigation.css" />
-        <link rel="stylesheet" href="StyleSheet1.css" />
-
+        <link rel="stylesheet" href="css/Navigation.css" />
+        <link rel="stylesheet" href="css/StyleSheet1.css" />
+        
+        <script type="module" src="js/firebase-config.js"></script>
+        <script type="module" src="js/session-guard.js"></script>
+        <script type="module" src="js/nav-access.js"></script>
+        <script type="module" src="js/user-info.js"></script>
 
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -19,37 +23,37 @@
             
             
             <ul class="nav-menu">
-                <a href="">
+                <a href="" data-page="Dashboard.html" data-icon="dashboard-icon-b.png">
                     <li class="nav-item active">
                         <img src="images/dashboard-icon-w.png" />
                         <span>Dashboard</span>
                     </li>
                 </a>
-                <a href="Calendar.html">
+                <a href="Calendar.html" data-page="Calendar.html" data-icon="calendar-icon-b.png">
                     <li class="nav-item">
                         <img src="images/calendar-icon-b.png" />
                         <span>Calendar</span>
                     </li>
                 </a>
-                <a href="InspectionLog.html">
+                <a href="InspectionLog.html" data-page="InspectionLog.html" data-icon="inspectionlog-icon-b.png">
                     <li class="nav-item">
                         <img src="images/inspectionlog-icon-b.png" />
                         <span>Inspection Log</span>
                     </li>
                 </a>
-                <a href="Analytics.html">
+                <a href="Analytics.html" data-page="Analytics.html" data-icon="analytics-icon-b.png">
                     <li class="nav-item">
                         <img src="images/analytics-icon-b.png" />
                         <span>Analytics</span>
                     </li>
                 </a>
-                <a href="Registration.html">
+                <a href="Registration.html" data-page="Registration.html" data-icon="registerphi-icon-b.png">
                     <li class="nav-item">
                         <img src="images/registerphi-icon-b.png" />
                         <span>Register PHI</span>
                     </li>
                 </a>
-                <a href="PHIinformation.html">
+                <a href="PHIinformation.html" data-page="PHIinformation.html" data-icon="profile-icon-b.png">
                     <li class="nav-item">
                         <img src="images/profile-icon-b.png" />
                         <span>Profile</span>
@@ -58,7 +62,7 @@
             </ul>
             <form method="post" action="">
                 <input type="hidden" name="action" value="logout" />
-                <button class="logout">
+                <button class="logout" onclick="logoutUser(event)">
                     <img src="images/logout-icon.png"/>
                     <span>Logout</span>
                 </button>
@@ -70,8 +74,8 @@
                 <img src="images/logged-user-icon.png">
             </div>
             <div class="user-info">
-                <span class="user-name">Leo Perera</span>
-                <span class="user-role">PHI</span>
+                <span class="user-name"></span>
+                <span class="user-role"></span>
             </div>
         </div>
         
@@ -85,7 +89,7 @@
                         <img src="images/Dashboard-icon1.png" style="top:3px">
                     </div>
                     <p>Total Shops</p>
-                    <h3>1500</h3>
+                    <h3></h3>
                     <span style="left:185px;">Shops</span>
                 </div>
                 <div class="stat-card">
@@ -94,7 +98,7 @@
                     </div>
                     <p>Total Inspections </p>
                     <p class="text-1">This Month</p>
-                    <h3>70</h3>
+                    <h3></h3>
                     <span style="left:140px;">Inspections</span>
                 </div>
                 <div class="stat-card">
@@ -104,7 +108,7 @@
                     <p>Pending Inspections</p>
                     <p class="text-1">This Month</p>
 
-                    <h3>05</h3>
+                    <h3></h3>
                     <span style="left:140px;">Inspections</span>
                 </div>
                 <div class="stat-card">
@@ -112,7 +116,7 @@
                         <img src="images/Dashboard-icon4.png" style="top:3px">
                     </div>
                     <p>High Risk Shops </p>
-                    <h3>10</h3>
+                    <h3></h3>
                     <span style="left:185px;">Shops</span>
                 </div>
             </div>
@@ -124,126 +128,12 @@
                 </div>
                 <div class="chart-card-2">
                     <h3>Risk Levels by Shops </h3>
-                    <canvas id="riskLevelsChart"></canvas>
+                    <canvas id="riskLevelsChart" width="250" height="200"></canvas>
                 </div>
             </div>
         </div>
 
-        <script>
-            //Daily Inspection Chart 
-
-            document.addEventListener("DOMContentLoaded", function () {
-            const ctx = document.getElementById("dailyInspectionChart").getContext("2d");
-
-            // Sample Data: Inspection rates for 7 days
-            const labels = ["01", "02", "03", "04", "05", "06", "07"];
-            const inspectionRates = [45, 15, 80, 20, 10, 35, 30]; // Replace with actual data
-
-            const dailyInspectionChart = new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: "Daily Inspection Rate",
-                        data: inspectionRates,
-                        borderColor: "#2B50FF",
-                        backgroundColor: "rgba(43, 80, 255, 0.2)",
-                        borderWidth: 2,
-                        pointRadius: 5,
-                        pointBackgroundColor: "#85C1E9",
-                        tension: 0.4, 
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: "Day",
-                            },
-                            grid: {
-                                display: true,
-                                drawBorder: false
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: "Inspection Rate",
-                            },
-                            beginAtZero: true,
-                            grid: {
-                                drawBorder: false
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            enabled: true
-                        }
-                    }
-                }
-            });
-        });
-
-
-        // Pie Chart
-        document.addEventListener("DOMContentLoaded", function () {
-            const ctxPie = document.getElementById("riskLevelsChart").getContext("2d");
-
-            // Sample Data: Risk Levels Distribution
-            var catLabels = ["Grade A", "Grade B", "Grade C", "Grade D"];
-            var catData = [60, 20, 10, 10];
-
-            const salesPieChart = new Chart(ctxPie, {
-                type: "doughnut", 
-                data: {
-                    labels: catLabels,
-                    datasets: [{
-                        data: catData,
-                        backgroundColor: [
-                            'rgba(61, 185, 82, 1)',   // Green (A)
-                            'rgba(241, 215, 48, 1)',  // Yellow (B)
-                            'rgba(255, 133, 20, 1)',  // Orange (C)
-                            'rgba(187, 31, 34, 1)',   // Red (D)
-                        ],
-                        borderColor: [
-                            'rgba(61, 185, 82, 1)',  
-                            'rgba(241, 215, 48, 1)', 
-                            'rgba(255, 133, 20, 1)',  
-                            'rgba(187, 31, 34, 1)',  
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    cutout: "45%", 
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: "bottom",
-                            labels: {
-                                usePointStyle: false,
-                                boxWidth: 15, 
-                                padding: 15,
-                            }
-                        },
-                        title: {
-                            display: true,
-                        }
-                    }
-                }
-            });
-        });
-
-
-    </script>
+        <script type="module" src="js/dashboard.js"></script>
 
 </body>
 </html>

@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <title>Safe Serve</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Stylesheet3.css">
+
+    <link rel="stylesheet" href="css/Stylesheet3.css">
+
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/auth.js"></script>
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
 
 </head>
 <body>
@@ -18,7 +22,7 @@
         <p class="subtitle">Login to your account</p>
 
         <div class="login-form" id="login-form">
-            <form method="" action="">
+            <form method="">
                 <label for="username">Email</label>
                 <input type="text" id="username" name="username" placeholder="Enter your email" required>
                 <div class="error-message" id="email-error"></div>
@@ -32,12 +36,6 @@
             <div id="message" class="error-message"></div>
         </div>
     </div>
-
-    <!-- Firebase Setup + Auth Logic -->
-    <script type="module" src="js/firebase-config.js"></script>
-    <script type="module" src="js/auth.js"></script>
-
-
 
 </body>
 </html>

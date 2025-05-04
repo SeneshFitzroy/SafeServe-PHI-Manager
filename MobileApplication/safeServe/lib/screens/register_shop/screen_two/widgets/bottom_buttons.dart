@@ -6,10 +6,10 @@ class BottomButtons extends StatelessWidget {
   final VoidCallback onSubmit;
 
   const BottomButtons({
-    Key? key,
+    super.key,
     required this.onPrevious,
     required this.onSubmit,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

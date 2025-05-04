@@ -1,4 +1,3 @@
-// lib/screens/register_shop/screen_one/widgets/trade_dropdown.dart
 import 'package:flutter/material.dart';
 
 class TradeDropdown extends StatefulWidget {
@@ -8,12 +7,12 @@ class TradeDropdown extends StatefulWidget {
   final ValueChanged<String> onChanged;
 
   const TradeDropdown({
-    Key? key,
+    super.key,
     required this.label,
     required this.isInvalid,
     required this.initialValue,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<TradeDropdown> createState() => _TradeDropdownState();
@@ -33,47 +32,56 @@ class _TradeDropdownState extends State<TradeDropdown> {
   @override
   void initState() {
     super.initState();
-    _selectedTrade = widget.initialValue.isEmpty ? null : widget.initialValue;
+    if (widget.initialValue.isNotEmpty && _tradeOptions.contains(widget.initialValue)) {
+      _selectedTrade = widget.initialValue;
+    } else {
+      _selectedTrade = null;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(widget.label,
-            style: const TextStyle(fontSize: 18, color: Colors.black)),
-        const SizedBox(height: 8),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: widget.isInvalid ? Colors.red : const Color(0xFF4289FC),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.label,
+            style: const TextStyle(fontSize: 18, color: Colors.black),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: widget.isInvalid ? Colors.red : const Color(0xFF4289FC),
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _selectedTrade,
+                hint: const Text('Select Trade'),
+                isExpanded: true,
+                items: _tradeOptions.map((option) {
+                  return DropdownMenuItem<String>(
+                    value: option,
+                    child: Text(option),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedTrade = value;
+                    widget.onChanged(value ?? '');
+                  });
+                },
+              ),
             ),
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton<String>(
-              value: _selectedTrade,
-              hint: const Text('Select Trade'),
-              isExpanded: true,
-              items: _tradeOptions.map((option) {
-                return DropdownMenuItem<String>(
-                  value: option,
-                  child: Text(option),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedTrade = value;
-                  widget.onChanged(value ?? '');
-                });
-              },
-            ),
-          ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 }

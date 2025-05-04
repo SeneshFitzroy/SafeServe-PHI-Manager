@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import '../screens/calendar/calendar_screen.dart';
 import '../screens/registered_shops/registered_shops_screen.dart';
-import '../screens/Dashboard/dashboard.dart'; // Add import for Dashboard
+import '../screens/map_view/map_view_screen.dart';
 
 /// Simple enum to identify which icon is which
 enum NavItem {
@@ -8,6 +9,7 @@ enum NavItem {
   shops,
   dashboard,
   form,
+  map, 
   notifications,
 }
 
@@ -18,12 +20,12 @@ class CustomNavBarIcon extends StatelessWidget {
   final bool selected;
 
   const CustomNavBarIcon({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.navItem,
     this.selected = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +36,9 @@ class CustomNavBarIcon extends StatelessWidget {
       onTap: () {
         switch (navItem) {
           case NavItem.calendar:
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Calendar placeholder')),
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const CalendarScreen()),
             );
             break;
           case NavItem.shops:
@@ -45,15 +48,19 @@ class CustomNavBarIcon extends StatelessWidget {
             );
             break;
           case NavItem.dashboard:
-            // Navigate to Dashboard instead of showing a snackbar
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const Dashboard()),
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Dashboard placeholder')),
             );
             break;
           case NavItem.form:
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Form placeholder')),
+            );
+            break;
+          case NavItem.map:
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const MapViewScreen()),
             );
             break;
           case NavItem.notifications:
