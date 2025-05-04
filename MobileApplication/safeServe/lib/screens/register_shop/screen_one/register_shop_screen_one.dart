@@ -10,7 +10,7 @@ import 'widgets/searchable_trade_dropdown.dart';
 
 class RegisterShopScreenOne extends StatefulWidget {
   final RegisterShopFormData formData;
-  const RegisterShopScreenOne({Key? key, required this.formData}) : super(key: key);
+  const RegisterShopScreenOne({super.key, required this.formData});
 
   @override
   State<RegisterShopScreenOne> createState() => _RegisterShopScreenOneState();

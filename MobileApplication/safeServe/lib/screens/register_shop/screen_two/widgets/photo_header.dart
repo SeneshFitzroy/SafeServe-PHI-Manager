@@ -6,10 +6,10 @@ class PhotoHeader extends StatelessWidget {
   final VoidCallback onArrowPressed;
 
   const PhotoHeader({
-    Key? key,
+    super.key,
     required this.title,
     required this.onArrowPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
