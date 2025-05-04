@@ -92,20 +92,16 @@ h3 {
 }
 
 .division-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-left: 20px;
-    max-width: 500px; /* 👈 limit width to 3 tags per row */
-  }
-  
-  .division {
-    background-color: #9BCAFE;
-    padding: 5px 10px;
-    border-radius: 5px;
-    white-space: nowrap;
-  }
-  
+    display: flex; 
+    gap: 10px; 
+}
+
+.division {
+    background-color:#9BCAFE;
+    padding: 5px 10px; 
+    border-radius: 5px; 
+    margin-left:20px;
+}
 
 .pwd-change-button {
     background: #1F41BB;
@@ -300,11 +296,3 @@ h3 {
 .form-save-but:hover {
     background-color: #1F41BB; 
 }
-
-.error-msg {
-    color: red;
-    font-size: 13px;
-    margin-left: 10px;
-    margin-top: 5px;
-  }
-  
