@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';       // ← new
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:safeserve/screens/Profileview/profile.dart';
+import 'package:safeserve/screens/form_selection/form_selection_screen.dart';
 import 'package:safeserve/screens/notes/note_editor_screen.dart';
+import 'package:safeserve/screens/Search_Page/Searchpage.dart';
 import 'firebase_options.dart';
 
 import 'screens/login_screen/login_screen.dart';
@@ -14,7 +17,7 @@ import 'screens/h800_form/h800_form_screen.dart';
 import 'screens/h800_form/h800_form_screen_two.dart';
 import 'screens/view_shop_detail/view_shop_detail_screen.dart';
 import 'screens/edit_shop_detail/edit_shop_detail_screen.dart';
-import 'screens/notes/notes_list_screen.dart';                // ← added
+import 'screens/notes/notes_list_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,15 +25,21 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // ENABLE OFFLINE PERSISTENCE for Firestore:
-  // (on mobile it's on by default, but this makes it explicit
-  //  and unlimits the cache size)
-  FirebaseFirestore.instance.settings = const Settings(
-    persistenceEnabled: true,
-    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-  );
+  // Update to modern persistence approach
+  try {
+    await FirebaseFirestore.instance.enablePersistence(
+      const PersistenceSettings(synchronizeTabs: true),
+    );
+  } catch (e) {
+    // Persistence might already be enabled or not supported
+    print('Error enabling persistence: $e');
+  }
 
   runApp(const SafeServeApp());
+}
+
+class Settings {
+  const Settings();
 }
 
 class SafeServeApp extends StatelessWidget {
@@ -42,9 +51,10 @@ class SafeServeApp extends StatelessWidget {
       title: 'SafeServe',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Roboto'),
-      home: const LoginScreen(),
+      // Temporarily use SearchPage as home to bypass login for testing search functionality
+      home: const SearchPage(), // Changed from LoginScreen to SearchPage
       routes: {
-        '/search': (_) => const _PlaceholderPage(title: 'Search'),
+        '/search': (_) => const SearchPage(),
         '/menu':   (_) => const _PlaceholderPage(title: 'Menu'),
         '/add':    (_) => const _PlaceholderPage(title: 'Add'),
         '/detail': (_) => const _PlaceholderPage(title: 'Shop Detail'),
