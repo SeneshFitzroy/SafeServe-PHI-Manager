@@ -1,23 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../../widgets/safe_serve_appbar.dart';
 import '../../../widgets/safe_serve_drawer.dart';
 import '../../../widgets/custom_nav_bar_icon.dart';
+import '../../../widgets/custom_nav_bar_icon.dart' show NavItem;
 import '../register_shop/register_shop_form_data.dart';
 import '../register_shop/screen_one/register_shop_screen_one.dart';
 import 'widgets/shop_card.dart';
 
 class RegisteredShopsScreen extends StatefulWidget {
-  const RegisteredShopsScreen({super.key});
+  const RegisteredShopsScreen({Key? key}) : super(key: key);
 
   @override
   State<RegisteredShopsScreen> createState() => _RegisteredShopsScreenState();
 }
 
 class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
+  // Scaffold key to open the end drawer
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  // Scroll controller to hide/show the nav bar
   final ScrollController _scrollController = ScrollController();
   bool _isNavVisible = true;
+
+  // Firestore reference
+  final CollectionReference _shopsRef =
+  FirebaseFirestore.instance.collection('shops');
 
   @override
   void initState() {
@@ -26,48 +36,26 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
   }
 
   void _scrollListener() {
-    if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-      if (_isNavVisible) {
-        setState(() => _isNavVisible = false);
-      }
-    } else if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
-      if (!_isNavVisible) {
-        setState(() => _isNavVisible = true);
-      }
+    final direction = _scrollController.position.userScrollDirection;
+    if (direction == ScrollDirection.reverse && _isNavVisible) {
+      setState(() => _isNavVisible = false);
+    } else if (direction == ScrollDirection.forward && !_isNavVisible) {
+      setState(() => _isNavVisible = true);
     }
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_scrollListener);
-    _scrollController.dispose();
+    _scrollController
+      ..removeListener(_scrollListener)
+      ..dispose();
     super.dispose();
-  }
-
-  Future<List<Map<String, dynamic>>> fetchShops() async {
-    await Future.delayed(const Duration(seconds: 1));
-    return [
-      {
-        'name': 'ABC Bakery & Café',
-        'address': '123 Main Street, Colombo 07',
-        'lastInspection': '01/02/2025',
-        'grade': 'A',
-        'image': 'assets/images/shop/shop1.png',
-      },
-      {
-        'name': 'LUX Gift Shop',
-        'address': '123 2nd Street, Colombo 07',
-        'lastInspection': '01/05/2024',
-        'grade': 'B',
-        'image': 'assets/images/shop/shop2.png',
-      },
-    ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
+      key: _scaffoldKey, // attach the key here
       appBar: SafeServeAppBar(
         height: 70,
         onMenuPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
@@ -79,7 +67,7 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
       ),
       body: Stack(
         children: [
-          // Background Gradient
+          // Background gradient
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -90,37 +78,49 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
             ),
           ),
 
-          // Body content with shops
-          FutureBuilder<List<Map<String, dynamic>>>(
-            future: fetchShops(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
+          // Live list of shops
+          StreamBuilder<QuerySnapshot>(
+            stream: _shopsRef.snapshots(),
+            builder: (ctx, snap) {
+              if (!snap.hasData) {
                 return const Center(child: CircularProgressIndicator());
               }
-              final shops = snapshot.data!;
-              if (shops.isEmpty) {
+              final docs = snap.data!.docs;
+              if (docs.isEmpty) {
                 return const Center(child: Text('No shops found'));
               }
               return ListView.builder(
                 controller: _scrollController,
                 padding: const EdgeInsets.only(top: 15),
-                itemCount: shops.length + 1, // +1 for the header
-                itemBuilder: (context, index) {
-                  if (index == 0) {
-                    return _buildBodyHeader();
+                itemCount: docs.length + 1,
+                itemBuilder: (ctx, i) {
+                  if (i == 0) return _buildHeader(ctx);
+                  final doc = docs[i - 1];
+                  final data = doc.data()! as Map<String, dynamic>;
+
+                  // extract lastInspection timestamp
+                  final lastArr =
+                      data['lastInspection'] as List<dynamic>? ?? [];
+                  DateTime? lastDate;
+                  if (lastArr.isNotEmpty && lastArr.first is Timestamp) {
+                    lastDate = (lastArr.first as Timestamp).toDate();
                   }
-                  final shop = shops[index - 1];
+
                   return Padding(
                     padding: const EdgeInsets.fromLTRB(25, 0, 25, 30),
                     child: ShopCard(
-                      name: shop['name'],
-                      address: shop['address'],
-                      lastInspectionDate: shop['lastInspection'],
-                      grade: shop['grade'],
-                      imagePath: shop['image'],
+                      name: data['name'] ?? doc.id,
+                      address: data['establishmentAddress'] ?? 'No address',
+                      lastInspection: lastDate,
+                      grade: data['grade'] ?? 'N/A',
+                      imagePath: data['image'] ??
+                          'assets/images/shop/shop1.png',
                       onDetailsTap: () {
-                        Navigator.pushNamed(context, '/shop_detail',
-                            arguments: shop['name']);
+                        Navigator.pushNamed(
+                          context,
+                          '/shop_detail',
+                          arguments: doc.id,
+                        );
                       },
                     ),
                   );
@@ -129,14 +129,13 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
             },
           ),
 
-          // Floating bottom nav
-          _buildFloatingNavBar(context),
+          _buildBottomNav(context),
         ],
       ),
     );
   }
 
-  Widget _buildBodyHeader() {
+  Widget _buildHeader(BuildContext ctx) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(25, 0, 15, 20),
       child: Row(
@@ -144,25 +143,28 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
           const Text(
             'Registered Shops',
             style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
               fontSize: 25,
+              fontWeight: FontWeight.bold,
             ),
           ),
           const Spacer(),
           IconButton(
-            icon: const Icon(Icons.filter_list, color: Color(0xFF1F41BB)),
-            onPressed: () {
-            },
+            icon: const Icon(
+              Icons.filter_list,
+              color: Color(0xFF1F41BB),
+            ),
+            onPressed: () {},
           ),
           IconButton(
-            icon: const Icon(Icons.add, color: Color(0xFF1F41BB)),
+            icon: const Icon(
+              Icons.add,
+              color: Color(0xFF1F41BB),
+            ),
             onPressed: () {
-              // Create an empty formData and go to screen 1
               Navigator.push(
-                context,
+                ctx,
                 MaterialPageRoute(
-                  builder: (ctx) => RegisterShopScreenOne(
+                  builder: (_) => RegisterShopScreenOne(
                     formData: RegisterShopFormData(),
                   ),
                 ),
@@ -174,16 +176,14 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
     );
   }
 
-  Widget _buildFloatingNavBar(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double navWidth = screenWidth * 0.80;
-
+  Widget _buildBottomNav(BuildContext ctx) {
+    final width = MediaQuery.of(ctx).size.width * 0.8;
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
       bottom: _isNavVisible ? 30 : -100,
-      left: (screenWidth - navWidth) / 2,
-      width: navWidth,
+      left: (MediaQuery.of(ctx).size.width - width) / 2,
+      width: width,
       child: Container(
         height: 60,
         decoration: BoxDecoration(
@@ -192,40 +192,39 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.15),
-              offset: const Offset(0, 2),
               blurRadius: 6,
-            ),
+            )
           ],
         ),
-        child: Row(
+        child: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             CustomNavBarIcon(
               icon: Icons.event,
               label: 'Calendar',
-              route: '/calendar',
+              navItem: NavItem.calendar,
               selected: false,
             ),
             CustomNavBarIcon(
               icon: Icons.store,
               label: 'Shops',
-              route: '/',
+              navItem: NavItem.shops,
               selected: true,
             ),
             CustomNavBarIcon(
               icon: Icons.dashboard,
               label: 'Dashboard',
-              route: '/dashboard',
+              navItem: NavItem.dashboard,
             ),
             CustomNavBarIcon(
               icon: Icons.description,
               label: 'Form',
-              route: '/form',
+              navItem: NavItem.form,
             ),
             CustomNavBarIcon(
               icon: Icons.notifications,
               label: 'Notifications',
-              route: '/notifications',
+              navItem: NavItem.notifications,
             ),
           ],
         ),

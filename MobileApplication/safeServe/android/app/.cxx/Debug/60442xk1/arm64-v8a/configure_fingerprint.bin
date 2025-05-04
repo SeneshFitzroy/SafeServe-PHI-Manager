@@ -2,6 +2,7 @@ C/C++ Structured Log©
 ¦
 £C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\arm64-v8a\additional_project_files.txtC
 A
+<<<<<<< HEAD
 ?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	ÿ£×äå2 ž£×äå2¦
 £
  C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\arm64-v8a\android_gradle_build.json	ÿ£×äå2¬	 ¢£×äå2«
@@ -26,3 +27,29 @@ A
 žC:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\arm64-v8a\symbol_folder_index.txt	€¤×äå2• ì£×äå2K
 I
 GC:\flutter\packages\flutter_tools\gradle\src\main\groovy\CMakeLists.txt	€¤×äå2§ —ˆè»Ó2
+=======
+?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	×òƒâå2 öñƒâå2¦
+£
+ C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\arm64-v8a\android_gradle_build.json	×òƒâå2¬	 ˆòƒâå2«
+¨
+¥C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\arm64-v8a\android_gradle_build_mini.json	×òƒâå2‡ ™òƒâå2˜
+•
+’C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\arm64-v8a\build.ninja	Øòƒâå2¶Ö Šñƒâå2œ
+™
+–C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\arm64-v8a\build.ninja.txt	Øòƒâå2¡
+ž
+›C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\arm64-v8a\build_file_index.txt	Øòƒâå2G ¡òƒâå2¢
+Ÿ
+œC:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\arm64-v8a\compile_commands.json	Øòƒâå2¦
+£
+ C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\arm64-v8a\compile_commands.json.bin	Øòƒâå2	¬
+©
+¦C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\arm64-v8a\metadata_generation_command.txt	Øòƒâå2
+ó	 žòƒâå2Ÿ
+œ
+™C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\arm64-v8a\prefab_config.json	Øòƒâå2( Ÿòƒâå2¤
+¡
+žC:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\arm64-v8a\symbol_folder_index.txt	Øòƒâå2•  òƒâå2K
+I
+GC:\flutter\packages\flutter_tools\gradle\src\main\groovy\CMakeLists.txt	Øòƒâå2§ —ˆè»Ó2
+>>>>>>> 361b342e1d83ec6f9369a4faad50680f0de9a194

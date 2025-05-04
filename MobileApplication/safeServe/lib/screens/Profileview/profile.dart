@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // For accessing the current user
 
 class ProfileScreen extends StatefulWidget {
   final String userName;
@@ -6,7 +8,7 @@ class ProfileScreen extends StatefulWidget {
   final String userPost;
 
   const ProfileScreen({
-    Key? key, 
+    Key? key,
     required this.userName,
     required this.profileImageUrl,
     required this.userPost,
@@ -17,21 +19,16 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // Controllers for editable fields
   late TextEditingController fullNameController;
   late TextEditingController phoneController;
   late TextEditingController emailController;
   late TextEditingController addressController;
-  
-  // Profile data map
-  late Map<String, dynamic> profileData;
 
-  // Sample GN divisions - would normally come from backend
+  Map<String, dynamic>? profileData;
   final List<String> gnDivisions = [
     'Kottawa', 'Homagama', 'Pitipana', 'Kotte', 'Biyagama'
   ];
-  
-  // Editing mode flags
+
   bool isEditingName = false;
   bool isEditingPhone = false;
   bool isEditingEmail = false;
@@ -40,28 +37,103 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize profile data with the user's name from drawer
-    profileData = {
-      'phiId': '73929302',
-      'fullName': widget.userName,
-      'nic': '7192819020v',
-      'phoneNumber': '0715645349',
-      'email': 'Leoperera@gmail.com',
-      'personalAddress': '648 Colombo North Colombo',
-      'district': 'Colombo',
-      'position': widget.userPost,
-    };
-    
-    // Initialize controllers with current data
-    fullNameController = TextEditingController(text: profileData['fullName']);
-    phoneController = TextEditingController(text: profileData['phoneNumber']);
-    emailController = TextEditingController(text: profileData['email']);
-    addressController = TextEditingController(text: profileData['personalAddress']);
+    fullNameController = TextEditingController();
+    phoneController = TextEditingController();
+    emailController = TextEditingController();
+    addressController = TextEditingController();
+    _fetchProfileData(); // Fetch data from Firestore
   }
-  
+
+  Future<void> _fetchProfileData() async {
+    try {
+      // Get the current user's ID from Firebase Auth
+      String? userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) {
+        // Fallback to a test user ID if auth isn't working
+        userId = '830NB71Ead5T0N4BF17WP9t5Vu2'; // From your Firestore data
+      }
+
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+
+      if (doc.exists) {
+        setState(() {
+          profileData = doc.data() as Map<String, dynamic>;
+          // Initialize controllers with Firestore data
+          fullNameController.text = profileData?['fullName'] ?? widget.userName;
+          phoneController.text = profileData?['phone'] ?? '';
+          emailController.text = profileData?['email'] ?? '';
+          addressController.text = profileData?['personalAddress'] ?? '';
+        });
+      } else {
+        // Fallback to default data if user document doesn't exist
+        setState(() {
+          profileData = {
+            'phiId': '73929302',
+            'fullName': widget.userName,
+            'nic': '7192819020v',
+            'phone': '0715645349',
+            'email': 'Leoperera@gmail.com',
+            'personalAddress': '648 Colombo North Colombo',
+            'district': 'Colombo',
+            'position': widget.userPost,
+          };
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error fetching profile: $e')),
+      );
+    }
+  }
+
+  Future<void> _updateField(String field, String value) async {
+    try {
+      String? userId = FirebaseAuth.instance.currentUser?.uid;
+      if (userId == null) {
+        userId = '830NB71Ead5T0N4BF17WP9t5Vu2'; // Fallback for testing
+      }
+
+      // Update Firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .set({field: value}, SetOptions(merge: true));
+
+      setState(() {
+        profileData?[field] = value;
+
+        // Reset edit mode
+        switch (field) {
+          case 'fullName':
+            isEditingName = false;
+            break;
+          case 'phone':
+            isEditingPhone = false;
+            break;
+          case 'email':
+            isEditingEmail = false;
+            break;
+          case 'personalAddress':
+            isEditingAddress = false;
+            break;
+        }
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('$field updated successfully')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error updating $field: $e')),
+      );
+    }
+  }
+
   @override
   void dispose() {
-    // Clean up controllers
     fullNameController.dispose();
     phoneController.dispose();
     emailController.dispose();
@@ -71,6 +143,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (profileData == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: _buildAppBar(),
       body: Container(
@@ -149,13 +227,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _buildProfileHeader(),
           const SizedBox(height: 24),
           _buildProfileImage(),
-          
-          // Full Name Display
           Center(
             child: Padding(
               padding: const EdgeInsets.only(top: 16.0, bottom: 4.0),
               child: Text(
-                profileData['fullName'] ?? "User",
+                profileData!['fullName'] ?? "User",
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 24,
@@ -165,11 +241,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          
-          // Position Display
           Center(
             child: Text(
-              profileData['position'] ?? "PHI Officer",
+              profileData!['position'] ?? "PHI Officer",
               style: const TextStyle(
                 color: Color(0xFF1F41BB),
                 fontSize: 18,
@@ -178,28 +252,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
           ),
-          
           const SizedBox(height: 24),
-          _buildInfoField('PHI ID', profileData['phiId'] ?? "N/A", false, null),
-          _buildEditableField('Full Name', fullNameController, isEditingName, 
+          _buildInfoField('PHI ID', profileData!['phiId'] ?? "N/A", false, null),
+          _buildEditableField(
+            'Full Name',
+            fullNameController,
+            isEditingName,
             () => setState(() => isEditingName = !isEditingName),
-            () => _updateField('fullName', fullNameController.text)
+            () => _updateField('fullName', fullNameController.text),
           ),
-          _buildInfoField('NIC', profileData['nic'] ?? "N/A", false, null),
-          _buildEditableField('Phone Number', phoneController, isEditingPhone,
+          _buildInfoField('NIC', profileData!['nic'] ?? "N/A", false, null),
+          _buildEditableField(
+            'Phone Number',
+            phoneController,
+            isEditingPhone,
             () => setState(() => isEditingPhone = !isEditingPhone),
-            () => _updateField('phoneNumber', phoneController.text)
+            () => _updateField('phone', phoneController.text),
           ),
-          _buildEditableField('Email', emailController, isEditingEmail,
+          _buildEditableField(
+            'Email',
+            emailController,
+            isEditingEmail,
             () => setState(() => isEditingEmail = !isEditingEmail),
-            () => _updateField('email', emailController.text)
+            () => _updateField('email', emailController.text),
           ),
-          _buildEditableField('Personal Address', addressController, isEditingAddress,
+          _buildEditableField(
+            'Personal Address',
+            addressController,
+            isEditingAddress,
             () => setState(() => isEditingAddress = !isEditingAddress),
-            () => _updateField('personalAddress', addressController.text)
+            () => _updateField('personalAddress', addressController.text),
           ),
-          _buildInfoField('District', profileData['district'] ?? "N/A", false, null),
-          
+          _buildInfoField('District', profileData!['district'] ?? "N/A", false, null),
           const SizedBox(height: 20),
           const Text(
             'GN Divisions',
@@ -212,7 +296,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           const SizedBox(height: 12),
           _buildGNDivisions(),
-          
           const SizedBox(height: 30),
           _buildChangePasswordButton(),
           const SizedBox(height: 20),
@@ -220,33 +303,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 30),
         ],
       ),
-    );
-  }
-
-  void _updateField(String field, String value) {
-    setState(() {
-      profileData[field] = value;
-      
-      // Reset edit mode
-      switch (field) {
-        case 'fullName':
-          isEditingName = false;
-          break;
-        case 'phoneNumber':
-          isEditingPhone = false;
-          break;
-        case 'email':
-          isEditingEmail = false;
-          break;
-        case 'personalAddress':
-          isEditingAddress = false;
-          break;
-      }
-    });
-    
-    // Show success message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$field updated successfully'))
     );
   }
 
@@ -353,9 +409,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: IconButton(
                 icon: const Icon(Icons.camera_alt, color: Colors.white, size: 20),
                 onPressed: () {
-                  // Implement photo change functionality
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Change profile picture feature coming soon'))
+                    const SnackBar(content: Text('Change profile picture feature coming soon')),
                   );
                 },
               ),
@@ -426,12 +481,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildEditableField(
-    String label, 
-    TextEditingController controller, 
-    bool isEditing,
-    VoidCallback onEditTap,
-    VoidCallback onSave
-  ) {
+      String label,
+      TextEditingController controller,
+      bool isEditing,
+      VoidCallback onEditTap,
+      VoidCallback onSave) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -572,9 +626,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
           onTap: () {
-            // Handle change password
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Change password feature coming soon'))
+              const SnackBar(content: Text('Change password feature coming soon')),
             );
           },
           child: Center(
@@ -624,7 +677,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: InkWell(
           borderRadius: BorderRadius.circular(10),
           onTap: () {
-            // Show confirmation dialog
             showDialog(
               context: context,
               builder: (context) => AlertDialog(

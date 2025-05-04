@@ -1,5 +1,12 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:safeserve/screens/Profileview/profile.dart';
+import 'package:safeserve/screens/map_view/map_view_screen.dart';
+import 'package:safeserve/screens/reports_screen.dart';
+import 'package:safeserve/screens/calendar/calendar_screen.dart';
+import 'package:safeserve/screens/login_screen/login_screen.dart';
+import 'package:safeserve/services/logout_service.dart';
 
 class SafeServeDrawer extends StatelessWidget {
   final String profileImageUrl;
@@ -29,20 +36,66 @@ class SafeServeDrawer extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 children: [
                   _buildDrawerItem(
-                    icon: Icons.person, 
-                    label: 'Profile', 
-                    onTap: () => _navigateToProfile(context)
+                    icon: Icons.person,
+                    label: 'Profile',
+                    onTap: () => _navigateToProfile(context),
                   ),
                   _buildDrawerItem(icon: Icons.dashboard, label: 'Dashboard', onTap: () {}),
-                  _buildDrawerItem(icon: Icons.calendar_today, label: 'Calendar', onTap: () {}),
+                  _buildDrawerItem(
+                    icon: Icons.calendar_today,
+                    label: 'Calendar',
+                    onTap: () {
+                      Navigator.pop(context); // close drawer
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => const CalendarScreen()),
+                      );
+                    },
+                  ),
                   _buildDrawerItem(icon: Icons.store, label: 'Shops', onTap: () {}),
                   _buildDrawerItem(icon: Icons.description, label: 'Forms', onTap: () {}),
-                  _buildDrawerItem(icon: Icons.map, label: 'Map View', onTap: () {}),
+                  _buildDrawerItem(
+                    icon: Icons.note,
+                    label: 'Notes',
+                    onTap: () {
+                      Navigator.of(context).pop(); // close drawer
+                      Navigator.of(context).pushNamed('/notes');
+                    },
+                  ),
+                  _buildDrawerItem(
+                    icon: Icons.map,
+                    label: 'Map View',
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => const MapViewScreen()),
+                      );
+                    },
+                  ),
                   _buildDrawerItem(icon: Icons.notifications, label: 'Notifications', onTap: () {}),
-                  _buildDrawerItem(icon: Icons.assessment, label: 'Reports', onTap: () {}),
+                  _buildDrawerItem(
+                    icon: Icons.assessment,
+                    label: 'Reports',
+                    onTap: () {
+                      Navigator.pop(context); // Close drawer
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => const Reports()),
+                      );
+                    },
+                  ),
                   _buildDrawerItem(icon: Icons.settings, label: 'Settings', onTap: () {}),
                   _buildDrawerItem(icon: Icons.help_outline, label: 'Support', onTap: () {}),
-                  _buildDrawerItem(icon: Icons.logout, label: 'Logout', onTap: () {}),
+                  _buildDrawerItem(
+                    icon: Icons.logout,
+                    label: 'Logout',
+                    onTap: () async {
+                      await LogoutService.instance.signOut();
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
+                        (route) => false,
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -63,7 +116,8 @@ class SafeServeDrawer extends StatelessWidget {
             CircleAvatar(
               radius: 30,
               backgroundColor: Colors.grey[300],
-              backgroundImage: (profileImageUrl.isNotEmpty) ? NetworkImage(profileImageUrl) : null,
+              backgroundImage:
+                  (profileImageUrl.isNotEmpty) ? NetworkImage(profileImageUrl) : null,
               child: (profileImageUrl.isEmpty)
                   ? const Icon(Icons.person, size: 40, color: Colors.black54)
                   : null,
@@ -75,7 +129,8 @@ class SafeServeDrawer extends StatelessWidget {
                 children: [
                   Text(
                     userName,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -88,7 +143,7 @@ class SafeServeDrawer extends StatelessWidget {
             IconButton(
               onPressed: () => _navigateToProfile(context),
               icon: const Icon(Icons.arrow_forward_ios, color: Color(0xFF1F41BB)),
-            )
+            ),
           ],
         ),
       ),

@@ -1,97 +1,153 @@
 import 'package:flutter/material.dart';
-import 'package:safeserve/screens/register_shop/register_shop_form_data.dart';
-import 'package:safeserve/screens/register_shop/screen_one/register_shop_screen_one.dart';
-import 'package:safeserve/screens/register_shop/screen_two/register_shop_screen_two.dart';
-import 'screens/registered_shops/registered_shops_screen.dart';
-import 'screens/shop_detail/shop_detail_screen.dart';
-import 'screens/h800_form/h800_form_screen.dart'; // Import H800FormScreen
-import 'screens/h800_form/h800_form_screen_two.dart'; // Import H800FormScreenTwo
-import 'screens/h800_form/h800_form_data.dart'; // Import H800FormData
-import 'screens/form_selection/form_selection_screen.dart'; // Import FormSelectionScreen
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:safeserve/screens/Profileview/profile.dart';
+import 'package:safeserve/screens/form_selection/form_selection_screen.dart';
+import 'package:safeserve/screens/notes/note_editor_screen.dart';
+import 'firebase_options.dart';
 
-void main() {
+import 'screens/login_screen/login_screen.dart';
+import 'screens/register_shop/register_shop_form_data.dart';
+import 'screens/register_shop/screen_one/register_shop_screen_one.dart';
+import 'screens/register_shop/screen_two/register_shop_screen_two.dart';
+import 'screens/shop_detail/shop_detail_screen.dart';
+import 'screens/h800_form/h800_form_data.dart';
+import 'screens/h800_form/h800_form_screen.dart';
+import 'screens/h800_form/h800_form_screen_two.dart';
+import 'screens/view_shop_detail/view_shop_detail_screen.dart';
+import 'screens/edit_shop_detail/edit_shop_detail_screen.dart';
+import 'screens/notes/notes_list_screen.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  FirebaseFirestore.instance.settings = const Settings(
+    persistenceEnabled: true,
+    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+  );
+
   runApp(const SafeServeApp());
 }
 
 class SafeServeApp extends StatelessWidget {
-  const SafeServeApp({super.key});
+  const SafeServeApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SafeServe',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Roboto',
-      ),
-      // Start at the RegisteredShopsScreen
-      home: const RegisteredShopsScreen(),
-
-      // Placeholder for nav
+      theme: ThemeData(fontFamily: 'Roboto'),
+      home: const LoginScreen(), // Revert to LoginScreen for normal authentication flow
       routes: {
-        '/search': (context) => const PlaceholderPage(title: 'Search'),
-        '/menu': (context) => const PlaceholderPage(title: 'Menu'),
-        '/add': (context) => const PlaceholderPage(title: 'Add'),
-        '/detail': (context) => const PlaceholderPage(title: 'Shop Detail'),
-        '/calendar': (context) => const PlaceholderPage(title: 'Calendar'),
-        '/dashboard': (context) => const PlaceholderPage(title: 'Dashboard'),
-        '/form': (context) => const PlaceholderPage(title: 'Form'),
-        '/notifications': (context) =>
-            const PlaceholderPage(title: 'Notifications'),
-
-        '/register_shop_screen_one': (context) {
-          final formData = ModalRoute.of(context)?.settings.arguments
-              as RegisterShopFormData?;
+        '/search': (_) => const _PlaceholderPage(title: 'Search'),
+        '/menu': (_) => const _PlaceholderPage(title: 'Menu'),
+        '/add': (_) => const _PlaceholderPage(title: 'Add'),
+        '/detail': (_) => const _PlaceholderPage(title: 'Shop Detail'),
+        '/calendar': (_) => const _PlaceholderPage(title: 'Calendar'),
+        '/dashboard': (_) => const _PlaceholderPage(title: 'Dashboard'),
+        '/form': (_) => const _PlaceholderPage(title: 'Form'),
+        '/notes': (_) => const NotesListScreen(),
+        '/note_edit': (ctx) {
+          final id = ModalRoute.of(ctx)!.settings.arguments as String?;
+          return NoteEditScreen(noteId: id);
+        },
+        '/register_shop_screen_one': (ctx) {
+          final args = ModalRoute.of(ctx)!.settings.arguments as RegisterShopFormData?;
           return RegisterShopScreenOne(
-              formData: formData ?? RegisterShopFormData());
+            formData: args ?? RegisterShopFormData(),
+          );
         },
-        '/register_shop_screen_two': (context) {
-          final formData = ModalRoute.of(context)?.settings.arguments
-              as RegisterShopFormData?;
+        '/register_shop_screen_two': (ctx) {
+          final args = ModalRoute.of(ctx)!.settings.arguments as RegisterShopFormData?;
           return RegisterShopScreenTwo(
-              formData: formData ?? RegisterShopFormData());
+            formData: args ?? RegisterShopFormData(),
+          );
         },
-
-        // Named route for ShopDetailScreen
-        '/shop_detail': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as String?;
-          return ShopDetailScreen(shopId: args ?? '');
+        '/shop_detail': (ctx) {
+          final shopId = ModalRoute.of(ctx)!.settings.arguments as String?;
+          return ShopDetailScreen(shopId: shopId ?? '');
         },
-
-        // Named route for H800FormScreen
-        '/h800_form_screen': (context) {
-          final formData =
-              ModalRoute.of(context)?.settings.arguments as H800FormData?;
-          return H800FormScreen(formData: formData ?? H800FormData());
+        '/h800_form_screen': (ctx) {
+          final args = ModalRoute.of(ctx)!.settings.arguments as H800FormData?;
+          return H800FormScreen(
+            formData: args ?? H800FormData(),
+          );
         },
-
-        // Placeholder route for H800FormScreenTwo (to be implemented later)
-        '/h800_form_screen_two': (context) {
-          final formData =
-              ModalRoute.of(context)?.settings.arguments as H800FormData?;
-          return H800FormScreenTwo(formData: formData ?? H800FormData());
+        '/h800_form_screen_two': (ctx) {
+          final args = ModalRoute.of(ctx)!.settings.arguments as H800FormData?;
+          return H800FormScreenTwo(
+            formData: args ?? H800FormData(),
+          );
         },
-
-        // New route for FormSelectionScreen
         '/form_selection': (context) {
-          final formData =
-              ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          final formData = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
           return FormSelectionScreen(formData: formData ?? {});
         },
+        '/view_shop_detail': (_) => const ViewShopDetailScreen(),
+        '/edit_shop_detail': (_) => const EditShopDetailScreen(),
       },
     );
   }
 }
 
-// placeholder page for routes not yet implemented
-class PlaceholderPage extends StatelessWidget {
+class _PlaceholderPage extends StatelessWidget {
   final String title;
-  const PlaceholderPage({super.key, required this.title});
+  const _PlaceholderPage({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'SafeServe Menu',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Home'),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                // Navigate if needed
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.search),
+              title: Text('Search'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/search');
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.note),
+              title: Text('Notes'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/notes');
+              },
+            ),
+            // Add more menu items as needed
+          ],
+        ),
+      ),
       body: Center(child: Text(title, style: const TextStyle(fontSize: 20))),
     );
   }

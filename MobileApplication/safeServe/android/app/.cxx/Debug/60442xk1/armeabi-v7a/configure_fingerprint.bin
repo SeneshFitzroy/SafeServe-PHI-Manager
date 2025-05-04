@@ -2,6 +2,7 @@ C/C++ Structured Log«
 ¨
 ¥C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\armeabi-v7a\additional_project_files.txtC
 A
+<<<<<<< HEAD
 ?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	àâ×äå2 ‰á×äå2¨
 ¥
 ¢C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\armeabi-v7a\android_gradle_build.json	àâ×äå2°	 “á×äå2­
@@ -26,3 +27,29 @@ A
  C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\armeabi-v7a\symbol_folder_index.txt	äâ×äå2— ¢â×äå2K
 I
 GC:\flutter\packages\flutter_tools\gradle\src\main\groovy\CMakeLists.txt	äâ×äå2§ —ˆè»Ó2
+=======
+?com.android.build.gradle.internal.cxx.io.EncodedFileFingerPrint	æì„âå2 Òì„âå2¨
+¥
+¢C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\armeabi-v7a\android_gradle_build.json	æì„âå2°	 Öì„âå2­
+ª
+§C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\armeabi-v7a\android_gradle_build_mini.json	èì„âå2‹ Úì„âå2š
+—
+”C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\armeabi-v7a\build.ninja	èì„âå2ÀÖ ƒì„âå2ž
+›
+˜C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\armeabi-v7a\build.ninja.txt	èì„âå2£
+ 
+C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\armeabi-v7a\build_file_index.txt	èì„âå2G áì„âå2¤
+¡
+žC:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\armeabi-v7a\compile_commands.json	èì„âå2¨
+¥
+¢C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\armeabi-v7a\compile_commands.json.bin	èì„âå2	®
+«
+¨C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\armeabi-v7a\metadata_generation_command.txt	èì„âå2
+ý	 Þì„âå2¡
+ž
+›C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\armeabi-v7a\prefab_config.json	èì„âå2( ßì„âå2¦
+£
+ C:\Users\senes\OneDrive\Desktop\SafeServe1\SafeServe-PHI-Manager\MobileApplication\safeServe\android\app\.cxx\Debug\60442xk1\armeabi-v7a\symbol_folder_index.txt	èì„âå2— àì„âå2K
+I
+GC:\flutter\packages\flutter_tools\gradle\src\main\groovy\CMakeLists.txt	èì„âå2§ —ˆè»Ó2
+>>>>>>> 361b342e1d83ec6f9369a4faad50680f0de9a194
