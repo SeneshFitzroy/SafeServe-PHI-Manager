@@ -47,7 +47,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
       final userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
       if (userDoc.exists) {
         setState(() {
-          _phiId = userDoc.data()?['phiId'] ?? userId; // Fallback to UID if phiId is missing
+          _phiId = userDoc.data()?['phiId'] ?? userId; // Use phiId from users, fallback to UID
         });
       } else {
         setState(() {
@@ -218,7 +218,6 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
             const SizedBox(height: 30),
             ShopInfoCard(shopData: d),
             const SizedBox(height: 30),
-            // Forms stub
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 25),
               child: Text(
@@ -235,7 +234,6 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
               child: const FormButtons(),
             ),
             const SizedBox(height: 40),
-            // Inspection history
             InspectionHistory(
               inspectionTimestamps: (d['inspectionHistory'] as List<Timestamp>?) ?? [],
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../widgets/safe_serve_appbar.dart';
 import '../register_shop/screen_one/widgets/register_shop_header.dart';
 import 'h800_form_data.dart';
@@ -41,19 +42,35 @@ class H800FormSummary extends StatelessWidget {
     part2 += formData.natureOfBuilding == 'Permanent' ? 1 : 0;
     part2 += formData.space == 'Adequate' ? 1 : 0;
     part2 += formData.lightAndVentilation == 'Adequate' ? 1 : 0;
-    part2 += formData.conditionOfFloor == 'Good' ? 2 : (formData.conditionOfFloor == 'Satisfactory' ? 1 : 0);
-    part2 += formData.conditionOfWall == 'Good' ? 2 : (formData.conditionOfWall == 'Satisfactory' ? 1 : 0);
-    part2 += formData.conditionOfCeiling == 'Good' ? 2 : (formData.conditionOfCeiling == 'Satisfactory' ? 1 : 0);
+    part2 += formData.conditionOfFloor == 'Good'
+        ? 2
+        : (formData.conditionOfFloor == 'Satisfactory' ? 1 : 0);
+    part2 += formData.conditionOfWall == 'Good'
+        ? 2
+        : (formData.conditionOfWall == 'Satisfactory' ? 1 : 0);
+    part2 += formData.conditionOfCeiling == 'Good'
+        ? 2
+        : (formData.conditionOfCeiling == 'Satisfactory' ? 1 : 0);
     part2 += formData.hasHazards == 'Yes' ? 0 : 1;
 
     // Part 3: Area of Food Preparation/Serving/Display/Storage (30 Marks)
-    part3 += formData.generalCleanlinessPart3 == 'Good' ? 2 : (formData.generalCleanlinessPart3 == 'Satisfactory' ? 1 : 0);
-    part3 += formData.safetyMeasuresForCleanliness == 'Good' ? 2 : (formData.safetyMeasuresForCleanliness == 'Satisfactory' ? 1 : 0);
+    part3 += formData.generalCleanlinessPart3 == 'Good'
+        ? 2
+        : (formData.generalCleanlinessPart3 == 'Satisfactory' ? 1 : 0);
+    part3 += formData.safetyMeasuresForCleanliness == 'Good'
+        ? 2
+        : (formData.safetyMeasuresForCleanliness == 'Satisfactory' ? 1 : 0);
     part3 += formData.hasFlies == 'Yes' ? 0 : 1;
     part3 += formData.hasPests == 'Yes' ? 0 : 1;
-    part3 += formData.hasFloor == 'Good' ? 2 : (formData.hasFloor == 'Satisfactory' ? 1 : 0);
-    part3 += formData.maintenanceOfWalls == 'Good' ? 2 : (formData.maintenanceOfWalls == 'Satisfactory' ? 1 : 0);
-    part3 += formData.maintenanceOfCeilingPart3 == 'Good' ? 2 : (formData.maintenanceOfCeilingPart3 == 'Satisfactory' ? 1 : 0);
+    part3 += formData.hasFloor == 'Good'
+        ? 2
+        : (formData.hasFloor == 'Satisfactory' ? 1 : 0);
+    part3 += formData.maintenanceOfWalls == 'Good'
+        ? 2
+        : (formData.maintenanceOfWalls == 'Satisfactory' ? 1 : 0);
+    part3 += formData.maintenanceOfCeilingPart3 == 'Good'
+        ? 2
+        : (formData.maintenanceOfCeilingPart3 == 'Satisfactory' ? 1 : 0);
     part3 += formData.spaceInWorkingArea == 'Adequate' ? 1 : 0;
     part3 += formData.dailyCleaning == 'Yes' ? 1 : 0;
     part3 += formData.riskOfContaminationFromToilets == 'Yes' ? 0 : 1;
@@ -67,9 +84,13 @@ class H800FormSummary extends StatelessWidget {
     part3 += formData.cleanlinessOfEquipment == 'Yes' ? 1 : 0;
     part3 += formData.suitabilityOfLayout == 'Yes' ? 1 : 0;
     part3 += formData.lightAndVentilationPart3 == 'Adequate' ? 1 : 0;
-    part3 += formData.houseKeeping == 'Good' ? 2 : (formData.houseKeeping == 'Satisfactory' ? 1 : 0);
+    part3 += formData.houseKeeping == 'Good'
+        ? 2
+        : (formData.houseKeeping == 'Satisfactory' ? 1 : 0);
     part3 += formData.waterSupplySuitable == 'Yes' ? 1 : 0;
-    part3 += formData.safeFoodHandling == 'Good' ? 2 : (formData.safeFoodHandling == 'Satisfactory' ? 1 : 0);
+    part3 += formData.safeFoodHandling == 'Good'
+        ? 2
+        : (formData.safeFoodHandling == 'Satisfactory' ? 1 : 0);
 
     // Part 4: Equipment & Furniture (10 Marks)
     part4 += formData.equipmentForFoodHandling == 'Adequate' ? 1 : 0;
@@ -79,17 +100,27 @@ class H800FormSummary extends StatelessWidget {
     part4 += formData.storageCleanEquip == 'Yes' ? 1 : 0;
     part4 += formData.suitableSafetyofFurniture == 'Satisfactory' ? 1 : 0;
     part4 += formData.furnitureCondition == 'Adequate' ? 1 : 0;
-    part4 += formData.cleaningAndMaintenanceOfFurniture == 'Satisfactory' ? 1 : 0;
+    part4 +=
+        formData.cleaningAndMaintenanceOfFurniture == 'Satisfactory' ? 1 : 0;
     part4 += formData.maintenanceOfRefrigerators == 'Satisfactory' ? 1 : 0;
-    part4 += formData.cleanandMaintenanceOfRefrigerators == 'Satisfactory' ? 1 : 0;
+    part4 +=
+        formData.cleanandMaintenanceOfRefrigerators == 'Satisfactory' ? 1 : 0;
 
     // Part 5: Storage (10 Marks)
-    part5 += formData.storageFacilities == 'Good' ? 2 : (formData.storageFacilities == 'Satisfactory' ? 1 : 0);
-    part5 += formData.storageOfRawMaterials == 'Good' ? 2 : (formData.storageOfRawMaterials == 'Satisfactory' ? 1 : 0);
-    part5 += formData.storageOfCookedFood == 'Good' ? 2 : (formData.storageOfCookedFood == 'Satisfactory' ? 1 : 0);
+    part5 += formData.storageFacilities == 'Good'
+        ? 2
+        : (formData.storageFacilities == 'Satisfactory' ? 1 : 0);
+    part5 += formData.storageOfRawMaterials == 'Good'
+        ? 2
+        : (formData.storageOfRawMaterials == 'Satisfactory' ? 1 : 0);
+    part5 += formData.storageOfCookedFood == 'Good'
+        ? 2
+        : (formData.storageOfCookedFood == 'Satisfactory' ? 1 : 0);
     part5 += formData.foodStoredTemp == 'Yes' ? 1 : 0;
     part5 += formData.storageInRefrigerator == 'Satisfactory' ? 1 : 0;
-    part5 += formData.measuresToPreventContamination == 'Good' ? 2 : (formData.measuresToPreventContamination == 'Satisfactory' ? 1 : 0);
+    part5 += formData.measuresToPreventContamination == 'Good'
+        ? 2
+        : (formData.measuresToPreventContamination == 'Satisfactory' ? 1 : 0);
 
     // Part 6: Water Supply (5 Marks)
     part6 += formData.waterSource == 'Safe' ? 1 : 0;
@@ -117,12 +148,20 @@ class H800FormSummary extends StatelessWidget {
     part8 += formData.separationOfUnwholesomeFood == 'Yes' ? 1 : 0;
 
     // Part 9: Health Status and Training of Food Handlers (10 Marks)
-    part9 += formData.personalHygiene == 'Good' ? 2 : (formData.personalHygiene == 'Satisfactory' ? 1 : 0);
-    part9 += formData.wearingProtectiveClothing == 'Good' ? 2 : (formData.wearingProtectiveClothing == 'Satisfactory' ? 1 : 0);
+    part9 += formData.personalHygiene == 'Good'
+        ? 2
+        : (formData.personalHygiene == 'Satisfactory' ? 1 : 0);
+    part9 += formData.wearingProtectiveClothing == 'Good'
+        ? 2
+        : (formData.wearingProtectiveClothing == 'Satisfactory' ? 1 : 0);
     part9 += formData.communicableDiseases == 'Yes' ? 0 : 1;
     part9 += formData.goodHealthHabits == 'Practiced' ? 1 : 0;
-    part9 += formData.healthRecords == 'Good' ? 2 : (formData.healthRecords == 'Satisfactory' ? 1 : 0);
-    part9 += formData.trainingRecords == 'Good' ? 2 : (formData.trainingRecords == 'Satisfactory' ? 1 : 0);
+    part9 += formData.healthRecords == 'Good'
+        ? 2
+        : (formData.healthRecords == 'Satisfactory' ? 1 : 0);
+    part9 += formData.trainingRecords == 'Good'
+        ? 2
+        : (formData.trainingRecords == 'Satisfactory' ? 1 : 0);
 
     // Part 10: Display of Health Instructions, Record Keeping & Certification (5 Marks)
     part10 += formData.displayHealthInstructions == 'Yes' ? 1 : 0;
@@ -149,6 +188,8 @@ class H800FormSummary extends StatelessWidget {
     try {
       final h800FormsRef = FirebaseFirestore.instance.collection('h800_forms');
       final totalScore = formData.calculateTotalScore();
+      print('Saving phiId: $phiId');
+      print('Authenticated userId: ${FirebaseAuth.instance.currentUser?.uid}');
 
       // Convert H800FormData to a map and include phiId
       final formDataMap = {
@@ -180,7 +221,8 @@ class H800FormSummary extends StatelessWidget {
         'maintenanceOfCeilingPart3': formData.maintenanceOfCeilingPart3,
         'spaceInWorkingArea': formData.spaceInWorkingArea,
         'dailyCleaning': formData.dailyCleaning,
-        'riskOfContaminationFromToilets': formData.riskOfContaminationFromToilets,
+        'riskOfContaminationFromToilets':
+            formData.riskOfContaminationFromToilets,
         'adequateBins': formData.adequateBins,
         'hasUnnecessaryItems': formData.hasUnnecessaryItems,
         'cleaningToolsAvailable': formData.cleaningToolsAvailable,
@@ -202,16 +244,19 @@ class H800FormSummary extends StatelessWidget {
         'storageCleanEquip': formData.storageCleanEquip,
         'suitableSafetyofFurniture': formData.suitableSafetyofFurniture,
         'furnitureCondition': formData.furnitureCondition,
-        'cleaningAndMaintenanceOfFurniture': formData.cleaningAndMaintenanceOfFurniture,
+        'cleaningAndMaintenanceOfFurniture':
+            formData.cleaningAndMaintenanceOfFurniture,
         'maintenanceOfRefrigerators': formData.maintenanceOfRefrigerators,
-        'cleanandMaintenanceOfRefrigerators': formData.cleanandMaintenanceOfRefrigerators,
+        'cleanandMaintenanceOfRefrigerators':
+            formData.cleanandMaintenanceOfRefrigerators,
         // Part 5
         'storageFacilities': formData.storageFacilities,
         'storageOfRawMaterials': formData.storageOfRawMaterials,
         'storageOfCookedFood': formData.storageOfCookedFood,
         'foodStoredTemp': formData.foodStoredTemp,
         'storageInRefrigerator': formData.storageInRefrigerator,
-        'measuresToPreventContamination': formData.measuresToPreventContamination,
+        'measuresToPreventContamination':
+            formData.measuresToPreventContamination,
         // Part 6
         'waterSource': formData.waterSource,
         'waterStorageMethod': formData.waterStorageMethod,
@@ -252,8 +297,8 @@ class H800FormSummary extends StatelessWidget {
       await h800FormsRef.add(formDataMap);
       print('H800 form data saved successfully for shopId: $shopId');
 
-      // Navigate back to the register_shop screen
-      Navigator.pushNamed(context, '/register_shop');
+      // Navigate back to the ShopDetailScreen
+      Navigator.pop(context); 
     } catch (e) {
       print('Error saving H800 form data: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -319,16 +364,34 @@ class H800FormSummary extends StatelessWidget {
                             ),
                             const SizedBox(height: 20),
                             ...[
-                              _buildScoreRow('Part 1: Location & Environment', partScores['Part 1']!, 5),
-                              _buildScoreRow('Part 2: Building', partScores['Part 2']!, 10),
-                              _buildScoreRow('Part 3: Area of Food Preparation/Serving/Display/Storage', partScores['Part 3']!, 30),
-                              _buildScoreRow('Part 4: Equipment & Furniture', partScores['Part 4']!, 10),
-                              _buildScoreRow('Part 5: Storage', partScores['Part 5']!, 10),
-                              _buildScoreRow('Part 6: Water Supply', partScores['Part 6']!, 5),
-                              _buildScoreRow('Part 7: Waste Management', partScores['Part 7']!, 10),
-                              _buildScoreRow('Part 8: Condition, Standard & Cleanliness of Food', partScores['Part 8']!, 5),
-                              _buildScoreRow('Part 9: Health Status and Training of Food Handlers', partScores['Part 9']!, 10),
-                              _buildScoreRow('Part 10: Display of Health Instructions, Record Keeping & Certification', partScores['Part 10']!, 5),
+                              _buildScoreRow('Part 1: Location & Environment',
+                                  partScores['Part 1']!, 5),
+                              _buildScoreRow('Part 2: Building',
+                                  partScores['Part 2']!, 10),
+                              _buildScoreRow(
+                                  'Part 3: Area of Food Preparation/Serving/Display/Storage',
+                                  partScores['Part 3']!,
+                                  30),
+                              _buildScoreRow('Part 4: Equipment & Furniture',
+                                  partScores['Part 4']!, 10),
+                              _buildScoreRow(
+                                  'Part 5: Storage', partScores['Part 5']!, 10),
+                              _buildScoreRow('Part 6: Water Supply',
+                                  partScores['Part 6']!, 5),
+                              _buildScoreRow('Part 7: Waste Management',
+                                  partScores['Part 7']!, 10),
+                              _buildScoreRow(
+                                  'Part 8: Condition, Standard & Cleanliness of Food',
+                                  partScores['Part 8']!,
+                                  5),
+                              _buildScoreRow(
+                                  'Part 9: Health Status and Training of Food Handlers',
+                                  partScores['Part 9']!,
+                                  10),
+                              _buildScoreRow(
+                                  'Part 10: Display of Health Instructions, Record Keeping & Certification',
+                                  partScores['Part 10']!,
+                                  5),
                             ],
                           ],
                         ),
@@ -353,7 +416,8 @@ class H800FormSummary extends StatelessWidget {
                           children: [
                             const Divider(),
                             const SizedBox(height: 10),
-                            _buildTotalScoreContainer(totalScore, totalPossibleScore),
+                            _buildTotalScoreContainer(
+                                totalScore, totalPossibleScore),
                           ],
                         ),
                       ),
