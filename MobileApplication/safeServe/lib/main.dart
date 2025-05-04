@@ -80,22 +80,6 @@ class SafeServeApp extends StatelessWidget {
           return ShopDetailScreen(shopId: shopId ?? '');
         },
 
-        // HC800 Form Flow
-        '/h800_form_screen': (ctx) {
-          final args = ModalRoute.of(ctx)!.settings.arguments
-          as H800FormData?;
-          return H800FormScreen(
-            formData: args ?? H800FormData(),
-          );
-        },
-        '/h800_form_screen_two': (ctx) {
-          final args = ModalRoute.of(ctx)!.settings.arguments
-          as H800FormData?;
-          return H800FormScreenTwo(
-            formData: args ?? H800FormData(),
-          );
-        },
-
         // View & Edit Shop Detail
         '/view_shop_detail': (_) => const ViewShopDetailScreen(),
         '/edit_shop_detail': (_) => const EditShopDetailScreen(),
