@@ -1,4 +1,3 @@
-// js/dashboard.js
 import { auth, db } from "./firebase-config.js";
 import {
   onAuthStateChanged,
@@ -15,7 +14,7 @@ import {
   Timestamp
 } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-// Globals
+
 let currentUser = null;
 let userRole = "";
 let userGNDivisions = [];
@@ -33,9 +32,6 @@ onAuthStateChanged(auth, async (user) => {
       userRole = userData.role;
       userGNDivisions = userData.gnDivisions || [];
 
-      console.log("✅ Logged in as:", userRole);
-      console.log("📍 Assigned GN Divisions:", userGNDivisions);
-
       await loadTotalShops();
       await loadMonthlyInspections();
       await loadUpcomingInspections();
@@ -43,18 +39,16 @@ onAuthStateChanged(auth, async (user) => {
       await loadRiskLevelChart();
       await loadWeeklyInspectionData(); 
 
-
-      // TODO: Add remaining steps here...
     } else {
-      console.error("❌ User document not found in Firestore");
+      console.error("User document not found in Firestore");
     }
   } else {
-    console.warn("⚠️ User not authenticated");
+    console.warn("User not authenticated");
     window.location.href = "login.html";
   }
 });
 
-// 🔐 Logout handler
+// Logout handling
 window.logoutUser = function (e) {
   e.preventDefault();
   signOut(auth)
@@ -67,7 +61,8 @@ window.logoutUser = function (e) {
     });
 };
 
-// 📊 Daily Inspection Chart
+
+// Daily Inspection Chart
 function renderDailyInspectionChart(labels = [], data = []) {
     const ctx = document.getElementById("dailyInspectionChart").getContext("2d");
   
@@ -112,7 +107,9 @@ function renderDailyInspectionChart(labels = [], data = []) {
     });
   }
   
-// 🥧 Risk Level Doughnut Chart
+
+
+// Risk Level Doughnut Chart
 function renderRiskLevelChart(data = [60, 20, 10, 10]) {
   const ctxPie = document.getElementById("riskLevelsChart").getContext("2d");
   new Chart(ctxPie, {
@@ -151,16 +148,18 @@ function renderRiskLevelChart(data = [60, 20, 10, 10]) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  renderDailyInspectionChart(); // placeholder
+  renderDailyInspectionChart();
 });
 
-// 🔢 Load total shops
+
+
+
+// Load total shops
 async function loadTotalShops() {
   try {
     const shopsRef = collection(db, "shops");
     const batchPromises = [];
 
-    // Batch GN divisions (max 10 per 'in' clause)
     for (let i = 0; i < userGNDivisions.length; i += 10) {
       const batch = query(shopsRef, where("gnDivision", "in", userGNDivisions.slice(i, i + 10)));
       batchPromises.push(getDocs(batch));
@@ -176,7 +175,10 @@ async function loadTotalShops() {
   }
 }
 
-// 📆 Load inspections for current month
+
+
+
+// Load inspections for current month
 async function loadMonthlyInspections() {
     try {
       const formsRef = collection(db, "h800_forms");
@@ -191,19 +193,15 @@ async function loadMonthlyInspections() {
         );
         const snapshot = await getDocs(q);
   
-        // Filter by timestamp in JS
         const filtered = snapshot.docs.filter(doc => {
           const data = doc.data();
           return data.submittedAt?.toDate() >= firstOfMonth;
         });
   
-        console.log("📄 Monthly Inspection Forms (PHI):", filtered);
         inspectionCount = filtered.length;
       }
   
-      // (Optional) SPHI logic here if needed later
   
-      // Update UI
       const h3s = document.querySelectorAll(".stat-card h3");
       if (h3s.length >= 2) {
         h3s[1].textContent = inspectionCount;
@@ -214,14 +212,16 @@ async function loadMonthlyInspections() {
   }
   
 
-// 📅 Helper: Start of current month
+// Start of current month
 function getStartOfMonthTimestamp() {
   const now = new Date();
   return new Date(now.getFullYear(), now.getMonth(), 1);
 }
 
 
-// 🕒 Step 3: Load Upcoming Inspections
+
+
+// Load Upcoming Inspections
 async function loadUpcomingInspections() {
     try {
       const shopsRef = collection(db, "shops");
@@ -229,7 +229,6 @@ async function loadUpcomingInspections() {
   
       let upcomingCount = 0;
   
-      // Handle batching for large GN division lists
       const batchPromises = [];
       for (let i = 0; i < userGNDivisions.length; i += 10) {
         const batch = query(shopsRef, where("gnDivision", "in", userGNDivisions.slice(i, i + 10)));
@@ -241,7 +240,6 @@ async function loadUpcomingInspections() {
       snapshots.forEach(snap => {
         snap.forEach(doc => {
           const shop = doc.data();
-          console.log("🏪 Shop:", shop.name || "Unnamed", "Upcoming:", shop.upcomingInspection);
 
           if (shop.upcomingInspection) {
             if (
@@ -265,6 +263,8 @@ async function loadUpcomingInspections() {
     }
   }
   
+
+
 
   async function loadHighRiskShops() {
     try {
@@ -290,7 +290,6 @@ async function loadUpcomingInspections() {
         });
       });
   
-      console.log("⚠️ High Risk Shops:", highRiskCount);
   
       const h3s = document.querySelectorAll(".stat-card h3");
       if (h3s.length >= 4) {
@@ -301,6 +300,8 @@ async function loadUpcomingInspections() {
     }
   }
   
+
+
 
   async function loadRiskLevelChart() {
   try {
@@ -333,12 +334,14 @@ async function loadUpcomingInspections() {
       gradeCounts["D"]
     ];
 
-    console.log("📊 Risk Level Counts:", chartData);
     renderRiskLevelChart(chartData);
   } catch (err) {
     console.error("❌ Error loading risk level chart:", err);
   }
 }
+
+
+
 
 async function loadWeeklyInspectionData() {
     try {
@@ -355,7 +358,6 @@ async function loadWeeklyInspectionData() {
         );
         snapshot = await getDocs(q);
       } else if (userRole === "SPHI") {
-        // Step 1: Get all PHIs in assigned GN divisions
         const usersRef = collection(db, "users");
         const batchPromises = [];
         for (let i = 0; i < userGNDivisions.length; i += 10) {
@@ -371,11 +373,10 @@ async function loadWeeklyInspectionData() {
         const phiRefs = userSnapshots.flatMap(snap => snap.docs.map(doc => doc.ref));
   
         if (phiRefs.length === 0) {
-          renderDailyInspectionChart(); // empty chart
+          renderDailyInspectionChart(); 
           return;
         }
   
-        // Step 2: Get all forms submitted by those PHIs
         const formBatches = [];
         for (let i = 0; i < phiRefs.length; i += 10) {
           const batch = query(
@@ -391,7 +392,6 @@ async function loadWeeklyInspectionData() {
         };
       }
   
-      // Step 3: Group by weekday
       const dayCounts = Array(7).fill(0);
   
       snapshot.docs.forEach(doc => {
@@ -406,17 +406,14 @@ async function loadWeeklyInspectionData() {
   
       const weekLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
       renderDailyInspectionChart(weekLabels, dayCounts);
-      console.log("📆 Weekly Inspections by Day:", dayCounts);
-  
     } catch (err) {
       console.error("❌ Error loading weekly inspections:", err);
     }
   }
   
-  // 📅 Helper: Start of current week (Sunday)
 function getStartOfWeekTimestamp() {
     const now = new Date();
-    const dayOfWeek = now.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
+    const dayOfWeek = now.getDay(); 
     return new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek);
   }
   
