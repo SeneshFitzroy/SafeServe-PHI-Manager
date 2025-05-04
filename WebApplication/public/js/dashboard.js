@@ -32,12 +32,19 @@ onAuthStateChanged(auth, async (user) => {
       userRole = userData.role;
       userGNDivisions = userData.gnDivisions || [];
 
-      await loadTotalShops();
-      await loadMonthlyInspections();
-      await loadUpcomingInspections();
-      await loadHighRiskShops();
-      await loadRiskLevelChart();
-      await loadWeeklyInspectionData(); 
+      // Run core dashboard functions in parallel
+      await Promise.all([
+        loadTotalShops(),
+        loadMonthlyInspections(),
+        loadUpcomingInspections(),
+        loadHighRiskShops()
+      ]);
+
+      // Delay heavy chart rendering slightly for UX smoothness
+      setTimeout(() => {
+        loadRiskLevelChart();
+        loadWeeklyInspectionData();
+      }, 200); // Adjust delay if needed 
 
     } else {
       console.error("User document not found in Firestore");
@@ -199,15 +206,49 @@ async function loadMonthlyInspections() {
         });
   
         inspectionCount = filtered.length;
-      }
   
+      } else if (userRole === "SPHI") {
+        const usersRef = collection(db, "users");
+        const phiBatchPromises = [];
+  
+        for (let i = 0; i < userGNDivisions.length; i += 10) {
+          const batch = query(
+            usersRef,
+            where("gnDivisions", "array-contains-any", userGNDivisions.slice(i, i + 10)),
+            where("role", "==", "PHI")
+          );
+          phiBatchPromises.push(getDocs(batch));
+        }
+  
+        const phiSnapshots = await Promise.all(phiBatchPromises);
+        const phiRefs = phiSnapshots.flatMap(snap => snap.docs.map(doc => doc.ref));
+  
+        const formBatchPromises = [];
+        for (let i = 0; i < phiRefs.length; i += 10) {
+          const batch = query(
+            formsRef,
+            where("phiId", "in", phiRefs.slice(i, i + 10))
+          );
+          formBatchPromises.push(getDocs(batch));
+        }
+  
+        const formSnapshots = await Promise.all(formBatchPromises);
+        const allForms = formSnapshots.flatMap(snap => snap.docs);
+  
+        const filtered = allForms.filter(doc => {
+          const data = doc.data();
+          return data.submittedAt?.toDate() >= firstOfMonth;
+        });
+  
+        inspectionCount = filtered.length;
+      }
   
       const h3s = document.querySelectorAll(".stat-card h3");
       if (h3s.length >= 2) {
         h3s[1].textContent = inspectionCount;
       }
     } catch (err) {
-      console.error("❌ Error loading inspections:", err);
+      console.error("Error loading monthly inspections:", err);
     }
   }
   
