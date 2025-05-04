@@ -37,6 +37,9 @@ onAuthStateChanged(auth, async (user) => {
       await loadTotalShops();
       await loadMonthlyInspections();
       await loadUpcomingInspections();
+      await loadHighRiskShops();
+      await loadRiskLevelChart();
+
 
       // TODO: Add remaining steps here...
     } else {
@@ -63,6 +66,7 @@ window.logoutUser = function (e) {
 
 // 📊 Daily Inspection Chart
 function renderDailyInspectionChart(labels = ["01", "02", "03", "04", "05", "06", "07"], data = [45, 15, 80, 20, 10, 35, 30]) {
+    console.log("🟢 Rendering Doughnut Chart with Data:", data);
   const ctx = document.getElementById("dailyInspectionChart").getContext("2d");
   new Chart(ctx, {
     type: "line",
@@ -141,7 +145,6 @@ function renderRiskLevelChart(data = [60, 20, 10, 10]) {
 
 document.addEventListener("DOMContentLoaded", () => {
   renderDailyInspectionChart(); // placeholder
-  renderRiskLevelChart();       // placeholder
 });
 
 // 🔢 Load total shops
@@ -255,3 +258,77 @@ async function loadUpcomingInspections() {
     }
   }
   
+
+  async function loadHighRiskShops() {
+    try {
+      const shopsRef = collection(db, "shops");
+      let highRiskCount = 0;
+  
+      const batchPromises = [];
+      for (let i = 0; i < userGNDivisions.length; i += 10) {
+        const batch = query(
+          shopsRef,
+          where("gnDivision", "in", userGNDivisions.slice(i, i + 10))
+        );
+        batchPromises.push(getDocs(batch));
+      }
+  
+      const snapshots = await Promise.all(batchPromises);
+      snapshots.forEach(snap => {
+        snap.forEach(doc => {
+          const grade = doc.data().grade?.toUpperCase();
+          if (grade === "C" || grade === "D") {
+            highRiskCount++;
+          }
+        });
+      });
+  
+      console.log("⚠️ High Risk Shops:", highRiskCount);
+  
+      const h3s = document.querySelectorAll(".stat-card h3");
+      if (h3s.length >= 4) {
+        h3s[3].textContent = highRiskCount;
+      }
+    } catch (err) {
+      console.error("❌ Error loading high-risk shops:", err);
+    }
+  }
+  
+
+  async function loadRiskLevelChart() {
+  try {
+    const shopsRef = collection(db, "shops");
+    let gradeCounts = { A: 0, B: 0, C: 0, D: 0 };
+
+    const batchPromises = [];
+    for (let i = 0; i < userGNDivisions.length; i += 10) {
+      const batch = query(
+        shopsRef,
+        where("gnDivision", "in", userGNDivisions.slice(i, i + 10))
+      );
+      batchPromises.push(getDocs(batch));
+    }
+
+    const snapshots = await Promise.all(batchPromises);
+    snapshots.forEach(snap => {
+      snap.forEach(doc => {
+        const grade = doc.data().grade?.toUpperCase();
+        if (gradeCounts.hasOwnProperty(grade)) {
+          gradeCounts[grade]++;
+        }
+      });
+    });
+
+    const chartData = [
+      gradeCounts["A"],
+      gradeCounts["B"],
+      gradeCounts["C"],
+      gradeCounts["D"]
+    ];
+
+    console.log("📊 Risk Level Counts:", chartData);
+    renderRiskLevelChart(chartData);
+  } catch (err) {
+    console.error("❌ Error loading risk level chart:", err);
+  }
+}
