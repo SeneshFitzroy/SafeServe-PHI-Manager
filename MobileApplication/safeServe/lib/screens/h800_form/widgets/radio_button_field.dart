@@ -1,10 +1,11 @@
+// lib/screens/h800_form/widgets/radio_button_field.dart -  - For my reference
 import 'package:flutter/material.dart';
 
 class RadioButtonField extends StatelessWidget {
   final String label;
-  final String? value; // Changed to String? to align with H800FormData
+  final bool value;
   final bool isInvalid;
-  final ValueChanged<String?> onChanged;
+  final ValueChanged<bool> onChanged;
 
   const RadioButtonField({
     super.key,
@@ -27,18 +28,18 @@ class RadioButtonField extends StatelessWidget {
           ),
           Row(
             children: [
-              Radio<String?>(
-                value: 'Yes',
+              Radio<bool>(
+                value: true,
                 groupValue: value,
-                onChanged: onChanged,
+                onChanged: (val) => onChanged(true),
                 activeColor: Colors.green,
               ),
               const Text('Yes'),
               const SizedBox(width: 20),
-              Radio<String?>(
-                value: 'No',
+              Radio<bool>(
+                value: false,
                 groupValue: value,
-                onChanged: onChanged,
+                onChanged: (val) => onChanged(false),
                 activeColor: Colors.red,
               ),
               const Text('No'),

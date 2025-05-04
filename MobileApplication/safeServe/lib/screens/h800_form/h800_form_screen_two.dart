@@ -1,89 +1,59 @@
+// lib/screens/h800_form/h800_form_screen_two.dart
 import 'package:flutter/material.dart';
 import '../../widgets/safe_serve_appbar.dart';
 import '../register_shop/screen_one/widgets/register_shop_header.dart';
-import 'h800_form_data.dart';
-import 'widgets/h800_form_button.dart';
 import 'widgets/generic_dropdown.dart';
 import 'widgets/radio_button_field.dart';
+import '../register_shop/screen_one/widgets/next_button.dart';
+import 'h800_form_data.dart';
 
 class H800FormScreenTwo extends StatefulWidget {
   final H800FormData formData;
-  final String shopId;
-  final String phiId;
 
-  const H800FormScreenTwo({
-    super.key,
-    required this.formData,
-    required this.shopId,
-    required this.phiId,
-  });
+  const H800FormScreenTwo({super.key, required this.formData});
 
   @override
-  H800FormScreenTwoState createState() => H800FormScreenTwoState();
+  State<H800FormScreenTwo> createState() => _H800FormScreenTwoState();
 }
 
-class H800FormScreenTwoState extends State<H800FormScreenTwo> {
-  // Part 2: Building
-  String? _natureOfBuilding;
-  String? _space;
-  String? _lightAndVentilation;
-  String? _conditionOfFloor;
-  String? _conditionOfWall;
-  String? _conditionOfCeiling;
-  String? _hasHazards;
-
-  // Validation flags
-  Map<String, bool> _isInvalid = {};
+class _H800FormScreenTwoState extends State<H800FormScreenTwo> {
+  final ScrollController _scrollController = ScrollController();
+  final Set<String> _invalidFields = {};
 
   @override
-  void initState() {
-    super.initState();
-    // Initialize values from formData
-    _natureOfBuilding = widget.formData.natureOfBuilding;
-    _space = widget.formData.space;
-    _lightAndVentilation = widget.formData.lightAndVentilation;
-    _conditionOfFloor = widget.formData.conditionOfFloor;
-    _conditionOfWall = widget.formData.conditionOfWall;
-    _conditionOfCeiling = widget.formData.conditionOfCeiling;
-    _hasHazards = widget.formData.hasHazards;
-
-    // Initialize validation flags
-    _isInvalid = {
-      'natureOfBuilding': false,
-      'space': false,
-      'lightAndVentilation': false,
-      'conditionOfFloor': false,
-      'conditionOfWall': false,
-      'conditionOfCeiling': false,
-      'hasHazards': false,
-    };
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
-  bool _validateForm() {
-    bool isValid = true;
-    setState(() {
-      _isInvalid['natureOfBuilding'] = _natureOfBuilding == null;
-      _isInvalid['space'] = _space == null;
-      _isInvalid['lightAndVentilation'] = _lightAndVentilation == null;
-      _isInvalid['conditionOfFloor'] = _conditionOfFloor == null;
-      _isInvalid['conditionOfWall'] = _conditionOfWall == null;
-      _isInvalid['conditionOfCeiling'] = _conditionOfCeiling == null;
-      _isInvalid['hasHazards'] = _hasHazards == null;
-    });
+  bool validateFields() {
+    _invalidFields.clear();
 
-    isValid = !_isInvalid.containsValue(true);
-    return isValid;
+    // Validate dropdown fields
+    if (widget.formData.generalCleanlinessPart3.trim().isEmpty) {
+      _invalidFields.add('generalCleanlinessPart3');
+    }
+    if (widget.formData.safetyMeasuresForCleanliness.trim().isEmpty) {
+      _invalidFields.add('safetyMeasuresForCleanliness');
+    }
+    if (widget.formData.dailyCleaning.trim().isEmpty) {
+      _invalidFields.add('dailyCleaning');
+    }
+    if (widget.formData.spaceInWorkingArea.trim().isEmpty) {
+      _invalidFields.add('spaceInWorkingArea');
+    }
+    if (widget.formData.maintenanceOfWalls.trim().isEmpty) {
+      _invalidFields.add('maintenanceOfWalls');
+    }
+    if (widget.formData.maintenanceOfCeilingPart3.trim().isEmpty) {
+      _invalidFields.add('maintenanceOfCeilingPart3');
+    }
+
+    setState(() {});
+    return _invalidFields.isEmpty;
   }
 
-  void _updateFormData() {
-    widget.formData.natureOfBuilding = _natureOfBuilding;
-    widget.formData.space = _space;
-    widget.formData.lightAndVentilation = _lightAndVentilation;
-    widget.formData.conditionOfFloor = _conditionOfFloor;
-    widget.formData.conditionOfWall = _conditionOfWall;
-    widget.formData.conditionOfCeiling = _conditionOfCeiling;
-    widget.formData.hasHazards = _hasHazards;
-  }
+  bool isFieldInvalid(String fieldKey) => _invalidFields.contains(fieldKey);
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +66,7 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
         children: [
           _buildGradientBackground(),
           SingleChildScrollView(
+            controller: _scrollController,
             padding: const EdgeInsets.only(bottom: 60),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,142 +77,247 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                   onArrowPressed: () => Navigator.pop(context),
                 ),
                 const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: LinearProgressIndicator(
-                    value: 0.2, // 2/10 of the form completed
-                    backgroundColor: Colors.grey[300],
-                    valueColor:
-                    const AlwaysStoppedAnimation<Color>(Colors.blue),
+
+                // Part 3: Area of Food Preparation/Serving/Display/Storage
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Text(
+                    'Part 3 - Area of Food Preparation/Serving/Display/Storage',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Part 2: Building (10 Marks)',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 20),
-                      GenericDropdown(
-                        label: '2.1 Nature of the building',
-                        initialValue: _natureOfBuilding,
-                        isInvalid: _isInvalid['natureOfBuilding']!,
-                        items: const ['Permanent', 'Temporary'],
-                        onChanged: (value) {
-                          setState(() {
-                            _natureOfBuilding = value;
-                            _isInvalid['natureOfBuilding'] = value == null;
-                          });
+                const SizedBox(height: 10),
+
+                // 3.1 General cleanliness
+                GenericDropdown(
+                  label: '3.1 General cleanliness',
+                  initialValue: widget.formData.generalCleanlinessPart3,
+                  isInvalid: isFieldInvalid('generalCleanlinessPart3'),
+                  items: const ['Satisfactory', 'Unsatisfactory'],
+                  onChanged: (val) => widget.formData.generalCleanlinessPart3 = val,
+                ),
+
+                // 3.2 Safety measures for cleanliness
+                GenericDropdown(
+                  label: '3.2 Safety measures for cleanliness',
+                  initialValue: widget.formData.safetyMeasuresForCleanliness,
+                  isInvalid: isFieldInvalid('safetyMeasuresForCleanliness'),
+                  items: const ['Adequate', 'Inadequate'],
+                  onChanged: (val) => widget.formData.safetyMeasuresForCleanliness = val,
+                ),
+
+                // 3.3 Flies
+                RadioButtonField(
+                  label: '3.3 Flies',
+                  value: widget.formData.hasFlies,
+                  onChanged: (val) => setState(() {
+                    widget.formData.hasFlies = val;
+                  }),
+                ),
+
+                // 3.4 Ants/Cockroaches/Rodents and other disease carriers
+                RadioButtonField(
+                  label: '3.4 Ants/Cockroaches/Rodents and other disease carriers',
+                  value: widget.formData.hasPests,
+                  onChanged: (val) => setState(() {
+                    widget.formData.hasPests = val;
+                  }),
+                ),
+
+                // 3.5 Presence of floor
+                RadioButtonField(
+                  label: '3.5 Presence of floor',
+                  value: widget.formData.hasFloor,
+                  onChanged: (val) => setState(() {
+                    widget.formData.hasFloor = val;
+                  }),
+                ),
+
+                // 3.6 Maintenance of walls
+                GenericDropdown(
+                  label: '3.6 Maintenance of walls',
+                  initialValue: widget.formData.maintenanceOfWalls,
+                  isInvalid: isFieldInvalid('maintenanceOfWalls'),
+                  items: const ['Good', 'Poor'],
+                  onChanged: (val) => widget.formData.maintenanceOfWalls = val,
+                ),
+
+                // 3.7 Maintenance of ceiling
+                GenericDropdown(
+                  label: '3.7 Maintenance of ceiling',
+                  initialValue: widget.formData.maintenanceOfCeilingPart3,
+                  isInvalid: isFieldInvalid('maintenanceOfCeilingPart3'),
+                  items: const ['Good', 'Poor'],
+                  onChanged: (val) => widget.formData.maintenanceOfCeilingPart3 = val,
+                ),
+
+                // 3.8 Space in the working area
+                GenericDropdown(
+                  label: '3.8 Space in the working area',
+                  initialValue: widget.formData.spaceInWorkingArea,
+                  isInvalid: isFieldInvalid('spaceInWorkingArea'),
+                  items: const ['Adequate', 'Inadequate'],
+                  onChanged: (val) => widget.formData.spaceInWorkingArea = val,
+                ),
+
+                // 3.9 Daily cleaning
+                GenericDropdown(
+                  label: '3.9 Daily cleaning',
+                  initialValue: widget.formData.dailyCleaning,
+                  isInvalid: isFieldInvalid('dailyCleaning'),
+                  items: const ['Yes', 'No'],
+                  onChanged: (val) => widget.formData.dailyCleaning = val,
+                ),
+
+                // 3.10 Risk of contamination from toilets
+                RadioButtonField(
+                  label: '3.10 Risk of contamination from toilets',
+                  value: widget.formData.riskOfContaminationFromToilets,
+                  onChanged: (val) => setState(() {
+                    widget.formData.riskOfContaminationFromToilets = val;
+                  }),
+                ),
+
+                // 3.11 Adequate number of bins with lids for waste disposal
+                RadioButtonField(
+                  label: '3.11 Adequate number of bins with lids for waste disposal',
+                  value: widget.formData.adequateBins,
+                  onChanged: (val) => setState(() {
+                    widget.formData.adequateBins = val;
+                  }),
+                ),
+
+                // 3.12 Empty boxes/Gunny bags and other unnecessary items
+                RadioButtonField(
+                  label: '3.12 Empty boxes/Gunny bags and other unnecessary items',
+                  value: widget.formData.hasUnnecessaryItems,
+                  onChanged: (val) => setState(() {
+                    widget.formData.hasUnnecessaryItems = val;
+                  }),
+                ),
+
+                // 3.13 Availability of cleaning tools/materials/serviettes etc.
+                RadioButtonField(
+                  label: '3.13 Availability of cleaning tools/materials/serviettes etc.',
+                  value: widget.formData.cleaningToolsAvailable,
+                  onChanged: (val) => setState(() {
+                    widget.formData.cleaningToolsAvailable = val;
+                  }),
+                ),
+
+                // 3.14 Objectionable odor
+                RadioButtonField(
+                  label: '3.14 Objectionable odor',
+                  value: widget.formData.hasObjectionableOdor,
+                  onChanged: (val) => setState(() {
+                    widget.formData.hasObjectionableOdor = val;
+                  }),
+                ),
+
+                // 3.15 Open drains and stagnant waste water
+                RadioButtonField(
+                  label: '3.15 Open drains and stagnant waste water',
+                  value: widget.formData.hasOpenDrains,
+                  onChanged: (val) => setState(() {
+                    widget.formData.hasOpenDrains = val;
+                  }),
+                ),
+
+                // 3.16 Area used for sleeping or any other unrelated activities
+                RadioButtonField(
+                  label: '3.16 Area used for sleeping or any other unrelated activities',
+                  value: widget.formData.areaUsedForSleeping,
+                  onChanged: (val) => setState(() {
+                    widget.formData.areaUsedForSleeping = val;
+                  }),
+                ),
+
+                // 3.17 Use of separate chopping boards/knives etc.
+                RadioButtonField(
+                  label: '3.17 Use of separate chopping boards/knives etc.',
+                  value: widget.formData.separateChoppingBoards,
+                  onChanged: (val) => setState(() {
+                    widget.formData.separateChoppingBoards = val;
+                  }),
+                ),
+
+                // 3.18 Cleanliness of equipment/utensils
+                RadioButtonField(
+                  label: '3.18 Cleanliness of equipment/utensils',
+                  value: widget.formData.cleanlinessOfEquipment,
+                  onChanged: (val) => setState(() {
+                    widget.formData.cleanlinessOfEquipment = val;
+                  }),
+                ),
+
+                // 3.19 Suitability of the layout of the area for the process
+                RadioButtonField(
+                  label: '3.19 Suitability of the layout of the area for the process',
+                  value: widget.formData.suitabilityOfLayout,
+                  onChanged: (val) => setState(() {
+                    widget.formData.suitabilityOfLayout = val;
+                  }),
+                ),
+
+                // 3.20 Light and ventilation
+                GenericDropdown(
+                  label: '3.20 Light and ventilation',
+                  initialValue: widget.formData.lightAndVentilationPart3,
+                  isInvalid: isFieldInvalid('lightAndVentilationPart3'),
+                  items: const ['Good', 'Poor'],
+                  onChanged: (val) => widget.formData.lightAndVentilationPart3 = val,
+                ),
+
+                // 3.21 House keeping
+                RadioButtonField(
+                  label: '3.21 House keeping',
+                  value: widget.formData.houseKeeping,
+                  onChanged: (val) => setState(() {
+                    widget.formData.houseKeeping = val;
+                  }),
+                ),
+
+                // 3.22 Water supplied for different tasks in a suitable manner
+                RadioButtonField(
+                  label: '3.22 Water supplied for different tasks in a suitable manner',
+                  value: widget.formData.waterSupplySuitable,
+                  onChanged: (val) => setState(() {
+                    widget.formData.waterSupplySuitable = val;
+                  }),
+                ),
+
+                const SizedBox(height: 30),
+
+                // Previous and Next Buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
                         },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey,
+                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        ),
+                        child: const Text(
+                          'Previous',
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
-                      GenericDropdown(
-                        label: '2.2 Space',
-                        initialValue: _space,
-                        isInvalid: _isInvalid['space']!,
-                        items: const ['Adequate', 'Inadequate'],
-                        onChanged: (value) {
-                          setState(() {
-                            _space = value;
-                            _isInvalid['space'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.3 Light and ventilation',
-                        initialValue: _lightAndVentilation,
-                        isInvalid: _isInvalid['lightAndVentilation']!,
-                        items: const ['Adequate', 'Inadequate'],
-                        onChanged: (value) {
-                          setState(() {
-                            _lightAndVentilation = value;
-                            _isInvalid['lightAndVentilation'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.4 Condition of the floor',
-                        initialValue: _conditionOfFloor,
-                        isInvalid: _isInvalid['conditionOfFloor']!,
-                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _conditionOfFloor = value;
-                            _isInvalid['conditionOfFloor'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.5 Condition of the wall',
-                        initialValue: _conditionOfWall,
-                        isInvalid: _isInvalid['conditionOfWall']!,
-                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _conditionOfWall = value;
-                            _isInvalid['conditionOfWall'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.6 Condition of the ceiling',
-                        initialValue: _conditionOfCeiling,
-                        isInvalid: _isInvalid['conditionOfCeiling']!,
-                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _conditionOfCeiling = value;
-                            _isInvalid['conditionOfCeiling'] = value == null;
-                          });
-                        },
-                      ),
-                      RadioButtonField(
-                        label: '2.7 Hazards to employees/customers',
-                        value: _hasHazards,
-                        isInvalid: _isInvalid['hasHazards']!,
-                        onChanged: (value) {
-                          setState(() {
-                            _hasHazards = value;
-                            _isInvalid['hasHazards'] = value == null;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 30),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          H800FormButton(
-                            label: 'Previous',
-                            onPressed: () {
-                              _updateFormData();
-                              Navigator.pop(context);
-                            },
-                          ),
-                          H800FormButton(
-                            label: 'Next',
-                            onPressed: () {
-                              if (_validateForm()) {
-                                _updateFormData();
-                                Navigator.pushNamed(
-                                  context,
-                                  '/h800_form_screen_three',
-                                  arguments: {
-                                    'formData': widget.formData,
-                                    'shopId': widget.shopId,
-                                    'phiId': widget.phiId,
-                                  },
-                                );
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                    ),
+                    NextButton(
+                      onPressed: () {
+                        if (validateFields()) {
+                          // Navigate to the next screen (if exists) or handle form submission
+                          // For now, we'll just pop back as a placeholder
+                          Navigator.pop(context);
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
