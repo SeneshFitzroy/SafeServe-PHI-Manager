@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:safeserve/screens/h800_form/photo_upload_screen.dart';
 import '../../widgets/safe_serve_appbar.dart';
 import '../register_shop/screen_one/widgets/register_shop_header.dart';
 import 'h800_form_data.dart';
@@ -184,128 +185,7 @@ class H800FormSummary extends StatelessWidget {
     };
   }
 
-  Future<void> _saveFormData(BuildContext context) async {
-    try {
-      final h800FormsRef = FirebaseFirestore.instance.collection('h800_forms');
-      final totalScore = formData.calculateTotalScore();
-      print('Saving phiId: $phiId');
-      print('Authenticated userId: ${FirebaseAuth.instance.currentUser?.uid}');
 
-      // Convert H800FormData to a map and include phiId
-      final formDataMap = {
-        'shopId': shopId,
-        'phiId': phiId,
-        'submittedAt': Timestamp.now(),
-        'totalScore': totalScore,
-        // Part 1
-        'suitabilityForBusiness': formData.suitabilityForBusiness,
-        'generalCleanliness': formData.generalCleanliness,
-        'hasPollutingConditions': formData.hasPollutingConditions,
-        'hasAnimals': formData.hasAnimals,
-        'hasSmokeOrAdverseEffects': formData.hasSmokeOrAdverseEffects,
-        // Part 2
-        'natureOfBuilding': formData.natureOfBuilding,
-        'space': formData.space,
-        'lightAndVentilation': formData.lightAndVentilation,
-        'conditionOfFloor': formData.conditionOfFloor,
-        'conditionOfWall': formData.conditionOfWall,
-        'conditionOfCeiling': formData.conditionOfCeiling,
-        'hasHazards': formData.hasHazards,
-        // Part 3
-        'generalCleanlinessPart3': formData.generalCleanlinessPart3,
-        'safetyMeasuresForCleanliness': formData.safetyMeasuresForCleanliness,
-        'hasFlies': formData.hasFlies,
-        'hasPests': formData.hasPests,
-        'hasFloor': formData.hasFloor,
-        'maintenanceOfWalls': formData.maintenanceOfWalls,
-        'maintenanceOfCeilingPart3': formData.maintenanceOfCeilingPart3,
-        'spaceInWorkingArea': formData.spaceInWorkingArea,
-        'dailyCleaning': formData.dailyCleaning,
-        'riskOfContaminationFromToilets':
-            formData.riskOfContaminationFromToilets,
-        'adequateBins': formData.adequateBins,
-        'hasUnnecessaryItems': formData.hasUnnecessaryItems,
-        'cleaningToolsAvailable': formData.cleaningToolsAvailable,
-        'hasObjectionableOdor': formData.hasObjectionableOdor,
-        'hasOpenDrains': formData.hasOpenDrains,
-        'areaUsedForSleeping': formData.areaUsedForSleeping,
-        'separateChoppingBoards': formData.separateChoppingBoards,
-        'cleanlinessOfEquipment': formData.cleanlinessOfEquipment,
-        'suitabilityOfLayout': formData.suitabilityOfLayout,
-        'lightAndVentilationPart3': formData.lightAndVentilationPart3,
-        'houseKeeping': formData.houseKeeping,
-        'waterSupplySuitable': formData.waterSupplySuitable,
-        'safeFoodHandling': formData.safeFoodHandling,
-        // Part 4
-        'equipmentForFoodHandling': formData.equipmentForFoodHandling,
-        'conditionOfEquipment': formData.conditionOfEquipment,
-        'cleanOfEquipment': formData.cleanOfEquipment,
-        'foodTongsAvailable': formData.foodTongsAvailable,
-        'storageCleanEquip': formData.storageCleanEquip,
-        'suitableSafetyofFurniture': formData.suitableSafetyofFurniture,
-        'furnitureCondition': formData.furnitureCondition,
-        'cleaningAndMaintenanceOfFurniture':
-            formData.cleaningAndMaintenanceOfFurniture,
-        'maintenanceOfRefrigerators': formData.maintenanceOfRefrigerators,
-        'cleanandMaintenanceOfRefrigerators':
-            formData.cleanandMaintenanceOfRefrigerators,
-        // Part 5
-        'storageFacilities': formData.storageFacilities,
-        'storageOfRawMaterials': formData.storageOfRawMaterials,
-        'storageOfCookedFood': formData.storageOfCookedFood,
-        'foodStoredTemp': formData.foodStoredTemp,
-        'storageInRefrigerator': formData.storageInRefrigerator,
-        'measuresToPreventContamination':
-            formData.measuresToPreventContamination,
-        // Part 6
-        'waterSource': formData.waterSource,
-        'waterStorageMethod': formData.waterStorageMethod,
-        'waterDispensedThroughTaps': formData.waterDispensedThroughTaps,
-        'waterSafetyCertified': formData.waterSafetyCertified,
-        // Part 7
-        'numberofBinswithLids': formData.numberofBinswithLids,
-        'lidsOfBinsClosed': formData.lidsOfBinsClosed,
-        'cleanlinessOfWasteBins': formData.cleanlinessOfWasteBins,
-        'seperationofWaste': formData.seperationofWaste,
-        'disposalOfWaste': formData.disposalOfWaste,
-        'managementofWasteWater': formData.managementofWasteWater,
-        'adequateNumberOfToilets': formData.adequateNumberOfToilets,
-        'locationOfToilets': formData.locationOfToilets,
-        'cleanlinessOfToilets': formData.cleanlinessOfToilets,
-        'septicTankCondition': formData.septicTankCondition,
-        // Part 8
-        'conditionOfFood': formData.conditionOfFood,
-        'displayPackaging': formData.displayPackaging,
-        'insectInfested': formData.insectInfested,
-        'violationOfLabeling': formData.violationOfLabeling,
-        'separationOfUnwholesomeFood': formData.separationOfUnwholesomeFood,
-        // Part 9
-        'personalHygiene': formData.personalHygiene,
-        'wearingProtectiveClothing': formData.wearingProtectiveClothing,
-        'communicableDiseases': formData.communicableDiseases,
-        'goodHealthHabits': formData.goodHealthHabits,
-        'healthRecords': formData.healthRecords,
-        'trainingRecords': formData.trainingRecords,
-        // Part 10
-        'displayHealthInstructions': formData.displayHealthInstructions,
-        'entertainsComplaints': formData.entertainsComplaints,
-        'preventSmoking': formData.preventSmoking,
-        'issuingBills': formData.issuingBills,
-        'foodSafetyCertification': formData.foodSafetyCertification,
-      };
-
-      await h800FormsRef.add(formDataMap);
-      print('H800 form data saved successfully for shopId: $shopId');
-
-      // Navigate back to the ShopDetailScreen
-      Navigator.pop(context); 
-    } catch (e) {
-      print('Error saving H800 form data: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to save form: $e')),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -431,7 +311,19 @@ class H800FormSummary extends StatelessWidget {
                           ),
                           H800FormButton(
                             label: 'Submit',
-                            onPressed: () => _saveFormData(context),
+                            onPressed: () {
+                              // go to photo‑upload screen instead of direct DB write
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => H800PhotoUploadScreen(
+                                    formData: formData,
+                                    shopId: shopId,
+                                    phiId: phiId,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
