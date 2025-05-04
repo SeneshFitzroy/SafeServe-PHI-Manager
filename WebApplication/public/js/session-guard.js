@@ -2,7 +2,7 @@ const role = sessionStorage.getItem("userRole");
 const path = window.location.pathname.split("/").pop();
 
 if (!role) {
-  window.location.href = "login.html"; // Only guard after login
+  window.location.href = "login.html"; 
 } else {
   const SPHI_ALLOWED = ["Dashboard.html", "Registration.html", "PHIinformation.html"];
   const PHI_BLOCKED = ["Registration.html"];

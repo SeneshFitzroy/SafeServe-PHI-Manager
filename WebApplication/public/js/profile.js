@@ -1,4 +1,3 @@
-// js/profile.js
 import { auth, db } from "./firebase-config.js";
 import {
   onAuthStateChanged,
@@ -29,7 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("User profile not found!");
       }
     } else {
-      // Not logged in
       window.location.href = "login.html";
     }
   });
@@ -54,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       hideEditSlider();
-      location.reload(); // Refresh to show updated values
+      location.reload(); 
     } catch (error) {
       console.error("Error updating profile:", error);
       alert("Failed to update profile. Please try again.");
@@ -63,7 +61,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function populateProfile(user) {
-  // Personal Information
   const infoCard1 = document.querySelectorAll(".info-card")[0];
   infoCard1.innerHTML = `
     <h3>Personal Information</h3>
@@ -79,7 +76,6 @@ function populateProfile(user) {
     </button>
   `;
 
-  // Work Information
   const infoCard2 = document.querySelectorAll(".info-card")[1];
   infoCard2.innerHTML = `
     <h3>Work Information</h3>
@@ -91,7 +87,6 @@ function populateProfile(user) {
     </div>
   `;
 
-  // Top-right avatar
   document.querySelector(".user-name").innerText = user.full_name;
   document.querySelector(".user-role").innerText = user.role;
 }
@@ -157,7 +152,6 @@ document.getElementById("change-password-btn").addEventListener("click", async (
         } else if (error.code === "auth/weak-password") {
           document.getElementById("new-password-error").innerText = "Password should be at least 6 characters.";
         } else {
-          // Display all other errors inline (not alert)
           oldError.innerText = "Error: " + error.message;
         }
       }

@@ -1,5 +1,3 @@
-// js/phi-registration.js
-
 import { auth, db } from './firebase-config.js';
 import {
   collection,
@@ -12,7 +10,6 @@ import {
 
 import { fetchAndRenderPHIs } from './phi-listing.js'; 
 
-// DOM Elements (IDs must be unique in your HTML)
 const districtField = document.getElementById('district');
 const gnDropdown = document.getElementById('add-multiSelectDropdown');
 const selectedOptionsContainer = document.getElementById('add-selected-options');
@@ -21,7 +18,7 @@ const phiIdError = document.getElementById('phiid-error');
 const form = document.getElementById('phi-registration-form');
 const passwordError = document.getElementById('password-match-error');
 
-// 1️⃣ Autofill District + Populate GN Divisions
+// Autofill District + Populate GN Divisions
 auth.onAuthStateChanged(async (user) => {
   console.log("onAuthStateChanged -> user:", user);
   if (user) {
@@ -54,14 +51,13 @@ auth.onAuthStateChanged(async (user) => {
   }
 });
 
-// 2️⃣ Validate PHI ID in Real-Time
+// Validate PHI ID in Real-Time
 phiIdInput.addEventListener('input', async () => {
   const enteredId = phiIdInput.value.trim();
   if (!enteredId) {
     phiIdError.textContent = '';
     return;
   }
-  // If your Firestore document uses "phiId" as the field name:
   const q = query(collection(db, 'users'), where('phiId', '==', enteredId));
   const snap = await getDocs(q);
   phiIdError.textContent = snap.empty ? '' : 'PHI ID already exists.';
@@ -115,7 +111,6 @@ form.addEventListener('submit', async (e) => {
     return;
   }
 
-  // Cloud Function URL (make sure this is correct)
   const cloudFunctionURL = 'https://createphiuser-m2olz6aiqa-uc.a.run.app';
   console.log('Submitting to Cloud Function at:', cloudFunctionURL);
 
@@ -147,7 +142,7 @@ form.addEventListener('submit', async (e) => {
     
     form.reset();
     selectedOptionsContainer.innerHTML = '';
-    hideSlider(); // Close the slider
+    hideSlider(); 
     await fetchAndRenderPHIs(); 
     
   } catch (err) {
