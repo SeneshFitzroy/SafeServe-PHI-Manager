@@ -9,11 +9,11 @@ import 'h800_form_data.dart';
 import 'success_screen.dart';
 
 class OwnerOtpScreen extends StatefulWidget {
-  final String          phone;      // merely displayed – no SMS
-  final H800FormData    formData;
-  final List<File>      photos;
-  final Position        position;
-  final String          shopId, phiId;
+  final String       phone;
+  final H800FormData formData;
+  final List<File>   photos;
+  final Position     position;
+  final String       shopId, phiId;
 
   const OwnerOtpScreen({
     super.key,
@@ -33,9 +33,9 @@ class _OwnerOtpScreenState extends State<OwnerOtpScreen> {
   final _otpSvc    = OtpService();
   final _submitSvc = InspectionSubmissionService();
 
-  String _code   = '';
-  bool   _sent   = false;
-  bool   _busy   = false;
+  String _code = '';
+  bool   _sent = false;
+  bool   _busy = false;
 
   @override
   void initState() {
@@ -58,7 +58,6 @@ class _OwnerOtpScreenState extends State<OwnerOtpScreen> {
     if (_busy) return;
 
     setState(() => _busy = true);
-
     final valid = await _otpSvc.verifyOtp(smsCode: _code);
     if (!valid) {
       setState(() => _busy = false);
@@ -86,60 +85,87 @@ class _OwnerOtpScreenState extends State<OwnerOtpScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    appBar: SafeServeAppBar(height: 70, onMenuPressed: () {}),
-    body: Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xffE6F5FE), Color(0xffF5ECF9)],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      appBar: SafeServeAppBar(height: 70, onMenuPressed: () {}),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xffE6F5FE), Color(0xffF5ECF9)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
-      ),
-      child: Column(
-        children: [
-          const SizedBox(height: 40),
-          const Text('Verify by Owner',
-              style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff1F41BB))),
-          const SizedBox(height: 8),
-          Text('Enter the OTP sent to ${widget.phone}',
-              style: const TextStyle(fontSize: 14)),
-          const SizedBox(height: 30),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: PinCodeTextField(
-              appContext: context,
-              length: 6,
-              onChanged: (_) {},
-              onCompleted: (v) => _code = v,
-              pinTheme: PinTheme(
-                inactiveColor: const Color(0xff1F41BB),
-                selectedColor: const Color(0xff1F41BB),
-                activeColor:  Colors.green,
+        width: double.infinity,
+        child: LayoutBuilder(builder: (ctx, constraints) {
+          return SingleChildScrollView(
+            padding: EdgeInsets.only(
+              top: 100,
+              bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+            ),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(
+                child: Column(
+                  children: [
+                    const Text(
+                      'Verify by Owner',
+                      style: TextStyle(
+                        fontSize: 33,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xff1F41BB),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Enter the OTP sent to ${widget.phone}',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(height: 30),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: PinCodeTextField(
+                        appContext: context,
+                        length: 6,
+                        onChanged: (_) {},
+                        onCompleted: (v) => _code = v,
+                        pinTheme: PinTheme(
+                          inactiveColor: const Color(0xff1F41BB),
+                          selectedColor: const Color(0xff1F41BB),
+                          activeColor: Colors.green,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xff1F41BB),
+                        minimumSize: const Size(180, 45),
+                      ),
+                      onPressed: _busy ? null : _verify,
+                      child: const Text(
+                        'Verify',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextButton(
+                      onPressed: _sent ? null : _sendFakeCode,
+                      child: const Text('Didn’t get code?  Retry'),
+                    ),
+                    const Spacer(), // pushes content up when empties
+                  ],
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xff1F41BB),
-              minimumSize: const Size(180, 45),
-            ),
-            onPressed: _busy ? null : _verify,
-            child: const Text('Verify',
-                style: TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold)),
-          ),
-          const SizedBox(height: 12),
-          TextButton(
-            onPressed: _sent ? null : _sendFakeCode,
-            child: const Text('Didn’t get code?  Retry'),
-          ),
-        ],
+          );
+        }),
       ),
-    ),
-  );
+    );
+  }
 }

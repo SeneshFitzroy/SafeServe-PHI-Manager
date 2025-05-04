@@ -55,7 +55,7 @@ class H800SuccessScreen extends StatelessWidget {
                           (r) => false),
                   child: const Text('Go to Dashboard',
                       style:
-                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white))),
             )
           ],
         ),
