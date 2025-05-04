@@ -1,5 +1,5 @@
-name: safeserve
-description: "Safe Serve is a food safety inspections mobile application for Public Health Inspectors (PHIs)"
+name: safe_serve
+description: A Flutter application for SafeServe
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -33,7 +33,8 @@ dependencies:
   material_design_icons_flutter: ^5.0.6595
   image_picker: ^1.0.7
   intl: ^0.18.1
-  google_maps_flutter: ^2.5.0
+  flutter_map: ^4.0.0  # Replace google_maps_flutter
+  latlong2: ^0.8.2     # Required for LatLng coordinates with flutter_map
 
   firebase_core: ^2.27.0
   firebase_auth: ^4.17.0
@@ -54,13 +55,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
-  flutter_lints: ^5.0.0
+  flutter_lints: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
