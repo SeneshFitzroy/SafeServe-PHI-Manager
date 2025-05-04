@@ -7,7 +7,12 @@ import {
 
 import {
   doc,
-  getDoc
+  getDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+  Timestamp
 } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
 // Globals
@@ -30,9 +35,10 @@ onAuthStateChanged(auth, async (user) => {
       console.log("📍 Assigned GN Divisions:", userGNDivisions);
 
       await loadTotalShops();
+      await loadMonthlyInspections();
+      await loadUpcomingInspections();
 
-
-      // Next: Load dynamic dashboard data
+      // TODO: Add remaining steps here...
     } else {
       console.error("❌ User document not found in Firestore");
     }
@@ -55,7 +61,7 @@ window.logoutUser = function (e) {
     });
 };
 
-// 📊 Daily Inspection Line Chart (Placeholder until replaced with real data)
+// 📊 Daily Inspection Chart
 function renderDailyInspectionChart(labels = ["01", "02", "03", "04", "05", "06", "07"], data = [45, 15, 80, 20, 10, 35, 30]) {
   const ctx = document.getElementById("dailyInspectionChart").getContext("2d");
   new Chart(ctx, {
@@ -78,24 +84,13 @@ function renderDailyInspectionChart(labels = ["01", "02", "03", "04", "05", "06"
       maintainAspectRatio: false,
       scales: {
         x: {
-          title: {
-            display: true,
-            text: "Day"
-          },
-          grid: {
-            display: true,
-            drawBorder: false
-          }
+          title: { display: true, text: "Day" },
+          grid: { display: true, drawBorder: false }
         },
         y: {
-          title: {
-            display: true,
-            text: "Inspection Rate"
-          },
+          title: { display: true, text: "Inspection Rate" },
           beginAtZero: true,
-          grid: {
-            drawBorder: false
-          }
+          grid: { drawBorder: false }
         }
       },
       plugins: {
@@ -106,7 +101,7 @@ function renderDailyInspectionChart(labels = ["01", "02", "03", "04", "05", "06"
   });
 }
 
-// 🥧 Risk Levels Doughnut Chart (Placeholder)
+// 🥧 Risk Level Doughnut Chart
 function renderRiskLevelChart(data = [60, 20, 10, 10]) {
   const ctxPie = document.getElementById("riskLevelsChart").getContext("2d");
   new Chart(ctxPie, {
@@ -116,10 +111,10 @@ function renderRiskLevelChart(data = [60, 20, 10, 10]) {
       datasets: [{
         data: data,
         backgroundColor: [
-          "rgba(61, 185, 82, 1)",   // A - Green
-          "rgba(241, 215, 48, 1)",  // B - Yellow
-          "rgba(255, 133, 20, 1)",  // C - Orange
-          "rgba(187, 31, 34, 1)"    // D - Red
+          "rgba(61, 185, 82, 1)",   // A
+          "rgba(241, 215, 48, 1)",  // B
+          "rgba(255, 133, 20, 1)",  // C
+          "rgba(187, 31, 34, 1)"    // D
         ],
         borderColor: [
           "rgba(61, 185, 82, 1)",
@@ -137,61 +132,126 @@ function renderRiskLevelChart(data = [60, 20, 10, 10]) {
         legend: {
           display: true,
           position: "bottom",
-          labels: {
-            usePointStyle: false,
-            boxWidth: 15,
-            padding: 15
-          }
-        },
-        title: { display: true }
+          labels: { usePointStyle: false, boxWidth: 15, padding: 15 }
+        }
       }
     }
   });
 }
 
-// Example trigger (temporary)
 document.addEventListener("DOMContentLoaded", () => {
-  renderDailyInspectionChart(); // Sample values
-  renderRiskLevelChart();       // Sample values
+  renderDailyInspectionChart(); // placeholder
+  renderRiskLevelChart();       // placeholder
 });
 
+// 🔢 Load total shops
+async function loadTotalShops() {
+  try {
+    const shopsRef = collection(db, "shops");
+    const batchPromises = [];
 
-import {
-    collection,
-    getDocs,
-    query,
-    where
-  } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
-  
-  // 🔢 Step 2: Load total shops count
-  async function loadTotalShops() {
+    // Batch GN divisions (max 10 per 'in' clause)
+    for (let i = 0; i < userGNDivisions.length; i += 10) {
+      const batch = query(shopsRef, where("gnDivision", "in", userGNDivisions.slice(i, i + 10)));
+      batchPromises.push(getDocs(batch));
+    }
+
+    const snapshots = await Promise.all(batchPromises);
+    let totalCount = 0;
+    snapshots.forEach(snap => totalCount += snap.size);
+
+    document.querySelectorAll(".stat-card h3")[0].textContent = totalCount;
+  } catch (err) {
+    console.error("❌ Error loading total shops:", err);
+  }
+}
+
+// 📆 Load inspections for current month
+async function loadMonthlyInspections() {
     try {
-      const shopsRef = collection(db, "shops");
+      const formsRef = collection(db, "h800_forms");
+      const firstOfMonth = Timestamp.fromDate(getStartOfMonthTimestamp());
   
-      // Firestore doesn't support 'where in' with more than 10 items, so handle accordingly
-      const batchPromises = [];
+      let inspectionCount = 0;
   
-      // Split GN divisions into batches of 10
-      const gnDivisionBatches = [];
-      for (let i = 0; i < userGNDivisions.length; i += 10) {
-        gnDivisionBatches.push(userGNDivisions.slice(i, i + 10));
+      if (userRole === "PHI") {
+        const q = query(
+          formsRef,
+          where("phiId", "==", doc(db, "users", currentUser.uid))
+        );
+        const snapshot = await getDocs(q);
+  
+        // Filter by timestamp in JS
+        const filtered = snapshot.docs.filter(doc => {
+          const data = doc.data();
+          return data.submittedAt?.toDate() >= firstOfMonth;
+        });
+  
+        console.log("📄 Monthly Inspection Forms (PHI):", filtered);
+        inspectionCount = filtered.length;
       }
   
-      gnDivisionBatches.forEach(batch => {
-        const q = query(shopsRef, where("gnDivision", "in", batch));
-        batchPromises.push(getDocs(q));
-      });
+      // (Optional) SPHI logic here if needed later
+  
+      // Update UI
+      const h3s = document.querySelectorAll(".stat-card h3");
+      if (h3s.length >= 2) {
+        h3s[1].textContent = inspectionCount;
+      }
+    } catch (err) {
+      console.error("❌ Error loading inspections:", err);
+    }
+  }
+  
+
+// 📅 Helper: Start of current month
+function getStartOfMonthTimestamp() {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), 1);
+}
+
+
+// 🕒 Step 3: Load Upcoming Inspections
+async function loadUpcomingInspections() {
+    try {
+      const shopsRef = collection(db, "shops");
+      const today = new Date();
+  
+      let upcomingCount = 0;
+  
+      // Handle batching for large GN division lists
+      const batchPromises = [];
+      for (let i = 0; i < userGNDivisions.length; i += 10) {
+        const batch = query(shopsRef, where("gnDivision", "in", userGNDivisions.slice(i, i + 10)));
+        batchPromises.push(getDocs(batch));
+      }
   
       const snapshots = await Promise.all(batchPromises);
-      let totalCount = 0;
+  
       snapshots.forEach(snap => {
-        totalCount += snap.size;
+        snap.forEach(doc => {
+          const shop = doc.data();
+          console.log("🏪 Shop:", shop.name || "Unnamed", "Upcoming:", shop.upcomingInspection);
+
+          if (shop.upcomingInspection) {
+            if (
+                shop.upcomingInspection?.toDate &&
+                shop.upcomingInspection.toDate() >= today
+              ) {
+                upcomingCount++;
+              }
+              
+          }
+        });
       });
   
-      // Update the UI
-      document.querySelectorAll(".stat-card h3")[0].textContent = totalCount;
+      const h3s = document.querySelectorAll(".stat-card h3");
+      if (h3s.length >= 3) {
+        h3s[2].textContent = upcomingCount;
+      }
+  
     } catch (err) {
-      console.error("❌ Error loading total shops:", err);
+      console.error("❌ Error loading upcoming inspections:", err);
     }
   }
   
