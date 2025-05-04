@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:safeserve/screens/dashboard/dashboard_screen.dart';
 
 // ─── Firebase & project options ────────────────────────────────────────────────
 import 'firebase_options.dart';
@@ -32,6 +33,8 @@ import 'screens/h800_form/h800_form_screen_eight.dart';
 import 'screens/h800_form/h800_form_screen_nine.dart';
 import 'screens/h800_form/h800_form_screen_ten.dart';
 import 'screens/h800_form/success_screen.dart';
+
+
 
 // ─── Pin‑code‑fields TextTheme shim for Flutter 3.13+ ─────────────────────────
 extension TextThemeButtonShim on TextTheme {
@@ -74,7 +77,6 @@ class SafeServeApp extends StatelessWidget {
         '/add':      (_) => const _PlaceholderPage(title: 'Add'),
         '/detail':   (_) => const _PlaceholderPage(title: 'Shop Detail'),
         '/calendar': (_) => const _PlaceholderPage(title: 'Calendar'),
-        '/dashboard':(_) => const _PlaceholderPage(title: 'Dashboard'),
         '/form':     (_) => const _PlaceholderPage(title: 'Form'),
 
         // Notes
@@ -127,6 +129,8 @@ class SafeServeApp extends StatelessWidget {
         // View / edit shop detail
         '/view_shop_detail': (_) => const ViewShopDetailScreen(),
         '/edit_shop_detail': (_) => const EditShopDetailScreen(),
+
+        '/dashboard': (_) => const DashboardScreen(),
       },
     );
   }

@@ -1,4 +1,3 @@
-// lib/screens/h800_form/success_screen.dart
 import 'package:flutter/material.dart';
 import '../../widgets/safe_serve_appbar.dart';
 import '../registered_shops/registered_shops_screen.dart';

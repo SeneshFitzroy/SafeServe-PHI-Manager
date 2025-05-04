@@ -1,13 +1,11 @@
-// lib/screens/h800_form/photo_upload_screen.dart
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'score_screen.dart';
 import 'h800_form_data.dart';
-import '../../../widgets/safe_serve_appbar.dart';  // <-- added
-import '../../../widgets/safe_serve_drawer.dart';  // optional, if you want a drawer
+import '../../../widgets/safe_serve_appbar.dart';
+import '../../../widgets/safe_serve_drawer.dart';
 
 class H800PhotoUploadScreen extends StatefulWidget {
   final H800FormData formData;
