@@ -9,9 +9,7 @@ import 'screens/register_shop/register_shop_form_data.dart';
 import 'screens/register_shop/screen_one/register_shop_screen_one.dart';
 import 'screens/register_shop/screen_two/register_shop_screen_two.dart';
 import 'screens/shop_detail/shop_detail_screen.dart';
-import 'screens/h800_form/h800_form_data.dart';
-import 'screens/h800_form/h800_form_screen.dart';
-import 'screens/h800_form/h800_form_screen_two.dart';
+
 import 'screens/view_shop_detail/view_shop_detail_screen.dart';
 import 'screens/edit_shop_detail/edit_shop_detail_screen.dart';
 import 'screens/notes/notes_list_screen.dart';                // ← added
@@ -81,20 +79,7 @@ class SafeServeApp extends StatelessWidget {
         },
 
         // HC800 Form Flow
-        '/h800_form_screen': (ctx) {
-          final args = ModalRoute.of(ctx)!.settings.arguments
-          as H800FormData?;
-          return H800FormScreen(
-            formData: args ?? H800FormData(),
-          );
-        },
-        '/h800_form_screen_two': (ctx) {
-          final args = ModalRoute.of(ctx)!.settings.arguments
-          as H800FormData?;
-          return H800FormScreenTwo(
-            formData: args ?? H800FormData(),
-          );
-        },
+       
 
         // View & Edit Shop Detail
         '/view_shop_detail': (_) => const ViewShopDetailScreen(),
