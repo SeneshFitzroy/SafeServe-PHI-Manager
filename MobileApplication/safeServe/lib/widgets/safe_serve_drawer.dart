@@ -1,17 +1,20 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:safeserve/screens/Profileview/profile.dart';
 import 'package:safeserve/screens/map_view/map_view_screen.dart';
 import 'package:safeserve/screens/reports_screen.dart';
 import 'package:safeserve/screens/calendar/calendar_screen.dart';
 import 'package:safeserve/screens/login_screen/login_screen.dart';
 import 'package:safeserve/services/logout_service.dart';
+=======
 import 'package:safeserve/screens/map_view/map_view_screen.dart'; // Use only this import for map view
 
 import '../screens/calendar/calendar_screen.dart';
 import '../screens/login_screen/login_screen.dart';
 import '../services/logout_service.dart'; 
+>>>>>>> 151f3e602c2476462654d04fd16c5fc1654e7d0d
 
 
 class SafeServeDrawer extends StatelessWidget {
