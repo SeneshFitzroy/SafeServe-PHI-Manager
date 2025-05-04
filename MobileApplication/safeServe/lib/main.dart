@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';       // ← new
+import 'package:safeserve/screens/notes/note_editor_screen.dart';
 import 'firebase_options.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'screens/login_screen/login_screen.dart';
 import 'screens/register_shop/register_shop_form_data.dart';
 import 'screens/register_shop/screen_one/register_shop_screen_one.dart';
@@ -10,28 +12,29 @@ import 'screens/shop_detail/shop_detail_screen.dart';
 import 'screens/h800_form/h800_form_data.dart';
 import 'screens/h800_form/h800_form_screen.dart';
 import 'screens/h800_form/h800_form_screen_two.dart';
-import 'screens/h800_form/h800_form_screen_three.dart';
-import 'screens/h800_form/h800_form_screen_four.dart';
-import 'screens/h800_form/h800_form_screen_five.dart';
-import 'screens/h800_form/h800_form_screen_six.dart';
-import 'screens/h800_form/h800_form_screen_seven.dart';
-import 'screens/h800_form/h800_form_screen_eight.dart';
-import 'screens/h800_form/h800_form_screen_nine.dart';
-import 'screens/h800_form/h800_form_screen_ten.dart';
-import 'screens/h800_form/h800_form_summary.dart';
 import 'screens/view_shop_detail/view_shop_detail_screen.dart';
 import 'screens/edit_shop_detail/edit_shop_detail_screen.dart';
+import 'screens/notes/notes_list_screen.dart';                // ← added
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // ENABLE OFFLINE PERSISTENCE for Firestore:
+  // (on mobile it's on by default, but this makes it explicit
+  //  and unlimits the cache size)
+  FirebaseFirestore.instance.settings = const Settings(
+    persistenceEnabled: true,
+    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+  );
+
   runApp(const SafeServeApp());
 }
 
 class SafeServeApp extends StatelessWidget {
-  const SafeServeApp({super.key});
+  const SafeServeApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,24 +45,30 @@ class SafeServeApp extends StatelessWidget {
       home: const LoginScreen(),
       routes: {
         '/search': (_) => const _PlaceholderPage(title: 'Search'),
-        '/menu': (_) => const _PlaceholderPage(title: 'Menu'),
-        '/add': (_) => const _PlaceholderPage(title: 'Add'),
+        '/menu':   (_) => const _PlaceholderPage(title: 'Menu'),
+        '/add':    (_) => const _PlaceholderPage(title: 'Add'),
         '/detail': (_) => const _PlaceholderPage(title: 'Shop Detail'),
-        '/calendar': (_) => const _PlaceholderPage(title: 'Calendar'),
-        '/dashboard': (_) => const _PlaceholderPage(title: 'Dashboard'),
-        '/form': (_) => const _PlaceholderPage(title: 'Form'),
-        '/notifications': (_) => const _PlaceholderPage(title: 'Notifications'),
+        '/calendar':      (_) => const _PlaceholderPage(title: 'Calendar'),
+        '/dashboard':     (_) => const _PlaceholderPage(title: 'Dashboard'),
+        '/form':          (_) => const _PlaceholderPage(title: 'Form'),
+        '/notes': (_) => const NotesListScreen(),
+        '/note_edit': (ctx) {
+        final id = ModalRoute.of(ctx)!.settings.arguments as String?;
+        return NoteEditScreen(noteId: id);
+        },
+        // Notes
 
+        // Register Shop
         '/register_shop_screen_one': (ctx) {
-          final args =
-              ModalRoute.of(ctx)!.settings.arguments as RegisterShopFormData?;
+          final args = ModalRoute.of(ctx)!.settings.arguments
+          as RegisterShopFormData?;
           return RegisterShopScreenOne(
             formData: args ?? RegisterShopFormData(),
           );
         },
         '/register_shop_screen_two': (ctx) {
-          final args =
-              ModalRoute.of(ctx)!.settings.arguments as RegisterShopFormData?;
+          final args = ModalRoute.of(ctx)!.settings.arguments
+          as RegisterShopFormData?;
           return RegisterShopScreenTwo(
             formData: args ?? RegisterShopFormData(),
           );
@@ -73,138 +82,20 @@ class SafeServeApp extends StatelessWidget {
 
         // HC800 Form Flow
         '/h800_form_screen': (ctx) {
-          final args =
-              ModalRoute.of(ctx)!.settings.arguments as Map<String, dynamic>?;
-          final shopId = args?['shopId'] as String? ?? '';
-          final phiId = args?['phiId'] as String? ??
-              FirebaseAuth.instance.currentUser?.uid ??
-              '';
+          final args = ModalRoute.of(ctx)!.settings.arguments
+          as H800FormData?;
           return H800FormScreen(
-            formData: H800FormData(),
-            shopId: shopId,
-            phiId: phiId,
+            formData: args ?? H800FormData(),
           );
         },
         '/h800_form_screen_two': (ctx) {
-          final args =
-              ModalRoute.of(ctx)!.settings.arguments as Map<String, dynamic>?;
-          final formData = args?['formData'] as H800FormData? ?? H800FormData();
-          final shopId = args?['shopId'] as String? ?? '';
-          final phiId = args?['phiId'] as String? ?? '';
+          final args = ModalRoute.of(ctx)!.settings.arguments
+          as H800FormData?;
           return H800FormScreenTwo(
-            formData: formData,
-            shopId: shopId,
-            phiId: phiId,
+            formData: args ?? H800FormData(),
           );
         },
-        '/h800_form_screen_three': (ctx) {
-          final args =
-              ModalRoute.of(ctx)!.settings.arguments as Map<String, dynamic>?;
-          final formData = args?['formData'] as H800FormData? ?? H800FormData();
-          final shopId = args?['shopId'] as String? ?? '';
-          final phiId = args?['phiId'] as String? ?? '';
-          return H800FormScreenThree(
-            formData: formData,
-            shopId: shopId,
-            phiId: phiId,
-          );
-        },
-        '/h800_form_screen_four': (ctx) {
-          final args =
-              ModalRoute.of(ctx)!.settings.arguments as Map<String, dynamic>?;
-          final formData = args?['formData'] as H800FormData? ?? H800FormData();
-          final shopId = args?['shopId'] as String? ?? '';
-          final phiId = args?['phiId'] as String? ?? '';
-          return H800FormScreenFour(
-            formData: formData,
-            shopId: shopId,
-            phiId: phiId,
-          );
-        },
-        '/h800_form_screen_five': (ctx) {
-          final args =
-              ModalRoute.of(ctx)!.settings.arguments as Map<String, dynamic>?;
-          final formData = args?['formData'] as H800FormData? ?? H800FormData();
-          final shopId = args?['shopId'] as String? ?? '';
-         final phiId = args?['phiId'] as String? ?? '';
-          return H800FormScreenFive(
-            formData: formData,
-            shopId: shopId,
-            phiId: phiId,
-          );
-        },
-        '/h800_form_screen_six': (ctx) {
-          final args =
-              ModalRoute.of(ctx)!.settings.arguments as Map<String, dynamic>?;
-          final formData = args?['formData'] as H800FormData? ?? H800FormData();
-          final shopId = args?['shopId'] as String? ?? '';
-          final phiId = args?['phiId'] as String? ?? '';
-          return H800FormScreenSix(
-            formData: formData,
-            shopId: shopId,
-            phiId: phiId,
-          );
-        },
-        '/h800_form_screen_seven': (ctx) {
-          final args =
-              ModalRoute.of(ctx)!.settings.arguments as Map<String, dynamic>?;
-          final formData = args?['formData'] as H800FormData? ?? H800FormData();
-          final shopId = args?['shopId'] as String? ?? '';
-         final phiId = args?['phiId'] as String? ?? '';
-          return H800FormScreenSeven(
-            formData: formData,
-            shopId: shopId,
-            phiId: phiId,
-          );
-        },
-        '/h800_form_screen_eight': (ctx) {
-          final args =
-              ModalRoute.of(ctx)!.settings.arguments as Map<String, dynamic>?;
-          final formData = args?['formData'] as H800FormData? ?? H800FormData();
-          final shopId = args?['shopId'] as String? ?? '';
-          final phiId = args?['phiId'] as String? ?? '';
-          return H800FormScreenEight(
-            formData: formData,
-            shopId: shopId,
-            phiId: phiId,
-          );
-        },
-        '/h800_form_screen_nine': (ctx) {
-          final args =
-              ModalRoute.of(ctx)!.settings.arguments as Map<String, dynamic>?;
-          final formData = args?['formData'] as H800FormData? ?? H800FormData();
-          final shopId = args?['shopId'] as String? ?? '';
-          final phiId = args?['phiId'] as String? ?? '';
-          return H800FormScreenNine(
-            formData: formData,
-            shopId: shopId,
-            phiId: phiId,
-          );
-        },
-        '/h800_form_screen_ten': (ctx) {
-          final args =
-              ModalRoute.of(ctx)!.settings.arguments as Map<String, dynamic>?;
-          final formData = args?['formData'] as H800FormData? ?? H800FormData();
-          final shopId = args?['shopId'] as String? ?? '';
-          final phiId = args?['phiId'] as String? ?? '';
-          return H800FormScreenTen(
-            formData: formData,
-            shopId: shopId,
-            phiId: phiId,
-          );
-        },
-        '/h800_form_summary': (ctx) {
-          final args =
-              ModalRoute.of(ctx)!.settings.arguments as Map<String, dynamic>?;
-          final formData = args?['formData'] as H800FormData? ?? H800FormData();
-          final shopId = args?['shopId'] as String? ?? '';
-          final phiId = args?['phiId'] as String? ?? '';
-          return H800FormSummary(
-            formData: formData,
-            shopId: shopId,
-            phiId: phiId,
-          );
-        },
+
         // View & Edit Shop Detail
         '/view_shop_detail': (_) => const ViewShopDetailScreen(),
         '/edit_shop_detail': (_) => const EditShopDetailScreen(),
@@ -216,7 +107,7 @@ class SafeServeApp extends StatelessWidget {
 /// A tiny placeholder page to stub out unimplemented routes.
 class _PlaceholderPage extends StatelessWidget {
   final String title;
-  const _PlaceholderPage({required this.title});
+  const _PlaceholderPage({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

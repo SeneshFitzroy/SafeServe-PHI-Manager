@@ -18,49 +18,68 @@ class AuthService {
   AuthService._();
   static final instance = AuthService._();
 
-  final _auth  = FirebaseAuth.instance;
-  final _db    = FirebaseFirestore.instance;
-  final _store = const FlutterSecureStorage();
+  // --- static cache for quick access ---
+  static String? _cachedUid;
+
+  /// Synchronous access to the last-known UID
+  String get cachedUid => _cachedUid ?? '';
+
+  final _auth   = FirebaseAuth.instance;
+  final _db     = FirebaseFirestore.instance;
+  final _store  = const FlutterSecureStorage();
   final _dateFmt = DateFormat('yyyy-MM-dd');
 
-
-  Future<String?> login({required String email, required String password}) async {
+  /// Master login: online if possible, else offline fallback
+  Future<String?> login({
+    required String email,
+    required String password,
+  }) async {
     final hasNet = await _hasInternet();
     return hasNet
-        ? _loginOnline(email: email, password: password)
-        : _loginOffline(email: email, password: password);
+        ? await _loginOnline(email: email, password: password)
+        : await _loginOffline(email: email, password: password);
   }
 
+  /// Reads the cached profile (email, uid, district, gnDivisions)
+  /// Also populates [_cachedUid].
   Future<Map<String, dynamic>?> getCachedProfile() async {
-    final email = await _store.read(key: _Keys.email);
-    final uid   = await _store.read(key: _Keys.uid);
+    final email    = await _store.read(key: _Keys.email);
+    final uid      = await _store.read(key: _Keys.uid);
     final district = await _store.read(key: _Keys.district);
     final gnStr    = await _store.read(key: _Keys.gnDivisions);
 
     if ([email, uid, district, gnStr].any((e) => e == null)) return null;
 
+    // cache the UID for sync use
+    _cachedUid = uid;
+
     return {
-      'email'      : email,
-      'uid'        : uid,
-      'district'   : district,
+      'email'      : email!,
+      'uid'        : uid!,
+      'district'   : district!,
       'gnDivisions': jsonDecode(gnStr!),
     };
   }
 
+  // --- online login ---
   Future<String?> _loginOnline({
     required String email,
     required String password,
   }) async {
     try {
       final cred = await _auth.signInWithEmailAndPassword(
-          email: email.trim(), password: password.trim());
+        email: email.trim(),
+        password: password.trim(),
+      );
 
+      // store for offline profile
       final snap = await _db.collection('users').doc(cred.user!.uid).get();
       final data = snap.data();
       if (data == null) {
-        return 'Profile not found in DataBase.';
+        return 'Profile not found in database.';
       }
 
+      // write secure storage
       await _store.write(key: _Keys.email,       value: email.trim());
       await _store.write(key: _Keys.uid,         value: cred.user!.uid);
       await _store.write(key: _Keys.district,    value: data['district'] ?? '');
@@ -73,6 +92,9 @@ class AuthService {
         value: _dateFmt.format(DateTime.now()),
       );
 
+      // update in-memory cache
+      _cachedUid = cred.user!.uid;
+
       return null; // success
     } on FirebaseAuthException catch (e) {
       return _mapError(e.code);
@@ -81,11 +103,11 @@ class AuthService {
     }
   }
 
+  // --- offline login fallback ---
   Future<String?> _loginOffline({
     required String email,
     required String password,
   }) async {
-    // Universal offline password
     if (password != '101010') return 'Offline login failed.';
 
     final cachedEmail = await _store.read(key: _Keys.email);
@@ -98,6 +120,9 @@ class AuthService {
     if (lastOnline != today) {
       return 'Daily online login required after 07:30.';
     }
+
+    // populate cachedUid for offline use
+    _cachedUid = await _store.read(key: _Keys.uid);
     return null;
   }
 
