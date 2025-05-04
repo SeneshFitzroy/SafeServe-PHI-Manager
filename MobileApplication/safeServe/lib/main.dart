@@ -1,92 +1,95 @@
 import 'package:flutter/material.dart';
-import 'package:safeserve/screens/register_shop/register_shop_form_data.dart';
-import 'package:safeserve/screens/register_shop/screen_one/register_shop_screen_one.dart';
-import 'package:safeserve/screens/register_shop/screen_two/register_shop_screen_two.dart';
-import 'screens/registered_shops/registered_shops_screen.dart';
-import 'screens/shop_detail/shop_detail_screen.dart';
-import 'screens/h800_form/h800_form_screen.dart'; // Import H800FormScreen
-import 'screens/h800_form/h800_form_screen_two.dart'; // Import H800FormScreenTwo
-import 'screens/h800_form/h800_form_data.dart'; // Import H800FormData
-import 'screens/form_selection/form_selection_screen.dart'; // Import FormSelectionScreen
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+import 'screens/login_screen/login_screen.dart';
+import 'screens/register_shop/register_shop_form_data.dart';
+import 'screens/register_shop/screen_one/register_shop_screen_one.dart';
+import 'screens/register_shop/screen_two/register_shop_screen_two.dart';
+import 'screens/shop_detail/shop_detail_screen.dart';
+import 'screens/h800_form/h800_form_data.dart';
+import 'screens/h800_form/h800_form_screen.dart';
+import 'screens/h800_form/h800_form_screen_two.dart';
+import 'screens/view_shop_detail/view_shop_detail_screen.dart';
+import 'screens/edit_shop_detail/edit_shop_detail_screen.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const SafeServeApp());
 }
 
 class SafeServeApp extends StatelessWidget {
-  const SafeServeApp({super.key});
+  const SafeServeApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'SafeServe',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Roboto',
-      ),
-      // Start at the RegisteredShopsScreen
-      home: const RegisteredShopsScreen(),
-
-      // Placeholder for nav
+      theme: ThemeData(fontFamily: 'Roboto'),
+      home: const LoginScreen(),
       routes: {
-        '/search': (context) => const PlaceholderPage(title: 'Search'),
-        '/menu': (context) => const PlaceholderPage(title: 'Menu'),
-        '/add': (context) => const PlaceholderPage(title: 'Add'),
-        '/detail': (context) => const PlaceholderPage(title: 'Shop Detail'),
-        '/calendar': (context) => const PlaceholderPage(title: 'Calendar'),
-        '/dashboard': (context) => const PlaceholderPage(title: 'Dashboard'),
-        '/form': (context) => const PlaceholderPage(title: 'Form'),
-        '/notifications': (context) =>
-            const PlaceholderPage(title: 'Notifications'),
+        '/search': (_) => const _PlaceholderPage(title: 'Search'),
+        '/menu':   (_) => const _PlaceholderPage(title: 'Menu'),
+        '/add':    (_) => const _PlaceholderPage(title: 'Add'),
+        '/detail': (_) => const _PlaceholderPage(title: 'Shop Detail'),
+        '/calendar':      (_) => const _PlaceholderPage(title: 'Calendar'),
+        '/dashboard':     (_) => const _PlaceholderPage(title: 'Dashboard'),
+        '/form':          (_) => const _PlaceholderPage(title: 'Form'),
+        '/notifications': (_) => const _PlaceholderPage(title: 'Notifications'),
 
-        '/register_shop_screen_one': (context) {
-          final formData = ModalRoute.of(context)?.settings.arguments
-              as RegisterShopFormData?;
+        '/register_shop_screen_one': (ctx) {
+          final args =
+          ModalRoute.of(ctx)!.settings.arguments as RegisterShopFormData?;
           return RegisterShopScreenOne(
-              formData: formData ?? RegisterShopFormData());
+            formData: args ?? RegisterShopFormData(),
+          );
         },
-        '/register_shop_screen_two': (context) {
-          final formData = ModalRoute.of(context)?.settings.arguments
-              as RegisterShopFormData?;
+        '/register_shop_screen_two': (ctx) {
+          final args =
+          ModalRoute.of(ctx)!.settings.arguments as RegisterShopFormData?;
           return RegisterShopScreenTwo(
-              formData: formData ?? RegisterShopFormData());
+            formData: args ?? RegisterShopFormData(),
+          );
         },
 
-        // Named route for ShopDetailScreen
-        '/shop_detail': (context) {
-          final args = ModalRoute.of(context)?.settings.arguments as String?;
-          return ShopDetailScreen(shopId: args ?? '');
+        // Shop Detail
+        '/shop_detail': (ctx) {
+          final shopId = ModalRoute.of(ctx)!.settings.arguments as String?;
+          return ShopDetailScreen(shopId: shopId ?? '');
         },
 
-        // Named route for H800FormScreen
-        '/h800_form_screen': (context) {
-          final formData =
-              ModalRoute.of(context)?.settings.arguments as H800FormData?;
-          return H800FormScreen(formData: formData ?? H800FormData());
+        // HC800 Form Flow
+        '/h800_form_screen': (ctx) {
+          final args =
+          ModalRoute.of(ctx)!.settings.arguments as H800FormData?;
+          return H800FormScreen(
+            formData: args ?? H800FormData(),
+          );
+        },
+        '/h800_form_screen_two': (ctx) {
+          final args =
+          ModalRoute.of(ctx)!.settings.arguments as H800FormData?;
+          return H800FormScreenTwo(
+            formData: args ?? H800FormData(),
+          );
         },
 
-        // Placeholder route for H800FormScreenTwo (to be implemented later)
-        '/h800_form_screen_two': (context) {
-          final formData =
-              ModalRoute.of(context)?.settings.arguments as H800FormData?;
-          return H800FormScreenTwo(formData: formData ?? H800FormData());
-        },
-
-        // New route for FormSelectionScreen
-        '/form_selection': (context) {
-          final formData =
-              ModalRoute.of(context)?.settings.arguments as H800FormData?;
-          return FormSelectionScreen(formData: formData);
-        },
+        // View & Edit Shop Detail
+        '/view_shop_detail': (_) => const ViewShopDetailScreen(),
+        '/edit_shop_detail': (_) => const EditShopDetailScreen(),
       },
     );
   }
 }
 
-// placeholder page for routes not yet implemented
-class PlaceholderPage extends StatelessWidget {
+/// A tiny placeholder page to stub out unimplemented routes.
+class _PlaceholderPage extends StatelessWidget {
   final String title;
-  const PlaceholderPage({super.key, required this.title});
+  const _PlaceholderPage({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
