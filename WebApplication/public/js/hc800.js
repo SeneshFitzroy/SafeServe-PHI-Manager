@@ -26,17 +26,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         const formsRef = collection(db, "h800_forms");
         const q = query(
             formsRef,
-            where("shopId", "==", shopRef),
-            orderBy("submittedAt", "desc"),
-            limit(3)
+            where("shopId", "==", shopRef)
         );
         const formSnaps = await getDocs(q);
-
-        const inspections = [];
+        
+        // Collect and sort manually
+        let inspections = [];
         formSnaps.forEach(doc => inspections.push(doc.data()));
-        inspections.reverse(); // show oldest on left
+        
+        // Sort by submittedAt DESC
+        inspections.sort((a, b) => b.submittedAt.toDate() - a.submittedAt.toDate());
+        
+        // Get latest 3 and reverse (oldest first)
+        inspections = inspections.slice(0, 3).reverse();
 
-        renderInspectionTable(inspections);
+        renderInspectionTable(inspections); // ← This is missing
+
+
     } catch (err) {
         console.error("Error loading data:", err);
     }
@@ -44,19 +50,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Fixed inspection fields mapping
 const inspectionFields = [
-    { label: "1.1 Suitability for the business", key: "suitabilityForBusiness" },
-    { label: "1.2 General cleanliness & tidiness", key: "generalCleanliness" },
-    { label: "1.3 Polluting conditions", key: "hasPollutingConditions" },
-    { label: "1.4 Dogs/Cats/Other animals", key: "hasAnimals" },
-    { label: "1.5 Smoke or other adverse effects", key: "hasSmokeOrAdverseEffects" },
-    { label: "2.1 Nature of the building", key: "natureOfBuilding" },
-    { label: "2.2 Space", key: "space" },
-    { label: "2.3 Light and ventilation", key: "lightAndVentilation" },
-    { label: "2.4 Condition of the floor", key: "conditionOfFloor" },
-    { label: "2.5 Condition of the wall", key: "conditionOfWall" },
-    { label: "2.6 Condition of the ceiling", key: "conditionOfCeiling" },
-    { label: "2.7 Hazards to employees/customers", key: "hasHazards" },
-];
+    // Part 1
+    { part: "Part 1 - Location & Environment", label: "1.1 Suitability for the business", key: "suitabilityForBusiness" },
+    { part: "Part 1 - Location & Environment", label: "1.2 General cleanliness & tidiness", key: "generalCleanliness" },
+    { part: "Part 1 - Location & Environment", label: "1.3 Polluting conditions", key: "hasPollutingConditions" },
+    { part: "Part 1 - Location & Environment", label: "1.4 Dogs/Cats/Other animals", key: "hasAnimals" },
+    { part: "Part 1 - Location & Environment", label: "1.5 Smoke or other adverse effects", key: "hasSmokeOrAdverseEffects" },
+  
+    // Part 2
+    { part: "Part 2 - Building", label: "2.1 Nature of the building", key: "natureOfBuilding" },
+    { part: "Part 2 - Building", label: "2.2 Space", key: "space" },
+    { part: "Part 2 - Building", label: "2.3 Light and ventilation", key: "lightAndVentilation" },
+    { part: "Part 2 - Building", label: "2.4 Condition of the floor", key: "conditionOfFloor" },
+    { part: "Part 2 - Building", label: "2.5 Condition of the wall", key: "conditionOfWall" },
+    { part: "Part 2 - Building", label: "2.6 Condition of the ceiling", key: "conditionOfCeiling" },
+    { part: "Part 2 - Building", label: "2.7 Hazards to employees/customers", key: "hasHazards" }
+  ];
+  
 
 function renderInspectionTable(forms) {
     const table = document.querySelector(".inspection-table");
