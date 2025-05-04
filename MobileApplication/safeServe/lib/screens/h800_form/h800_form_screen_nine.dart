@@ -6,12 +6,12 @@ import 'widgets/h800_form_button.dart';
 import 'widgets/generic_dropdown.dart';
 import 'widgets/radio_button_field.dart';
 
-class H800FormScreenTwo extends StatefulWidget {
+class H800FormScreenNine extends StatefulWidget {
   final H800FormData formData;
   final String shopId;
   final String phiId;
 
-  const H800FormScreenTwo({
+  const H800FormScreenNine({
     super.key,
     required this.formData,
     required this.shopId,
@@ -19,18 +19,17 @@ class H800FormScreenTwo extends StatefulWidget {
   });
 
   @override
-  H800FormScreenTwoState createState() => H800FormScreenTwoState();
+  H800FormScreenNineState createState() => H800FormScreenNineState();
 }
 
-class H800FormScreenTwoState extends State<H800FormScreenTwo> {
-  // Part 2: Building
-  String? _natureOfBuilding;
-  String? _space;
-  String? _lightAndVentilation;
-  String? _conditionOfFloor;
-  String? _conditionOfWall;
-  String? _conditionOfCeiling;
-  String? _hasHazards;
+class H800FormScreenNineState extends State<H800FormScreenNine> {
+  // Part 9: Health Status and Training of Food Handlers
+  String? _personalHygiene;
+  String? _wearingProtectiveClothing;
+  String? _communicableDiseases;
+  String? _goodHealthHabits;
+  String? _healthRecords;
+  String? _trainingRecords;
 
   // Validation flags
   Map<String, bool> _isInvalid = {};
@@ -39,36 +38,34 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
   void initState() {
     super.initState();
     // Initialize values from formData
-    _natureOfBuilding = widget.formData.natureOfBuilding;
-    _space = widget.formData.space;
-    _lightAndVentilation = widget.formData.lightAndVentilation;
-    _conditionOfFloor = widget.formData.conditionOfFloor;
-    _conditionOfWall = widget.formData.conditionOfWall;
-    _conditionOfCeiling = widget.formData.conditionOfCeiling;
-    _hasHazards = widget.formData.hasHazards;
+    _personalHygiene = widget.formData.personalHygiene;
+    _wearingProtectiveClothing = widget.formData.wearingProtectiveClothing;
+    _communicableDiseases = widget.formData.communicableDiseases;
+    _goodHealthHabits = widget.formData.goodHealthHabits;
+    _healthRecords = widget.formData.healthRecords;
+    _trainingRecords = widget.formData.trainingRecords;
 
     // Initialize validation flags
     _isInvalid = {
-      'natureOfBuilding': false,
-      'space': false,
-      'lightAndVentilation': false,
-      'conditionOfFloor': false,
-      'conditionOfWall': false,
-      'conditionOfCeiling': false,
-      'hasHazards': false,
+      'personalHygiene': false,
+      'wearingProtectiveClothing': false,
+      'communicableDiseases': false,
+      'goodHealthHabits': false,
+      'healthRecords': false,
+      'trainingRecords': false,
     };
   }
 
   bool _validateForm() {
     bool isValid = true;
     setState(() {
-      _isInvalid['natureOfBuilding'] = _natureOfBuilding == null;
-      _isInvalid['space'] = _space == null;
-      _isInvalid['lightAndVentilation'] = _lightAndVentilation == null;
-      _isInvalid['conditionOfFloor'] = _conditionOfFloor == null;
-      _isInvalid['conditionOfWall'] = _conditionOfWall == null;
-      _isInvalid['conditionOfCeiling'] = _conditionOfCeiling == null;
-      _isInvalid['hasHazards'] = _hasHazards == null;
+      _isInvalid['personalHygiene'] = _personalHygiene == null;
+      _isInvalid['wearingProtectiveClothing'] =
+          _wearingProtectiveClothing == null;
+      _isInvalid['communicableDiseases'] = _communicableDiseases == null;
+      _isInvalid['goodHealthHabits'] = _goodHealthHabits == null;
+      _isInvalid['healthRecords'] = _healthRecords == null;
+      _isInvalid['trainingRecords'] = _trainingRecords == null;
     });
 
     isValid = !_isInvalid.containsValue(true);
@@ -76,13 +73,12 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
   }
 
   void _updateFormData() {
-    widget.formData.natureOfBuilding = _natureOfBuilding;
-    widget.formData.space = _space;
-    widget.formData.lightAndVentilation = _lightAndVentilation;
-    widget.formData.conditionOfFloor = _conditionOfFloor;
-    widget.formData.conditionOfWall = _conditionOfWall;
-    widget.formData.conditionOfCeiling = _conditionOfCeiling;
-    widget.formData.hasHazards = _hasHazards;
+    widget.formData.personalHygiene = _personalHygiene;
+    widget.formData.wearingProtectiveClothing = _wearingProtectiveClothing;
+    widget.formData.communicableDiseases = _communicableDiseases;
+    widget.formData.goodHealthHabits = _goodHealthHabits;
+    widget.formData.healthRecords = _healthRecords;
+    widget.formData.trainingRecords = _trainingRecords;
   }
 
   @override
@@ -109,7 +105,7 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: LinearProgressIndicator(
-                    value: 0.2, // 2/10 of the form completed
+                    value: 0.9, // 9/10 of the form completed
                     backgroundColor: Colors.grey[300],
                     valueColor:
                     const AlwaysStoppedAnimation<Color>(Colors.blue),
@@ -122,91 +118,81 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Part 2: Building (10 Marks)',
+                        'Part 9: Health Status and Training of Food Handlers (10 Marks)',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
-                        label: '2.1 Nature of the building',
-                        initialValue: _natureOfBuilding,
-                        isInvalid: _isInvalid['natureOfBuilding']!,
-                        items: const ['Permanent', 'Temporary'],
-                        onChanged: (value) {
-                          setState(() {
-                            _natureOfBuilding = value;
-                            _isInvalid['natureOfBuilding'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.2 Space',
-                        initialValue: _space,
-                        isInvalid: _isInvalid['space']!,
-                        items: const ['Adequate', 'Inadequate'],
-                        onChanged: (value) {
-                          setState(() {
-                            _space = value;
-                            _isInvalid['space'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.3 Light and ventilation',
-                        initialValue: _lightAndVentilation,
-                        isInvalid: _isInvalid['lightAndVentilation']!,
-                        items: const ['Adequate', 'Inadequate'],
-                        onChanged: (value) {
-                          setState(() {
-                            _lightAndVentilation = value;
-                            _isInvalid['lightAndVentilation'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.4 Condition of the floor',
-                        initialValue: _conditionOfFloor,
-                        isInvalid: _isInvalid['conditionOfFloor']!,
+                        label: '9.1 Personal hygiene',
+                        initialValue: _personalHygiene,
+                        isInvalid: _isInvalid['personalHygiene']!,
                         items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
-                            _conditionOfFloor = value;
-                            _isInvalid['conditionOfFloor'] = value == null;
+                            _personalHygiene = value;
+                            _isInvalid['personalHygiene'] = value == null;
                           });
                         },
                       ),
                       GenericDropdown(
-                        label: '2.5 Condition of the wall',
-                        initialValue: _conditionOfWall,
-                        isInvalid: _isInvalid['conditionOfWall']!,
+                        label: '9.2 Wearing of protective clothing',
+                        initialValue: _wearingProtectiveClothing,
+                        isInvalid: _isInvalid['wearingProtectiveClothing']!,
                         items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
-                            _conditionOfWall = value;
-                            _isInvalid['conditionOfWall'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.6 Condition of the ceiling',
-                        initialValue: _conditionOfCeiling,
-                        isInvalid: _isInvalid['conditionOfCeiling']!,
-                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
-                        onChanged: (value) {
-                          setState(() {
-                            _conditionOfCeiling = value;
-                            _isInvalid['conditionOfCeiling'] = value == null;
+                            _wearingProtectiveClothing = value;
+                            _isInvalid['wearingProtectiveClothing'] =
+                                value == null;
                           });
                         },
                       ),
                       RadioButtonField(
-                        label: '2.7 Hazards to employees/customers',
-                        value: _hasHazards,
-                        isInvalid: _isInvalid['hasHazards']!,
+                        label: '9.3 Communicable diseases/skin diseases',
+                        value: _communicableDiseases,
+                        isInvalid: _isInvalid['communicableDiseases']!,
                         onChanged: (value) {
                           setState(() {
-                            _hasHazards = value;
-                            _isInvalid['hasHazards'] = value == null;
+                            _communicableDiseases = value;
+                            _isInvalid['communicableDiseases'] = value == null;
+                          });
+                        },
+                      ),
+                      GenericDropdown(
+                        label: '9.4 Good health habits',
+                        initialValue: _goodHealthHabits,
+                        isInvalid: _isInvalid['goodHealthHabits']!,
+                        items: const ['Practiced', 'Not Practiced'],
+                        onChanged: (value) {
+                          setState(() {
+                            _goodHealthHabits = value;
+                            _isInvalid['goodHealthHabits'] = value == null;
+                          });
+                        },
+                      ),
+                      GenericDropdown(
+                        label: '9.5 Maintenance of health records of employees',
+                        initialValue: _healthRecords,
+                        isInvalid: _isInvalid['healthRecords']!,
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
+                        onChanged: (value) {
+                          setState(() {
+                            _healthRecords = value;
+                            _isInvalid['healthRecords'] = value == null;
+                          });
+                        },
+                      ),
+                      GenericDropdown(
+                        label:
+                        '9.6 Maintenance of records regarding training on health employees',
+                        initialValue: _trainingRecords,
+                        isInvalid: _isInvalid['trainingRecords']!,
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
+                        onChanged: (value) {
+                          setState(() {
+                            _trainingRecords = value;
+                            _isInvalid['trainingRecords'] = value == null;
                           });
                         },
                       ),
@@ -228,7 +214,7 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                                 _updateFormData();
                                 Navigator.pushNamed(
                                   context,
-                                  '/h800_form_screen_three',
+                                  '/h800_form_screen_ten',
                                   arguments: {
                                     'formData': widget.formData,
                                     'shopId': widget.shopId,

@@ -6,12 +6,12 @@ import 'widgets/h800_form_button.dart';
 import 'widgets/generic_dropdown.dart';
 import 'widgets/radio_button_field.dart';
 
-class H800FormScreenTwo extends StatefulWidget {
+class H800FormScreenFive extends StatefulWidget {
   final H800FormData formData;
   final String shopId;
   final String phiId;
 
-  const H800FormScreenTwo({
+  const H800FormScreenFive({
     super.key,
     required this.formData,
     required this.shopId,
@@ -19,18 +19,17 @@ class H800FormScreenTwo extends StatefulWidget {
   });
 
   @override
-  H800FormScreenTwoState createState() => H800FormScreenTwoState();
+  H800FormScreenFiveState createState() => H800FormScreenFiveState();
 }
 
-class H800FormScreenTwoState extends State<H800FormScreenTwo> {
-  // Part 2: Building
-  String? _natureOfBuilding;
-  String? _space;
-  String? _lightAndVentilation;
-  String? _conditionOfFloor;
-  String? _conditionOfWall;
-  String? _conditionOfCeiling;
-  String? _hasHazards;
+class H800FormScreenFiveState extends State<H800FormScreenFive> {
+  // Part 5: Storage
+  String? _storageFacilities;
+  String? _storageOfRawMaterials;
+  String? _storageOfCookedFood;
+  String? _foodStoredTemp;
+  String? _storageInRefrigerator;
+  String? _measuresToPreventContamination;
 
   // Validation flags
   Map<String, bool> _isInvalid = {};
@@ -39,36 +38,35 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
   void initState() {
     super.initState();
     // Initialize values from formData
-    _natureOfBuilding = widget.formData.natureOfBuilding;
-    _space = widget.formData.space;
-    _lightAndVentilation = widget.formData.lightAndVentilation;
-    _conditionOfFloor = widget.formData.conditionOfFloor;
-    _conditionOfWall = widget.formData.conditionOfWall;
-    _conditionOfCeiling = widget.formData.conditionOfCeiling;
-    _hasHazards = widget.formData.hasHazards;
+    _storageFacilities = widget.formData.storageFacilities;
+    _storageOfRawMaterials = widget.formData.storageOfRawMaterials;
+    _storageOfCookedFood = widget.formData.storageOfCookedFood;
+    _foodStoredTemp = widget.formData.foodStoredTemp;
+    _storageInRefrigerator = widget.formData.storageInRefrigerator;
+    _measuresToPreventContamination =
+        widget.formData.measuresToPreventContamination;
 
     // Initialize validation flags
     _isInvalid = {
-      'natureOfBuilding': false,
-      'space': false,
-      'lightAndVentilation': false,
-      'conditionOfFloor': false,
-      'conditionOfWall': false,
-      'conditionOfCeiling': false,
-      'hasHazards': false,
+      'storageFacilities': false,
+      'storageOfRawMaterials': false,
+      'storageOfCookedFood': false,
+      'foodStoredTemp': false,
+      'storageInRefrigerator': false,
+      'measuresToPreventContamination': false,
     };
   }
 
   bool _validateForm() {
     bool isValid = true;
     setState(() {
-      _isInvalid['natureOfBuilding'] = _natureOfBuilding == null;
-      _isInvalid['space'] = _space == null;
-      _isInvalid['lightAndVentilation'] = _lightAndVentilation == null;
-      _isInvalid['conditionOfFloor'] = _conditionOfFloor == null;
-      _isInvalid['conditionOfWall'] = _conditionOfWall == null;
-      _isInvalid['conditionOfCeiling'] = _conditionOfCeiling == null;
-      _isInvalid['hasHazards'] = _hasHazards == null;
+      _isInvalid['storageFacilities'] = _storageFacilities == null;
+      _isInvalid['storageOfRawMaterials'] = _storageOfRawMaterials == null;
+      _isInvalid['storageOfCookedFood'] = _storageOfCookedFood == null;
+      _isInvalid['foodStoredTemp'] = _foodStoredTemp == null;
+      _isInvalid['storageInRefrigerator'] = _storageInRefrigerator == null;
+      _isInvalid['measuresToPreventContamination'] =
+          _measuresToPreventContamination == null;
     });
 
     isValid = !_isInvalid.containsValue(true);
@@ -76,13 +74,13 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
   }
 
   void _updateFormData() {
-    widget.formData.natureOfBuilding = _natureOfBuilding;
-    widget.formData.space = _space;
-    widget.formData.lightAndVentilation = _lightAndVentilation;
-    widget.formData.conditionOfFloor = _conditionOfFloor;
-    widget.formData.conditionOfWall = _conditionOfWall;
-    widget.formData.conditionOfCeiling = _conditionOfCeiling;
-    widget.formData.hasHazards = _hasHazards;
+    widget.formData.storageFacilities = _storageFacilities;
+    widget.formData.storageOfRawMaterials = _storageOfRawMaterials;
+    widget.formData.storageOfCookedFood = _storageOfCookedFood;
+    widget.formData.foodStoredTemp = _foodStoredTemp;
+    widget.formData.storageInRefrigerator = _storageInRefrigerator;
+    widget.formData.measuresToPreventContamination =
+        _measuresToPreventContamination;
   }
 
   @override
@@ -109,7 +107,7 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: LinearProgressIndicator(
-                    value: 0.2, // 2/10 of the form completed
+                    value: 0.5, // 5/10 of the form completed
                     backgroundColor: Colors.grey[300],
                     valueColor:
                     const AlwaysStoppedAnimation<Color>(Colors.blue),
@@ -122,91 +120,84 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        'Part 2: Building (10 Marks)',
+                        'Part 5: Storage (10 Marks)',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
-                        label: '2.1 Nature of the building',
-                        initialValue: _natureOfBuilding,
-                        isInvalid: _isInvalid['natureOfBuilding']!,
-                        items: const ['Permanent', 'Temporary'],
-                        onChanged: (value) {
-                          setState(() {
-                            _natureOfBuilding = value;
-                            _isInvalid['natureOfBuilding'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.2 Space',
-                        initialValue: _space,
-                        isInvalid: _isInvalid['space']!,
-                        items: const ['Adequate', 'Inadequate'],
-                        onChanged: (value) {
-                          setState(() {
-                            _space = value;
-                            _isInvalid['space'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.3 Light and ventilation',
-                        initialValue: _lightAndVentilation,
-                        isInvalid: _isInvalid['lightAndVentilation']!,
-                        items: const ['Adequate', 'Inadequate'],
-                        onChanged: (value) {
-                          setState(() {
-                            _lightAndVentilation = value;
-                            _isInvalid['lightAndVentilation'] = value == null;
-                          });
-                        },
-                      ),
-                      GenericDropdown(
-                        label: '2.4 Condition of the floor',
-                        initialValue: _conditionOfFloor,
-                        isInvalid: _isInvalid['conditionOfFloor']!,
+                        label: '5.1 Storage facilities and housekeeping',
+                        initialValue: _storageFacilities,
+                        isInvalid: _isInvalid['storageFacilities']!,
                         items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
-                            _conditionOfFloor = value;
-                            _isInvalid['conditionOfFloor'] = value == null;
+                            _storageFacilities = value;
+                            _isInvalid['storageFacilities'] = value == null;
                           });
                         },
                       ),
                       GenericDropdown(
-                        label: '2.5 Condition of the wall',
-                        initialValue: _conditionOfWall,
-                        isInvalid: _isInvalid['conditionOfWall']!,
+                        label: '5.2 Storage of raw materials',
+                        initialValue: _storageOfRawMaterials,
+                        isInvalid: _isInvalid['storageOfRawMaterials']!,
                         items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
-                            _conditionOfWall = value;
-                            _isInvalid['conditionOfWall'] = value == null;
+                            _storageOfRawMaterials = value;
+                            _isInvalid['storageOfRawMaterials'] = value == null;
                           });
                         },
                       ),
                       GenericDropdown(
-                        label: '2.6 Condition of the ceiling',
-                        initialValue: _conditionOfCeiling,
-                        isInvalid: _isInvalid['conditionOfCeiling']!,
+                        label:
+                        '5.3 Storage of cooked/partially cooked/prepared food',
+                        initialValue: _storageOfCookedFood,
+                        isInvalid: _isInvalid['storageOfCookedFood']!,
                         items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
-                            _conditionOfCeiling = value;
-                            _isInvalid['conditionOfCeiling'] = value == null;
+                            _storageOfCookedFood = value;
+                            _isInvalid['storageOfCookedFood'] = value == null;
                           });
                         },
                       ),
                       RadioButtonField(
-                        label: '2.7 Hazards to employees/customers',
-                        value: _hasHazards,
-                        isInvalid: _isInvalid['hasHazards']!,
+                        label: '5.4 Food stored under suitable temperature',
+                        value: _foodStoredTemp,
+                        isInvalid: _isInvalid['foodStoredTemp']!,
                         onChanged: (value) {
                           setState(() {
-                            _hasHazards = value;
-                            _isInvalid['hasHazards'] = value == null;
+                            _foodStoredTemp = value;
+                            _isInvalid['foodStoredTemp'] = value == null;
+                          });
+                        },
+                      ),
+                      GenericDropdown(
+                        label:
+                        '5.5 Storage of food in refrigerator/deep freezer',
+                        initialValue: _storageInRefrigerator,
+                        isInvalid: _isInvalid['storageInRefrigerator']!,
+                        items: const ['Satisfactory', 'Unsatisfactory'],
+                        onChanged: (value) {
+                          setState(() {
+                            _storageInRefrigerator = value;
+                            _isInvalid['storageInRefrigerator'] = value == null;
+                          });
+                        },
+                      ),
+                      GenericDropdown(
+                        label:
+                        '5.6 Measures taken to prevent contamination during food storage',
+                        initialValue: _measuresToPreventContamination,
+                        isInvalid:
+                        _isInvalid['measuresToPreventContamination']!,
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
+                        onChanged: (value) {
+                          setState(() {
+                            _measuresToPreventContamination = value;
+                            _isInvalid['measuresToPreventContamination'] =
+                                value == null;
                           });
                         },
                       ),
@@ -228,7 +219,7 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                                 _updateFormData();
                                 Navigator.pushNamed(
                                   context,
-                                  '/h800_form_screen_three',
+                                  '/h800_form_screen_six',
                                   arguments: {
                                     'formData': widget.formData,
                                     'shopId': widget.shopId,
