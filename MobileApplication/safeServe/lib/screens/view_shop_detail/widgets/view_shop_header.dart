@@ -4,10 +4,10 @@ class ViewShopHeader extends StatelessWidget {
   final String title;
   final VoidCallback onArrowPressed;
   const ViewShopHeader({
-    Key? key,
+    super.key,
     required this.title,
     required this.onArrowPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

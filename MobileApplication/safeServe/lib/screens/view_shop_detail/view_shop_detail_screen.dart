@@ -7,7 +7,7 @@ import 'widgets/view_text_field.dart';
 import 'widgets/view_trade_dropdown.dart';
 
 class ViewShopDetailScreen extends StatefulWidget {
-  const ViewShopDetailScreen({Key? key}) : super(key: key);
+  const ViewShopDetailScreen({super.key});
 
   @override
   State<ViewShopDetailScreen> createState() => _ViewShopDetailScreenState();

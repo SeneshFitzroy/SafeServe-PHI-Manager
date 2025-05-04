@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:safeserve/screens/map_view/map_view_screen.dart'; // Use only this import for map view
-import 'package:safeserve/screens/reports_screen.dart';
 
 import '../screens/calendar/calendar_screen.dart';
 import '../screens/login_screen/login_screen.dart';
 import '../services/logout_service.dart'; 
+
 
 class SafeServeDrawer extends StatelessWidget {
   final String profileImageUrl;
@@ -71,11 +71,6 @@ class SafeServeDrawer extends StatelessWidget {
                     icon: Icons.assessment,
                     label: 'Reports',
                     onTap: () {
-                      Navigator.pop(context); // Close drawer
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => const Reports()),
-                      );
                     },
                   ),
                   _buildDrawerItem(icon: Icons.settings, label: 'Settings', onTap: () {}),

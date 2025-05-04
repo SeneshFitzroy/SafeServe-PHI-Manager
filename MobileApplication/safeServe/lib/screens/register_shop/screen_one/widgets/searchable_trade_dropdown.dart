@@ -6,11 +6,11 @@ class SearchableTradeDropdown extends StatefulWidget {
   final ValueChanged<String> onSelected;
 
   const SearchableTradeDropdown({
-    Key? key,
+    super.key,
     required this.initial,
     required this.onSelected,
     this.isInvalid = false,
-  }) : super(key: key);
+  });
 
   @override
   State<SearchableTradeDropdown> createState() =>

@@ -10,7 +10,7 @@ import '../../widgets/custom_nav_bar_icon.dart';
 import '../../widgets/custom_nav_bar_icon.dart' show NavItem;
 
 class CalendarScreen extends StatefulWidget {
-  const CalendarScreen({Key? key}) : super(key: key);
+  const CalendarScreen({super.key});
 
   @override
   State<CalendarScreen> createState() => _CalendarScreenState();
