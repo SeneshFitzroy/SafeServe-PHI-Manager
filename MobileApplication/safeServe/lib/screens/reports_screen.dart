@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:safeserve/widgets/safe_serve_drawer.dart';
 
 class Reports extends StatelessWidget {
-  const Reports({Key? key}) : super(key: key);
+  const Reports({super.key});
 
   @override
   Widget build(BuildContext context) {

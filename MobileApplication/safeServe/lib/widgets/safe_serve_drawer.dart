@@ -2,14 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:safeserve/screens/map_view/map_view_screen.dart'; // Use only this import for map view
-import 'package:safeserve/screens/reports_screen.dart';
 
 import '../screens/calendar/calendar_screen.dart';
 import '../screens/login_screen/login_screen.dart';
 import '../services/logout_service.dart'; 
 
-import '../screens/Reports_Analytics.dart/Reports.dart';
-import '../screens/map_view/map_view_screen.dart';
 
 class SafeServeDrawer extends StatelessWidget {
   final String profileImageUrl;
