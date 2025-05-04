@@ -2,15 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-<<<<<<< HEAD
-import 'package:safeserve/screens/Profileview/profile.dart';
-import 'package:safeserve/screens/form_selection/form_selection_screen.dart';
-import 'package:safeserve/screens/notes/note_editor_screen.dart';
-=======
 import 'package:safeserve/screens/dashboard/dashboard_screen.dart';
 
 // ─── Firebase & project options ────────────────────────────────────────────────
->>>>>>> 151f3e602c2476462654d04fd16c5fc1654e7d0d
 import 'firebase_options.dart';
 
 // ─── Auth (needed later for OTP / form upload) ────────────────────────────────
@@ -25,8 +19,6 @@ import 'screens/shop_detail/shop_detail_screen.dart';
 import 'screens/view_shop_detail/view_shop_detail_screen.dart';
 import 'screens/edit_shop_detail/edit_shop_detail_screen.dart';
 import 'screens/notes/notes_list_screen.dart';
-<<<<<<< HEAD
-=======
 import 'screens/notes/note_editor_screen.dart';
 
 // ─── HC‑800 wizard –– 10 steps + final screens ────────────────────────────────
@@ -48,7 +40,6 @@ import 'screens/h800_form/success_screen.dart';
 extension TextThemeButtonShim on TextTheme {
   TextStyle? get button => labelLarge;
 }
->>>>>>> 151f3e602c2476462654d04fd16c5fc1654e7d0d
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,10 +47,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-<<<<<<< HEAD
-=======
   // Firestore: explicit unlimited cache / offline persistence
->>>>>>> 151f3e602c2476462654d04fd16c5fc1654e7d0d
   FirebaseFirestore.instance.settings = const Settings(
     persistenceEnabled: true,
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
@@ -77,18 +65,6 @@ class SafeServeApp extends StatelessWidget {
       title: 'SafeServe',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'Roboto'),
-<<<<<<< HEAD
-      home: const LoginScreen(), // Revert to LoginScreen for normal authentication flow
-      routes: {
-        '/search': (_) => const _PlaceholderPage(title: 'Search'),
-        '/menu': (_) => const _PlaceholderPage(title: 'Menu'),
-        '/add': (_) => const _PlaceholderPage(title: 'Add'),
-        '/detail': (_) => const _PlaceholderPage(title: 'Shop Detail'),
-        '/calendar': (_) => const _PlaceholderPage(title: 'Calendar'),
-        '/dashboard': (_) => const _PlaceholderPage(title: 'Dashboard'),
-        '/form': (_) => const _PlaceholderPage(title: 'Form'),
-        '/notes': (_) => const NotesListScreen(),
-=======
       home: const LoginScreen(),
 
       // ──────────────────────────────────────────────────────────────────
@@ -105,55 +81,32 @@ class SafeServeApp extends StatelessWidget {
 
         // Notes
         '/notes':     (_) => const NotesListScreen(),
->>>>>>> 151f3e602c2476462654d04fd16c5fc1654e7d0d
         '/note_edit': (ctx) {
           final id = ModalRoute.of(ctx)!.settings.arguments as String?;
           return NoteEditScreen(noteId: id);
         },
-<<<<<<< HEAD
-=======
 
         // Register‑shop wizard
->>>>>>> 151f3e602c2476462654d04fd16c5fc1654e7d0d
         '/register_shop_screen_one': (ctx) {
-          final args = ModalRoute.of(ctx)!.settings.arguments as RegisterShopFormData?;
+          final args = ModalRoute.of(ctx)!.settings.arguments
+          as RegisterShopFormData?;
           return RegisterShopScreenOne(
             formData: args ?? RegisterShopFormData(),
           );
         },
         '/register_shop_screen_two': (ctx) {
-          final args = ModalRoute.of(ctx)!.settings.arguments as RegisterShopFormData?;
+          final args = ModalRoute.of(ctx)!.settings.arguments
+          as RegisterShopFormData?;
           return RegisterShopScreenTwo(
             formData: args ?? RegisterShopFormData(),
           );
         },
-<<<<<<< HEAD
-=======
 
         // Shop detail
->>>>>>> 151f3e602c2476462654d04fd16c5fc1654e7d0d
         '/shop_detail': (ctx) {
           final shopId = ModalRoute.of(ctx)!.settings.arguments as String?;
           return ShopDetailScreen(shopId: shopId ?? '');
         },
-<<<<<<< HEAD
-        '/h800_form_screen': (ctx) {
-          final args = ModalRoute.of(ctx)!.settings.arguments as H800FormData?;
-          return H800FormScreen(
-            formData: args ?? H800FormData(),
-          );
-        },
-        '/h800_form_screen_two': (ctx) {
-          final args = ModalRoute.of(ctx)!.settings.arguments as H800FormData?;
-          return H800FormScreenTwo(
-            formData: args ?? H800FormData(),
-          );
-        },
-        '/form_selection': (context) {
-          final formData = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-          return FormSelectionScreen(formData: formData ?? {});
-        },
-=======
 
         // HC‑800 10‑step wizard
         '/h800_form_screen_one':   (ctx) => _h800Builder(ctx, 1),
@@ -174,7 +127,6 @@ class SafeServeApp extends StatelessWidget {
         '/h800_success':      (_) => const H800SuccessScreen(),
 
         // View / edit shop detail
->>>>>>> 151f3e602c2476462654d04fd16c5fc1654e7d0d
         '/view_shop_detail': (_) => const ViewShopDetailScreen(),
         '/edit_shop_detail': (_) => const EditShopDetailScreen(),
 
@@ -183,66 +135,6 @@ class SafeServeApp extends StatelessWidget {
     );
   }
 
-<<<<<<< HEAD
-class _PlaceholderPage extends StatelessWidget {
-  final String title;
-  const _PlaceholderPage({Key? key, required this.title}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'SafeServe Menu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pop(context); // Close the drawer
-                // Navigate if needed
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.search),
-              title: Text('Search'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/search');
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.note),
-              title: Text('Notes'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/notes');
-              },
-            ),
-            // Add more menu items as needed
-          ],
-        ),
-      ),
-      body: Center(child: Text(title, style: const TextStyle(fontSize: 20))),
-    );
-  }
-}
-=======
   /// Helper to pull the common args for every HC‑800 step
   Widget _h800Builder(BuildContext ctx, int step) {
     final m = ModalRoute.of(ctx)!.settings.arguments as Map;
@@ -278,4 +170,3 @@ class _PlaceholderPage extends StatelessWidget {
     ),
   );
 }
->>>>>>> 151f3e602c2476462654d04fd16c5fc1654e7d0d
