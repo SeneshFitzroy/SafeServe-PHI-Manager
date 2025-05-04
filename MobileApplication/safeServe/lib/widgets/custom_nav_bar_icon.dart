@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import '../screens/calendar/calendar_screen.dart';
 import '../screens/registered_shops/registered_shops_screen.dart';
+import '../screens/map_view/map_view_screen.dart';
 
 /// Simple enum to identify which icon is which
 enum NavItem {
@@ -7,6 +9,7 @@ enum NavItem {
   shops,
   dashboard,
   form,
+  map, 
   notifications,
 }
 
@@ -33,8 +36,9 @@ class CustomNavBarIcon extends StatelessWidget {
       onTap: () {
         switch (navItem) {
           case NavItem.calendar:
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Calendar placeholder')),
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const CalendarScreen()),
             );
             break;
           case NavItem.shops:
@@ -51,6 +55,12 @@ class CustomNavBarIcon extends StatelessWidget {
           case NavItem.form:
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Form placeholder')),
+            );
+            break;
+          case NavItem.map:
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const MapViewScreen()),
             );
             break;
           case NavItem.notifications:

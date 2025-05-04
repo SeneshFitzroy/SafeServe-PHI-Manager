@@ -1,0 +1,150 @@
+/*Styling of the system user webpage*/
+.middle-container{
+    height: 82%;
+    width:1105px;
+    left:360px;
+    top:125px;
+    border-radius: 5px;
+    background-color: transparent;
+    position: absolute;
+}
+
+.stats-container {
+    width:100%;
+    display: flex;
+    gap: 4%;
+    justify-content: space-between;
+}
+
+.stat-card {
+    width: 22%;
+    height: 135px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.stat-icon {
+    position: absolute;
+    top: 10px;
+    left: 15px;
+}
+
+.stat-icon img {
+    position: absolute;
+    top:5px;
+    width: 25px;
+    height: 25px;
+}
+
+.stat-card p {
+    position: absolute;
+    top: -5px;
+    left: 50px;
+    font-size: 20px;
+    color: black;
+}
+
+.stat-card .text-1 {
+    position: absolute;
+    top: 28px;
+    left: 50px;
+    font-size: 15px;
+    color: grey;
+}
+
+.stat-card h3 {
+    position: absolute;
+    top: 80px;
+    left: 15px;
+    font-size: 30px;
+    margin: 0;
+}
+
+.stat-card span {
+    position: absolute;
+    top: 88px;
+    left: 160px;
+    font-size: 16px;
+    color: #808080;
+    margin-top: 5px;
+}
+
+.charts-container {
+    height:65%;
+    width:100%;
+    margin-top:40px;
+    display: flex;
+    overflow: hidden;
+}
+
+.chart-card-1 {
+    position:absolute;
+    height:65%;
+    width:55%;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart-card-2 {
+    box-sizing: border-box; 
+    height:100%;
+    margin-left:60%;
+    padding-top: -20px;
+    width:500px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart-card-1 canvas {
+    width: 100%;
+    max-width: 600px;
+    max-height: 300px;
+}
+        
+.chart-card-2 canvas {
+    margin-top: -40px;
+    margin-left:25px;
+    width: 100%;
+    max-height: 350px;
+}
+        
+.chart-card-1 h3{
+    margin-left:30px;
+}
+
+.chart-card-2 h3{
+    margin-left:30px;
+}
+
+
+/* Make the calendar background white */
+.fc-col-header-cell {
+    background-color: #ADC1ED; 
+    font-weight: bold;
+    font-size: 16px;
+    border: 1px solid #ADC1ED;
+  }
+
+.fc-toolbar-title {
+    font-size: 24px;
+    font-weight: bold;
+    left: 0px;
+}
+
+.fc-daygrid-day-frame {
+    background-color: white;
+    border: 1px solid #ADC1ED;
+}
+
+.calendar-popover {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+}

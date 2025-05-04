@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../widgets/safe_serve_appbar.dart';
 
 class SearchPage extends StatefulWidget {
@@ -11,8 +11,9 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
-  List<String> searchResults = [];
+  List<Map<String, dynamic>> searchResults = [];
   bool isSearching = false;
+  bool hasError = false;
 
   @override
   void dispose() {
@@ -20,23 +21,30 @@ class _SearchPageState extends State<SearchPage> {
     super.dispose();
   }
 
-  void performSearch(String query) {
-    // This is a placeholder for actual search functionality
-    // You would replace this with your actual search logic
+  void performSearch(String query) async {
     setState(() {
       isSearching = query.isNotEmpty;
-      if (query.isNotEmpty) {
-        searchResults = [
-          'Result 1: $query',
-          'Result 2: $query',
-          'Result 3: $query',
-          'Result 4: $query',
-          'Result 5: $query',
-        ];
-      } else {
-        searchResults = [];
-      }
+      searchResults = [];
+      hasError = false;
     });
+
+    if (query.isEmpty) return;
+
+    try {
+      // Fetch all shops and filter locally
+      final snapshot = await FirebaseFirestore.instance.collection('shops').get();
+      final lowercaseQuery = query.toLowerCase();
+      setState(() {
+        searchResults = snapshot.docs
+            .map((doc) => {'id': doc.id, ...doc.data()})
+            .where((shop) => (shop['name'] ?? '').toLowerCase().contains(lowercaseQuery))
+            .toList();
+      });
+    } catch (e) {
+      setState(() {
+        hasError = true;
+      });
+    }
   }
 
   void _showSettingsMenu(BuildContext context) {
@@ -93,10 +101,80 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: SafeServeAppBar(
         height: 80,
-        onMenuPressed: () {
-          // Handle menu button press
-          Scaffold.of(context).openDrawer();
-        },
+        onMenuPressed: null,
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: const Color(0xFF4964C7),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Image.asset(
+                    'assets/images/other/logo.png',
+                    height: 60,
+                    errorBuilder: (context, error, stackTrace) => const Icon(
+                      Icons.shield,
+                      color: Colors.white,
+                      size: 60,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'SafeServe Menu',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.dashboard),
+              title: const Text('Dashboard'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/dashboard');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.search),
+              title: const Text('Search'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.note),
+              title: const Text('Notes'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/notes');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.calendar_today),
+              title: const Text('Calendar'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/calendar');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Profile'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
       ),
       extendBodyBehindAppBar: false,
       body: Container(
@@ -190,46 +268,79 @@ class _SearchPageState extends State<SearchPage> {
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: isSearching && searchResults.isEmpty
+              child: isSearching && searchResults.isEmpty && !hasError
                   ? const Center(
-                      child: Text(
-                        'No results found',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey,
-                        ),
-                      ),
+                      child: CircularProgressIndicator(),
                     )
-                  : !isSearching
+                  : hasError
                       ? const Center(
                           child: Text(
-                            'Start typing to search',
+                            'Error fetching results',
                             style: TextStyle(
                               fontSize: 18,
-                              color: Colors.grey,
+                              color: Colors.red,
                             ),
                           ),
                         )
-                      : ListView.builder(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount: searchResults.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              margin: const EdgeInsets.only(bottom: 10),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
+                      : !isSearching
+                          ? const Center(
+                              child: Text(
+                                'Start typing to search',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.grey,
+                                ),
                               ),
-                              elevation: 2,
-                              child: ListTile(
-                                title: Text(searchResults[index]),
-                                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                                onTap: () {
-                                  // Handle result selection
-                                },
-                              ),
-                            );
-                          },
-                        ),
+                            )
+                          : searchResults.isEmpty
+                              ? const Center(
+                                  child: Text(
+                                    'No results found',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                )
+                              : ListView.builder(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  itemCount: searchResults.length,
+                                  itemBuilder: (context, index) {
+                                    final shop = searchResults[index];
+                                    return Card(
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      elevation: 2,
+                                      child: ListTile(
+                                        leading: shop['image'] != null
+                                            ? ClipRRect(
+                                                borderRadius: BorderRadius.circular(8),
+                                                child: Image.network(
+                                                  shop['image'],
+                                                  width: 50,
+                                                  height: 50,
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (context, error, stackTrace) =>
+                                                      const Icon(Icons.store, size: 50),
+                                                ),
+                                              )
+                                            : const Icon(Icons.store, size: 50),
+                                        title: Text(shop['name'] ?? 'Unknown Shop'),
+                                        subtitle: Text(shop['address'] ?? 'No address'),
+                                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                            context,
+                                            '/shop_detail',
+                                            arguments: shop['id'],
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
             ),
           ],
         ),

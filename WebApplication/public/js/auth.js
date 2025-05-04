@@ -20,25 +20,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value;
 
-    // Reset error messages
-    emailError.innerText = "";
-    passwordError.innerText = "";
-    messageDiv.innerText = "";
+  // Reset error styles
+  emailError.innerText = "";
+  passwordError.innerText = "";
+  messageDiv.innerText = "";
+  document.getElementById("username").classList.remove("invalid");
+  document.getElementById("password").classList.remove("invalid");
+  emailError.style.display = "none";
+  passwordError.style.display = "none";
 
-    // Simple Validation
-    let hasError = false;
+  let hasError = false;
 
-    if (!email.includes("@") || !email.includes(".")) {
-      emailError.innerText = "Please enter a valid email address.";
-      hasError = true;
-    }
+  // Email Validation
+  if (!email.includes("@") || !email.includes(".")) {
+    emailError.innerText = "Please enter a valid email address.";
+    emailError.style.display = "block";
+    document.getElementById("username").classList.add("invalid");
+    hasError = true;
+  }
 
-    if (password.length < 6) {
-      passwordError.innerText = "Password must be at least 6 characters.";
-      hasError = true;
-    }
+  // Password Validation
+  if (password.length < 6) {
+    passwordError.innerText = "Password must be at least 6 characters.";
+    passwordError.style.display = "block";
+    document.getElementById("password").classList.add("invalid");
+    hasError = true;
+  }
 
-    if (hasError) return;
+  if (hasError) return;
+
 
     try {
       // Firebase login
@@ -54,9 +64,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const userData = userDoc.data();
       const role = userData.role;
+      const fullName = userData.full_name || "Unknown User"; 
 
+      // Save session info
+      sessionStorage.setItem("userRole", role);
+      sessionStorage.setItem("userUID", user.uid);
+      sessionStorage.setItem("userFullName", fullName); 
+
+
+      // Redirect based on role
       if (role === "SPHI") {
-        window.location.href = "Registration.html";
+        window.location.href = "Dashboard.html";
       } else if (role === "PHI") {
         window.location.href = "Dashboard.html";
       } else {
@@ -65,7 +83,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } catch (error) {
       console.error("Login Error:", error);
-      messageDiv.innerText = "Login failed: " + error.message;
+    
+      const errorCode = error.code;
+    
+      // Reset styles
+      messageDiv.innerText = "";
+      emailError.innerText = "";
+      passwordError.innerText = "";
+      document.getElementById("username").classList.remove("invalid");
+      document.getElementById("password").classList.remove("invalid");
+    
+      if (errorCode === "auth/user-not-found") {
+        emailError.innerText = "No user found with this email.";
+        emailError.style.display = "block";
+        document.getElementById("username").classList.add("invalid");
+      } else if (errorCode === "auth/wrong-password") {
+        passwordError.innerText = "Incorrect password.";
+        passwordError.style.display = "block";
+        document.getElementById("password").classList.add("invalid");
+      } else {
+        messageDiv.innerText = "Login failed: " + error.message;
+        messageDiv.style.display = "block";
+      }
     }
+    
   });
 });
