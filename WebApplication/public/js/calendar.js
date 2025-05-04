@@ -171,7 +171,8 @@ async function loadTasks(userId) {
     const events = [];
     try {
         const tasksRef = collection(db, "tasks");
-        const q = query(tasksRef, where("phiId", "==", userId));
+        const userRef = doc(db, "users", userId); 
+        const q = query(tasksRef, where("phiId", "==", userRef));
         const querySnapshot = await getDocs(q);
 
         querySnapshot.forEach((docSnap) => {
@@ -243,12 +244,15 @@ async function saveNewTask(dateStr, title, notes) {
             return;
         }
 
+        const userRef = doc(db, "users", user.uid);
+
         await addDoc(collection(db, "tasks"), {
-            title: title,
-            notes: notes,
-            date: new Date(dateStr),
-            phiId: user.uid
+        title: title,
+        notes: notes,
+        date: new Date(dateStr),
+        phiId: userRef
         });
+
 
         Swal.fire({
             icon: 'success',

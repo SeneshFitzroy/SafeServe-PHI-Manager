@@ -335,7 +335,6 @@ export async function confirmDelete(uid) {
   if (!confirmed) return;
 
   try {
-    //  Delete from Firestore
     await deleteDoc(doc(db, "users", uid));
 
     fetchAndRenderPHIs(); 
