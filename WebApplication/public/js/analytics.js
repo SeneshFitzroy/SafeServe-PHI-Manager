@@ -1,4 +1,3 @@
-// js/analytics.js
 import { db, auth } from "./firebase-config.js";
 import {
   collection,
@@ -18,11 +17,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      console.log("✅ Logged in UID:", user.uid);
+      console.log("Logged in UID:", user.uid);
       await loadYearlyInspectionData(user.uid);
       await loadHighRiskShops(user.uid);
+      await loadShopCategoryAnalytics("Bakeries");
     } else {
-      console.warn("⚠️ User not authenticated.");
+      console.warn("User not authenticated.");
     }
   });
 });
@@ -56,7 +56,7 @@ async function loadYearlyInspectionData(phiUid) {
 
   try {
     const formRef = collection(db, "h800_forms");
-    const phiRef = doc(db, "users", phiUid);  // Converts UID to a document reference
+    const phiRef = doc(db, "users", phiUid); 
     const q = query(formRef, where("phiId", "==", phiRef));
     const querySnapshot = await getDocs(q);
 
@@ -75,7 +75,7 @@ async function loadYearlyInspectionData(phiUid) {
 
     updateChart(totalCount, monthlyCounts);
   } catch (error) {
-    console.error("❌ Error loading inspections:", error);
+    console.error("Error loading inspections:", error);
   }
 }
 
@@ -90,7 +90,7 @@ function updateChart(total, monthlyData) {
   }
 }
 
-// Init Chart.js bar chart with placeholder data
+// Chart.js bar chart with placeholder data
 const ctx = document.getElementById('YearlyInspections').getContext('2d');
 window.monthlyInspectionsChart = new Chart(ctx, {
   type: 'bar',
@@ -101,7 +101,7 @@ window.monthlyInspectionsChart = new Chart(ctx, {
     ],
     datasets: [{
       label: 'Inspections',
-      data: Array(12).fill(0), // default until loaded
+      data: Array(12).fill(0), 
       backgroundColor: '#007bff',
       borderRadius: 5,
       barPercentage: 0.6,
@@ -141,8 +141,8 @@ window.riskLevelChart = new Chart(doughnutCtx, {
   data: {
     labels: ['Grade A', 'Grade B', 'Grade C', 'Grade D'],
     datasets: [{
-      data: [0, 0, 0, 0], // initially empty
-      backgroundColor: ['#28a745', '#ffc107', '#fd7e14', '#dc3545'], // green, yellow, orange, red
+      data: [0, 0, 0, 0], 
+      backgroundColor: ['#28a745', '#ffc107', '#fd7e14', '#dc3545'], 
       borderWidth: 1
     }]
   },
@@ -158,7 +158,7 @@ window.riskLevelChart = new Chart(doughnutCtx, {
 });
 
 
-// Loads high-risk shops (grade C or D in assigned GN Divisions)
+// Loads high-risk shops 
 async function loadHighRiskShops(phiUid) {
   try {
     const userDoc = await getDoc(doc(db, "users", phiUid));
@@ -214,64 +214,11 @@ async function loadHighRiskShops(phiUid) {
 }
 
 
-
-
-document.querySelector(".search-button").addEventListener("click", async () => {
+document.querySelector(".search-button").addEventListener("click", () => {
     const selectedCategory = document.getElementById("shopCategory").value || "Bakeries";
-    const user = auth.currentUser;
-    if (!user) return;
-  
-    try {
-      const userRef = doc(db, "users", user.uid);
-      const userSnap = await getDoc(userRef);
-      if (!userSnap.exists()) throw new Error("User profile not found");
-  
-      const assignedGN = userSnap.data().gnDivisions || [];
-      console.log("🧾 GN Divisions of PHI:", assignedGN);
-      console.log("🔎 Selected Category:", selectedCategory);
-  
-      const shopRef = collection(db, "shops");
-      const q = query(shopRef, where("typeOfTrade", "==", selectedCategory));
-      const shopSnap = await getDocs(q);
-      console.log("📦 Total shops fetched in category:", shopSnap.size);
-
-  
-      const aShops = [];
-  
-      const gradeCounts = { A: 0, B: 0, C: 0, D: 0 }; // Move this here (before forEach)
-
-    shopSnap.forEach((docSnap) => {
-    const data = docSnap.data();
-    const gn = (data.gnDivision || "").trim();
-    const grade = (data.grade || "").trim().toUpperCase();
-    const matchesGN = assignedGN.map(g => g.trim()).includes(gn);
-
-    console.log(`🧪 Shop Check: Name=${data.name}, GN="${gn}", Grade=${grade}, MatchGN=${assignedGN.includes(gn)}`);
-    console.log("🔍 Trimmed GN Match Check:", assignedGN.map(g => g.trim()));
-
-    if (matchesGN) {
-        if (gradeCounts.hasOwnProperty(grade)) {
-        gradeCounts[grade]++;
-        }
-        if (grade === "A") {
-        aShops.push({
-            referenceNo: data.referenceNo || "-",
-            name: data.name || "-",
-            gnDivision: gn
-        });
-        }
-    }
-    });
-
-  
-      updateShopTable(aShops);
-      updateDoughnutChart(gradeCounts);
-
-  
-    } catch (err) {
-      console.error("❌ Shop category analytics error (Table Only):", err);
-    }
+    loadShopCategoryAnalytics(selectedCategory);
   });
+  
   
   function updateShopTable(shops) {
     const container = document.querySelector(".shop-table-body");
@@ -298,6 +245,58 @@ document.querySelector(".search-button").addEventListener("click", async () => {
         counts.D
       ];
       window.riskLevelChart.update();
+    }
+  }
+  
+
+  async function loadShopCategoryAnalytics(category) {
+    const user = auth.currentUser;
+    if (!user) return;
+  
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+      if (!userSnap.exists()) throw new Error("User profile not found");
+  
+      const assignedGN = userSnap.data().gnDivisions || [];
+      console.log("🧾 GN Divisions of PHI:", assignedGN);
+      console.log("🔎 Selected Category:", category);
+  
+      const shopRef = collection(db, "shops");
+      const q = query(shopRef, where("typeOfTrade", "==", category));
+      const shopSnap = await getDocs(q);
+      console.log("Total shops fetched in category:", shopSnap.size);
+  
+      const aShops = [];
+      const gradeCounts = { A: 0, B: 0, C: 0, D: 0 };
+  
+      shopSnap.forEach((docSnap) => {
+        const data = docSnap.data();
+        const gn = (data.gnDivision || "").trim();
+        const grade = (data.grade || "").trim().toUpperCase();
+        const matchesGN = assignedGN.map(g => g.trim()).includes(gn);
+  
+        console.log(`Shop Check: Name=${data.name}, GN="${gn}", Grade=${grade}, MatchGN=${matchesGN}`);
+  
+        if (matchesGN) {
+          if (gradeCounts.hasOwnProperty(grade)) {
+            gradeCounts[grade]++;
+          }
+          if (grade === "A") {
+            aShops.push({
+              referenceNo: data.referenceNo || "-",
+              name: data.name || "-",
+              gnDivision: gn
+            });
+          }
+        }
+      });
+  
+      updateShopTable(aShops);
+      updateDoughnutChart(gradeCounts);
+  
+    } catch (err) {
+      console.error("Shop category analytics error:", err);
     }
   }
   
