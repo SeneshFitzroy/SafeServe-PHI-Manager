@@ -50,6 +50,14 @@ class SafeServeDrawer extends StatelessWidget {
                   _buildDrawerItem(icon: Icons.store, label: 'Shops', onTap: () {}),
                   _buildDrawerItem(icon: Icons.description, label: 'Forms', onTap: () {}),
                   _buildDrawerItem(
+                    icon: Icons.note,
+                    label: 'Notes',
+                    onTap: () {
+                      Navigator.of(context).pop();          // close drawer
+                      Navigator.of(context).pushNamed('/notes');
+                    },
+                  ),
+                  _buildDrawerItem(
                     icon: Icons.map, 
                     label: 'Map View', 
                     onTap: () {
