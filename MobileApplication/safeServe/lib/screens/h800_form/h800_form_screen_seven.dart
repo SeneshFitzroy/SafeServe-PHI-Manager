@@ -8,8 +8,15 @@ import 'widgets/radio_button_field.dart';
 
 class H800FormScreenSeven extends StatefulWidget {
   final H800FormData formData;
+  final String shopId;
+  final String phiId;
 
-  const H800FormScreenSeven({super.key, required this.formData});
+  const H800FormScreenSeven({
+    super.key,
+    required this.formData,
+    required this.shopId,
+    required this.phiId,
+  });
 
   @override
   H800FormScreenSevenState createState() => H800FormScreenSevenState();
@@ -119,7 +126,8 @@ class H800FormScreenSevenState extends State<H800FormScreenSeven> {
                   child: LinearProgressIndicator(
                     value: 0.7, // 7/10 of the form completed
                     backgroundColor: Colors.grey[300],
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -130,7 +138,8 @@ class H800FormScreenSevenState extends State<H800FormScreenSeven> {
                     children: [
                       const Text(
                         'Part 7: Waste Management (10 Marks)',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
@@ -164,7 +173,8 @@ class H800FormScreenSevenState extends State<H800FormScreenSeven> {
                         onChanged: (value) {
                           setState(() {
                             _cleanlinessOfWasteBins = value;
-                            _isInvalid['cleanlinessOfWasteBins'] = value == null;
+                            _isInvalid['cleanlinessOfWasteBins'] =
+                                value == null;
                           });
                         },
                       ),
@@ -199,7 +209,8 @@ class H800FormScreenSevenState extends State<H800FormScreenSeven> {
                         onChanged: (value) {
                           setState(() {
                             _managementofWasteWater = value;
-                            _isInvalid['managementofWasteWater'] = value == null;
+                            _isInvalid['managementofWasteWater'] =
+                                value == null;
                           });
                         },
                       ),
@@ -210,7 +221,8 @@ class H800FormScreenSevenState extends State<H800FormScreenSeven> {
                         onChanged: (value) {
                           setState(() {
                             _adequateNumberOfToilets = value;
-                            _isInvalid['adequateNumberOfToilets'] = value == null;
+                            _isInvalid['adequateNumberOfToilets'] =
+                                value == null;
                           });
                         },
                       ),
@@ -269,7 +281,11 @@ class H800FormScreenSevenState extends State<H800FormScreenSeven> {
                                 Navigator.pushNamed(
                                   context,
                                   '/h800_form_screen_eight',
-                                  arguments: widget.formData,
+                                  arguments: {
+                                    'formData': widget.formData,
+                                    'shopId': widget.shopId,
+                                    'phiId': widget.phiId,
+                                  },
                                 );
                               }
                             },

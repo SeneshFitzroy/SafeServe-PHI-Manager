@@ -8,8 +8,15 @@ import 'widgets/radio_button_field.dart';
 
 class H800FormScreenTen extends StatefulWidget {
   final H800FormData formData;
+  final String shopId;
+  final String phiId;
 
-  const H800FormScreenTen({super.key, required this.formData});
+  const H800FormScreenTen({
+    super.key,
+    required this.formData,
+    required this.shopId,
+    required this.phiId,
+  });
 
   @override
   H800FormScreenTenState createState() => H800FormScreenTenState();
@@ -49,7 +56,8 @@ class H800FormScreenTenState extends State<H800FormScreenTen> {
   bool _validateForm() {
     bool isValid = true;
     setState(() {
-      _isInvalid['displayHealthInstructions'] = _displayHealthInstructions == null;
+      _isInvalid['displayHealthInstructions'] =
+          _displayHealthInstructions == null;
       _isInvalid['entertainsComplaints'] = _entertainsComplaints == null;
       _isInvalid['preventSmoking'] = _preventSmoking == null;
       _isInvalid['issuingBills'] = _issuingBills == null;
@@ -94,7 +102,8 @@ class H800FormScreenTenState extends State<H800FormScreenTen> {
                   child: LinearProgressIndicator(
                     value: 1.0, // 10/10 of the form completed
                     backgroundColor: Colors.grey[300],
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -105,22 +114,26 @@ class H800FormScreenTenState extends State<H800FormScreenTen> {
                     children: [
                       const Text(
                         'Part 10: Display of Health Instructions, Record Keeping & Certification (5 Marks)',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
                       RadioButtonField(
-                        label: '10.1 Display of instructions and health messages for the consumers/employees',
+                        label:
+                            '10.1 Display of instructions and health messages for the consumers/employees',
                         value: _displayHealthInstructions,
                         isInvalid: _isInvalid['displayHealthInstructions']!,
                         onChanged: (value) {
                           setState(() {
                             _displayHealthInstructions = value;
-                            _isInvalid['displayHealthInstructions'] = value == null;
+                            _isInvalid['displayHealthInstructions'] =
+                                value == null;
                           });
                         },
                       ),
                       RadioButtonField(
-                        label: '10.2 Entertains consumer/employee complaints and suggestions',
+                        label:
+                            '10.2 Entertains consumer/employee complaints and suggestions',
                         value: _entertainsComplaints,
                         isInvalid: _isInvalid['entertainsComplaints']!,
                         onChanged: (value) {
@@ -131,7 +144,8 @@ class H800FormScreenTenState extends State<H800FormScreenTen> {
                         },
                       ),
                       RadioButtonField(
-                        label: '10.3 Steps taken to prevent smoking within the premises',
+                        label:
+                            '10.3 Steps taken to prevent smoking within the premises',
                         value: _preventSmoking,
                         isInvalid: _isInvalid['preventSmoking']!,
                         onChanged: (value) {
@@ -142,7 +156,8 @@ class H800FormScreenTenState extends State<H800FormScreenTen> {
                         },
                       ),
                       RadioButtonField(
-                        label: '10.4 Issuing of bills & record keeping when selling/purchasing food',
+                        label:
+                            '10.4 Issuing of bills & record keeping when selling/purchasing food',
                         value: _issuingBills,
                         isInvalid: _isInvalid['issuingBills']!,
                         onChanged: (value) {
@@ -153,13 +168,15 @@ class H800FormScreenTenState extends State<H800FormScreenTen> {
                         },
                       ),
                       RadioButtonField(
-                        label: '10.5 Availability of accredited certification on food safety',
+                        label:
+                            '10.5 Availability of accredited certification on food safety',
                         value: _foodSafetyCertification,
                         isInvalid: _isInvalid['foodSafetyCertification']!,
                         onChanged: (value) {
                           setState(() {
                             _foodSafetyCertification = value;
-                            _isInvalid['foodSafetyCertification'] = value == null;
+                            _isInvalid['foodSafetyCertification'] =
+                                value == null;
                           });
                         },
                       ),
@@ -184,6 +201,8 @@ class H800FormScreenTenState extends State<H800FormScreenTen> {
                                   MaterialPageRoute(
                                     builder: (context) => H800FormSummary(
                                       formData: widget.formData,
+                                      shopId: widget.shopId,
+                                      phiId: widget.phiId,
                                     ),
                                   ),
                                 );

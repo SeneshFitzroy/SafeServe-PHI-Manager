@@ -8,8 +8,15 @@ import 'widgets/radio_button_field.dart';
 
 class H800FormScreenFive extends StatefulWidget {
   final H800FormData formData;
+  final String shopId;
+  final String phiId;
 
-  const H800FormScreenFive({super.key, required this.formData});
+  const H800FormScreenFive({
+    super.key,
+    required this.formData,
+    required this.shopId,
+    required this.phiId,
+  });
 
   @override
   H800FormScreenFiveState createState() => H800FormScreenFiveState();
@@ -36,7 +43,8 @@ class H800FormScreenFiveState extends State<H800FormScreenFive> {
     _storageOfCookedFood = widget.formData.storageOfCookedFood;
     _foodStoredTemp = widget.formData.foodStoredTemp;
     _storageInRefrigerator = widget.formData.storageInRefrigerator;
-    _measuresToPreventContamination = widget.formData.measuresToPreventContamination;
+    _measuresToPreventContamination =
+        widget.formData.measuresToPreventContamination;
 
     // Initialize validation flags
     _isInvalid = {
@@ -57,7 +65,8 @@ class H800FormScreenFiveState extends State<H800FormScreenFive> {
       _isInvalid['storageOfCookedFood'] = _storageOfCookedFood == null;
       _isInvalid['foodStoredTemp'] = _foodStoredTemp == null;
       _isInvalid['storageInRefrigerator'] = _storageInRefrigerator == null;
-      _isInvalid['measuresToPreventContamination'] = _measuresToPreventContamination == null;
+      _isInvalid['measuresToPreventContamination'] =
+          _measuresToPreventContamination == null;
     });
 
     isValid = !_isInvalid.containsValue(true);
@@ -70,7 +79,8 @@ class H800FormScreenFiveState extends State<H800FormScreenFive> {
     widget.formData.storageOfCookedFood = _storageOfCookedFood;
     widget.formData.foodStoredTemp = _foodStoredTemp;
     widget.formData.storageInRefrigerator = _storageInRefrigerator;
-    widget.formData.measuresToPreventContamination = _measuresToPreventContamination;
+    widget.formData.measuresToPreventContamination =
+        _measuresToPreventContamination;
   }
 
   @override
@@ -99,7 +109,8 @@ class H800FormScreenFiveState extends State<H800FormScreenFive> {
                   child: LinearProgressIndicator(
                     value: 0.5, // 5/10 of the form completed
                     backgroundColor: Colors.grey[300],
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -110,7 +121,8 @@ class H800FormScreenFiveState extends State<H800FormScreenFive> {
                     children: [
                       const Text(
                         'Part 5: Storage (10 Marks)',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
@@ -138,7 +150,8 @@ class H800FormScreenFiveState extends State<H800FormScreenFive> {
                         },
                       ),
                       GenericDropdown(
-                        label: '5.3 Storage of cooked/partially cooked/prepared food',
+                        label:
+                            '5.3 Storage of cooked/partially cooked/prepared food',
                         initialValue: _storageOfCookedFood,
                         isInvalid: _isInvalid['storageOfCookedFood']!,
                         items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
@@ -161,7 +174,8 @@ class H800FormScreenFiveState extends State<H800FormScreenFive> {
                         },
                       ),
                       GenericDropdown(
-                        label: '5.5 Storage of food in refrigerator/deep freezer',
+                        label:
+                            '5.5 Storage of food in refrigerator/deep freezer',
                         initialValue: _storageInRefrigerator,
                         isInvalid: _isInvalid['storageInRefrigerator']!,
                         items: const ['Satisfactory', 'Unsatisfactory'],
@@ -173,14 +187,17 @@ class H800FormScreenFiveState extends State<H800FormScreenFive> {
                         },
                       ),
                       GenericDropdown(
-                        label: '5.6 Measures taken to prevent contamination during food storage',
+                        label:
+                            '5.6 Measures taken to prevent contamination during food storage',
                         initialValue: _measuresToPreventContamination,
-                        isInvalid: _isInvalid['measuresToPreventContamination']!,
+                        isInvalid:
+                            _isInvalid['measuresToPreventContamination']!,
                         items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _measuresToPreventContamination = value;
-                            _isInvalid['measuresToPreventContamination'] = value == null;
+                            _isInvalid['measuresToPreventContamination'] =
+                                value == null;
                           });
                         },
                       ),
@@ -203,7 +220,11 @@ class H800FormScreenFiveState extends State<H800FormScreenFive> {
                                 Navigator.pushNamed(
                                   context,
                                   '/h800_form_screen_six',
-                                  arguments: widget.formData,
+                                  arguments: {
+                                    'formData': widget.formData,
+                                    'shopId': widget.shopId,
+                                    'phiId': widget.phiId,
+                                  },
                                 );
                               }
                             },

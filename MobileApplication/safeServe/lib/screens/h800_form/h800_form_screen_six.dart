@@ -8,8 +8,15 @@ import 'widgets/radio_button_field.dart';
 
 class H800FormScreenSix extends StatefulWidget {
   final H800FormData formData;
+  final String shopId;
+  final String phiId;
 
-  const H800FormScreenSix({super.key, required this.formData});
+  const H800FormScreenSix({
+    super.key,
+    required this.formData,
+    required this.shopId,
+    required this.phiId,
+  });
 
   @override
   H800FormScreenSixState createState() => H800FormScreenSixState();
@@ -48,7 +55,8 @@ class H800FormScreenSixState extends State<H800FormScreenSix> {
     setState(() {
       _isInvalid['waterSource'] = _waterSource == null;
       _isInvalid['waterStorageMethod'] = _waterStorageMethod == null;
-      _isInvalid['waterDispensedThroughTaps'] = _waterDispensedThroughTaps == null;
+      _isInvalid['waterDispensedThroughTaps'] =
+          _waterDispensedThroughTaps == null;
       _isInvalid['waterSafetyCertified'] = _waterSafetyCertified == null;
     });
 
@@ -89,7 +97,8 @@ class H800FormScreenSixState extends State<H800FormScreenSix> {
                   child: LinearProgressIndicator(
                     value: 0.6, // 6/10 of the form completed
                     backgroundColor: Colors.grey[300],
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -100,7 +109,8 @@ class H800FormScreenSixState extends State<H800FormScreenSix> {
                     children: [
                       const Text(
                         'Part 6: Water Supply (5 Marks)',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
@@ -134,12 +144,14 @@ class H800FormScreenSixState extends State<H800FormScreenSix> {
                         onChanged: (value) {
                           setState(() {
                             _waterDispensedThroughTaps = value;
-                            _isInvalid['waterDispensedThroughTaps'] = value == null;
+                            _isInvalid['waterDispensedThroughTaps'] =
+                                value == null;
                           });
                         },
                       ),
                       RadioButtonField(
-                        label: '6.4 Safety of water certified by analytical reports (Bacteriology - 01, Chemical - 01)',
+                        label:
+                            '6.4 Safety of water certified by analytical reports (Bacteriology - 01, Chemical - 01)',
                         value: _waterSafetyCertified,
                         isInvalid: _isInvalid['waterSafetyCertified']!,
                         onChanged: (value) {
@@ -168,7 +180,11 @@ class H800FormScreenSixState extends State<H800FormScreenSix> {
                                 Navigator.pushNamed(
                                   context,
                                   '/h800_form_screen_seven',
-                                  arguments: widget.formData,
+                                  arguments: {
+                                    'formData': widget.formData,
+                                    'shopId': widget.shopId,
+                                    'phiId': widget.phiId,
+                                  },
                                 );
                               }
                             },

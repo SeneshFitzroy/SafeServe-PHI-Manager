@@ -8,8 +8,15 @@ import 'widgets/radio_button_field.dart';
 
 class H800FormScreenFour extends StatefulWidget {
   final H800FormData formData;
+  final String shopId;
+  final String phiId;
 
-  const H800FormScreenFour({super.key, required this.formData});
+  const H800FormScreenFour({
+    super.key,
+    required this.formData,
+    required this.shopId,
+    required this.phiId,
+  });
 
   @override
   H800FormScreenFourState createState() => H800FormScreenFourState();
@@ -42,9 +49,11 @@ class H800FormScreenFourState extends State<H800FormScreenFour> {
     _storageCleanEquip = widget.formData.storageCleanEquip;
     _suitableSafetyofFurniture = widget.formData.suitableSafetyofFurniture;
     _furnitureCondition = widget.formData.furnitureCondition;
-    _cleaningAndMaintenanceOfFurniture = widget.formData.cleaningAndMaintenanceOfFurniture;
+    _cleaningAndMaintenanceOfFurniture =
+        widget.formData.cleaningAndMaintenanceOfFurniture;
     _maintenanceOfRefrigerators = widget.formData.maintenanceOfRefrigerators;
-    _cleanandMaintenanceOfRefrigerators = widget.formData.cleanandMaintenanceOfRefrigerators;
+    _cleanandMaintenanceOfRefrigerators =
+        widget.formData.cleanandMaintenanceOfRefrigerators;
 
     // Initialize validation flags
     _isInvalid = {
@@ -64,16 +73,21 @@ class H800FormScreenFourState extends State<H800FormScreenFour> {
   bool _validateForm() {
     bool isValid = true;
     setState(() {
-      _isInvalid['equipmentForFoodHandling'] = _equipmentForFoodHandling == null;
+      _isInvalid['equipmentForFoodHandling'] =
+          _equipmentForFoodHandling == null;
       _isInvalid['conditionOfEquipment'] = _conditionOfEquipment == null;
       _isInvalid['cleanOfEquipment'] = _cleanOfEquipment == null;
       _isInvalid['foodTongsAvailable'] = _foodTongsAvailable == null;
       _isInvalid['storageCleanEquip'] = _storageCleanEquip == null;
-      _isInvalid['suitableSafetyofFurniture'] = _suitableSafetyofFurniture == null;
+      _isInvalid['suitableSafetyofFurniture'] =
+          _suitableSafetyofFurniture == null;
       _isInvalid['furnitureCondition'] = _furnitureCondition == null;
-      _isInvalid['cleaningAndMaintenanceOfFurniture'] = _cleaningAndMaintenanceOfFurniture == null;
-      _isInvalid['maintenanceOfRefrigerators'] = _maintenanceOfRefrigerators == null;
-      _isInvalid['cleanandMaintenanceOfRefrigerators'] = _cleanandMaintenanceOfRefrigerators == null;
+      _isInvalid['cleaningAndMaintenanceOfFurniture'] =
+          _cleaningAndMaintenanceOfFurniture == null;
+      _isInvalid['maintenanceOfRefrigerators'] =
+          _maintenanceOfRefrigerators == null;
+      _isInvalid['cleanandMaintenanceOfRefrigerators'] =
+          _cleanandMaintenanceOfRefrigerators == null;
     });
 
     isValid = !_isInvalid.containsValue(true);
@@ -88,9 +102,11 @@ class H800FormScreenFourState extends State<H800FormScreenFour> {
     widget.formData.storageCleanEquip = _storageCleanEquip;
     widget.formData.suitableSafetyofFurniture = _suitableSafetyofFurniture;
     widget.formData.furnitureCondition = _furnitureCondition;
-    widget.formData.cleaningAndMaintenanceOfFurniture = _cleaningAndMaintenanceOfFurniture;
+    widget.formData.cleaningAndMaintenanceOfFurniture =
+        _cleaningAndMaintenanceOfFurniture;
     widget.formData.maintenanceOfRefrigerators = _maintenanceOfRefrigerators;
-    widget.formData.cleanandMaintenanceOfRefrigerators = _cleanandMaintenanceOfRefrigerators;
+    widget.formData.cleanandMaintenanceOfRefrigerators =
+        _cleanandMaintenanceOfRefrigerators;
   }
 
   @override
@@ -119,7 +135,8 @@ class H800FormScreenFourState extends State<H800FormScreenFour> {
                   child: LinearProgressIndicator(
                     value: 0.4, // 4/10 of the form completed
                     backgroundColor: Colors.grey[300],
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -130,7 +147,8 @@ class H800FormScreenFourState extends State<H800FormScreenFour> {
                     children: [
                       const Text(
                         'Part 4: Equipment & Furniture (10 Marks)',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
@@ -141,7 +159,8 @@ class H800FormScreenFourState extends State<H800FormScreenFour> {
                         onChanged: (value) {
                           setState(() {
                             _equipmentForFoodHandling = value;
-                            _isInvalid['equipmentForFoodHandling'] = value == null;
+                            _isInvalid['equipmentForFoodHandling'] =
+                                value == null;
                           });
                         },
                       ),
@@ -170,7 +189,8 @@ class H800FormScreenFourState extends State<H800FormScreenFour> {
                         },
                       ),
                       RadioButtonField(
-                        label: '4.4 Availability of food tongs/spoons to serve food items',
+                        label:
+                            '4.4 Availability of food tongs/spoons to serve food items',
                         value: _foodTongsAvailable,
                         isInvalid: _isInvalid['foodTongsAvailable']!,
                         onChanged: (value) {
@@ -192,7 +212,8 @@ class H800FormScreenFourState extends State<H800FormScreenFour> {
                         },
                       ),
                       GenericDropdown(
-                        label: '4.6 Furniture- Tables/Chairs/Cupboards/Racks etc.',
+                        label:
+                            '4.6 Furniture- Tables/Chairs/Cupboards/Racks etc.',
                         initialValue: _furnitureCondition,
                         isInvalid: _isInvalid['furnitureCondition']!,
                         items: const ['Adequate', 'Inadequate'],
@@ -204,50 +225,59 @@ class H800FormScreenFourState extends State<H800FormScreenFour> {
                         },
                       ),
                       GenericDropdown(
-                        label: '4.7 Suitability for required purpose and safety of furniture',
+                        label:
+                            '4.7 Suitability for required purpose and safety of furniture',
                         initialValue: _suitableSafetyofFurniture,
                         isInvalid: _isInvalid['suitableSafetyofFurniture']!,
                         items: const ['Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _suitableSafetyofFurniture = value;
-                            _isInvalid['suitableSafetyofFurniture'] = value == null;
+                            _isInvalid['suitableSafetyofFurniture'] =
+                                value == null;
                           });
                         },
                       ),
                       GenericDropdown(
                         label: '4.8 Cleaning and maintenance of furniture',
                         initialValue: _cleaningAndMaintenanceOfFurniture,
-                        isInvalid: _isInvalid['cleaningAndMaintenanceOfFurniture']!,
+                        isInvalid:
+                            _isInvalid['cleaningAndMaintenanceOfFurniture']!,
                         items: const ['Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _cleaningAndMaintenanceOfFurniture = value;
-                            _isInvalid['cleaningAndMaintenanceOfFurniture'] = value == null;
+                            _isInvalid['cleaningAndMaintenanceOfFurniture'] =
+                                value == null;
                           });
                         },
                       ),
                       GenericDropdown(
-                        label: '4.9 Maintenance of temperature in refrigerators/deep freezers',
+                        label:
+                            '4.9 Maintenance of temperature in refrigerators/deep freezers',
                         initialValue: _maintenanceOfRefrigerators,
                         isInvalid: _isInvalid['maintenanceOfRefrigerators']!,
                         items: const ['Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _maintenanceOfRefrigerators = value;
-                            _isInvalid['maintenanceOfRefrigerators'] = value == null;
+                            _isInvalid['maintenanceOfRefrigerators'] =
+                                value == null;
                           });
                         },
                       ),
                       GenericDropdown(
-                        label: '4.10 Cleanliness & maintenance of refrigerators/deep freezers',
+                        label:
+                            '4.10 Cleanliness & maintenance of refrigerators/deep freezers',
                         initialValue: _cleanandMaintenanceOfRefrigerators,
-                        isInvalid: _isInvalid['cleanandMaintenanceOfRefrigerators']!,
+                        isInvalid:
+                            _isInvalid['cleanandMaintenanceOfRefrigerators']!,
                         items: const ['Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _cleanandMaintenanceOfRefrigerators = value;
-                            _isInvalid['cleanandMaintenanceOfRefrigerators'] = value == null;
+                            _isInvalid['cleanandMaintenanceOfRefrigerators'] =
+                                value == null;
                           });
                         },
                       ),
@@ -270,7 +300,11 @@ class H800FormScreenFourState extends State<H800FormScreenFour> {
                                 Navigator.pushNamed(
                                   context,
                                   '/h800_form_screen_five',
-                                  arguments: widget.formData,
+                                  arguments: {
+                                    'formData': widget.formData,
+                                    'shopId': widget.shopId,
+                                    'phiId': widget.phiId,
+                                  },
                                 );
                               }
                             },

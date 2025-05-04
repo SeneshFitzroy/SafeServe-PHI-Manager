@@ -8,8 +8,12 @@ import 'widgets/radio_button_field.dart';
 
 class H800FormScreen extends StatefulWidget {
   final H800FormData formData;
+  final String shopId;
+  final String phiId;
 
-  const H800FormScreen({super.key, required this.formData});
+  const H800FormScreen({super.key, required this.formData,
+    required this.shopId,
+    required this.phiId,});
 
   @override
   H800FormScreenState createState() => H800FormScreenState();
@@ -66,6 +70,8 @@ class H800FormScreenState extends State<H800FormScreen> {
     widget.formData.hasPollutingConditions = _hasPollutingConditions;
     widget.formData.hasAnimals = _hasAnimals;
     widget.formData.hasSmokeOrAdverseEffects = _hasSmokeOrAdverseEffects;
+    widget.formData.shopId = widget.shopId;
+    widget.formData.phiId = widget.phiId;
   }
 
   @override
@@ -174,7 +180,11 @@ class H800FormScreenState extends State<H800FormScreen> {
                             Navigator.pushNamed(
                               context,
                               '/h800_form_screen_two',
-                              arguments: widget.formData,
+                              arguments: {
+                                'formData': widget.formData,
+                                'shopId': widget.shopId,
+                                'phiId': widget.phiId,
+                              },
                             );
                           }
                         },

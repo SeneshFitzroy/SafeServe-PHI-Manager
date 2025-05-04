@@ -8,8 +8,15 @@ import 'widgets/radio_button_field.dart';
 
 class H800FormScreenThree extends StatefulWidget {
   final H800FormData formData;
+  final String shopId;
+  final String phiId;
 
-  const H800FormScreenThree({super.key, required this.formData});
+  const H800FormScreenThree({
+    super.key,
+    required this.formData,
+    required this.shopId,
+    required this.phiId,
+  });
 
   @override
   H800FormScreenThreeState createState() => H800FormScreenThreeState();
@@ -317,8 +324,7 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                         },
                       ),
                       RadioButtonField(
-                        label:
-                            '3.10 Risk of contamination from toilets',
+                        label: '3.10 Risk of contamination from toilets',
                         value: _riskOfContaminationFromToilets,
                         isInvalid:
                             _isInvalid['riskOfContaminationFromToilets']!,
@@ -379,8 +385,7 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                         },
                       ),
                       RadioButtonField(
-                        label:
-                            '3.15 Open drains & stagnated waste water',
+                        label: '3.15 Open drains & stagnated waste water',
                         value: _hasOpenDrains,
                         isInvalid: _isInvalid['hasOpenDrains']!,
                         onChanged: (value) {
@@ -416,8 +421,7 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                         },
                       ),
                       RadioButtonField(
-                        label:
-                            '3.18 Cleanliness of equipment/utensils',
+                        label: '3.18 Cleanliness of equipment/utensils',
                         value: _cleanlinessOfEquipment,
                         isInvalid: _isInvalid['cleanlinessOfEquipment']!,
                         onChanged: (value) {
@@ -466,8 +470,7 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                         },
                       ),
                       RadioButtonField(
-                        label:
-                            '3.22 Water supply suitable for different task ',
+                        label: '3.22 Water supply suitable for different task ',
                         value: _waterSupplySuitable,
                         isInvalid: _isInvalid['waterSupplySuitable']!,
                         onChanged: (value) {
@@ -478,15 +481,14 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                         },
                       ),
                       GenericDropdown(
-                        label:'3.23 Safe food handling practices',
+                        label: '3.23 Safe food handling practices',
                         initialValue: _safeFoodHandling,
                         isInvalid: _isInvalid['safeFoodHandling']!,
-                        items: const ['Good', 'Satisfactory','Unsatisfactory'],
+                        items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
                         onChanged: (value) {
                           setState(() {
                             _safeFoodHandling = value;
-                            _isInvalid['safeFoodHandling'] =
-                                value == null;
+                            _isInvalid['safeFoodHandling'] = value == null;
                           });
                         },
                       ),
@@ -509,7 +511,11 @@ class H800FormScreenThreeState extends State<H800FormScreenThree> {
                                 Navigator.pushNamed(
                                   context,
                                   '/h800_form_screen_four',
-                                  arguments: widget.formData,
+                                  arguments: {
+                                    'formData': widget.formData,
+                                    'shopId': widget.shopId,
+                                    'phiId': widget.phiId,
+                                  },
                                 );
                               }
                             },

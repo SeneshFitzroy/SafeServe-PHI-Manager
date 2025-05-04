@@ -8,8 +8,15 @@ import 'widgets/radio_button_field.dart';
 
 class H800FormScreenNine extends StatefulWidget {
   final H800FormData formData;
+  final String shopId;
+  final String phiId;
 
-  const H800FormScreenNine({super.key, required this.formData});
+  const H800FormScreenNine({
+    super.key,
+    required this.formData,
+    required this.shopId,
+    required this.phiId,
+  });
 
   @override
   H800FormScreenNineState createState() => H800FormScreenNineState();
@@ -53,7 +60,8 @@ class H800FormScreenNineState extends State<H800FormScreenNine> {
     bool isValid = true;
     setState(() {
       _isInvalid['personalHygiene'] = _personalHygiene == null;
-      _isInvalid['wearingProtectiveClothing'] = _wearingProtectiveClothing == null;
+      _isInvalid['wearingProtectiveClothing'] =
+          _wearingProtectiveClothing == null;
       _isInvalid['communicableDiseases'] = _communicableDiseases == null;
       _isInvalid['goodHealthHabits'] = _goodHealthHabits == null;
       _isInvalid['healthRecords'] = _healthRecords == null;
@@ -99,7 +107,8 @@ class H800FormScreenNineState extends State<H800FormScreenNine> {
                   child: LinearProgressIndicator(
                     value: 0.9, // 9/10 of the form completed
                     backgroundColor: Colors.grey[300],
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -110,7 +119,8 @@ class H800FormScreenNineState extends State<H800FormScreenNine> {
                     children: [
                       const Text(
                         'Part 9: Health Status and Training of Food Handlers (10 Marks)',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
@@ -133,7 +143,8 @@ class H800FormScreenNineState extends State<H800FormScreenNine> {
                         onChanged: (value) {
                           setState(() {
                             _wearingProtectiveClothing = value;
-                            _isInvalid['wearingProtectiveClothing'] = value == null;
+                            _isInvalid['wearingProtectiveClothing'] =
+                                value == null;
                           });
                         },
                       ),
@@ -173,7 +184,8 @@ class H800FormScreenNineState extends State<H800FormScreenNine> {
                         },
                       ),
                       GenericDropdown(
-                        label: '9.6 Maintenance of records regarding training on health employees',
+                        label:
+                            '9.6 Maintenance of records regarding training on health employees',
                         initialValue: _trainingRecords,
                         isInvalid: _isInvalid['trainingRecords']!,
                         items: const ['Good', 'Satisfactory', 'Unsatisfactory'],
@@ -203,7 +215,11 @@ class H800FormScreenNineState extends State<H800FormScreenNine> {
                                 Navigator.pushNamed(
                                   context,
                                   '/h800_form_screen_ten',
-                                  arguments: widget.formData,
+                                  arguments: {
+                                    'formData': widget.formData,
+                                    'shopId': widget.shopId,
+                                    'phiId': widget.phiId,
+                                  },
                                 );
                               }
                             },

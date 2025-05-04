@@ -8,8 +8,15 @@ import 'widgets/radio_button_field.dart';
 
 class H800FormScreenTwo extends StatefulWidget {
   final H800FormData formData;
+  final String shopId;
+  final String phiId;
 
-  const H800FormScreenTwo({super.key, required this.formData});
+  const H800FormScreenTwo({
+    super.key,
+    required this.formData,
+    required this.shopId,
+    required this.phiId,
+  });
 
   @override
   H800FormScreenTwoState createState() => H800FormScreenTwoState();
@@ -104,7 +111,8 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                   child: LinearProgressIndicator(
                     value: 0.2, // 2/10 of the form completed
                     backgroundColor: Colors.grey[300],
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -115,7 +123,8 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                     children: [
                       const Text(
                         'Part 2: Building (10 Marks)',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
@@ -220,7 +229,11 @@ class H800FormScreenTwoState extends State<H800FormScreenTwo> {
                                 Navigator.pushNamed(
                                   context,
                                   '/h800_form_screen_three',
-                                  arguments: widget.formData,
+                                  arguments: {
+                                    'formData': widget.formData,
+                                    'shopId': widget.shopId,
+                                    'phiId': widget.phiId,
+                                  },
                                 );
                               }
                             },

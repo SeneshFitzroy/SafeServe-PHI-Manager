@@ -8,8 +8,15 @@ import 'widgets/radio_button_field.dart';
 
 class H800FormScreenEight extends StatefulWidget {
   final H800FormData formData;
+  final String shopId;
+  final String phiId;
 
-  const H800FormScreenEight({super.key, required this.formData});
+  const H800FormScreenEight({
+    super.key,
+    required this.formData,
+    required this.shopId,
+    required this.phiId,
+  });
 
   @override
   H800FormScreenEightState createState() => H800FormScreenEightState();
@@ -53,7 +60,8 @@ class H800FormScreenEightState extends State<H800FormScreenEight> {
       _isInvalid['displayPackaging'] = _displayPackaging == null;
       _isInvalid['insectInfested'] = _insectInfested == null;
       _isInvalid['violationOfLabeling'] = _violationOfLabeling == null;
-      _isInvalid['separationOfUnwholesomeFood'] = _separationOfUnwholesomeFood == null;
+      _isInvalid['separationOfUnwholesomeFood'] =
+          _separationOfUnwholesomeFood == null;
     });
 
     isValid = !_isInvalid.containsValue(true);
@@ -94,7 +102,8 @@ class H800FormScreenEightState extends State<H800FormScreenEight> {
                   child: LinearProgressIndicator(
                     value: 0.8, // 8/10 of the form completed
                     backgroundColor: Colors.grey[300],
-                    valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -105,7 +114,8 @@ class H800FormScreenEightState extends State<H800FormScreenEight> {
                     children: [
                       const Text(
                         'Part 8: Condition, Standard & Cleanliness of Food (5 Marks)',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 20),
                       GenericDropdown(
@@ -133,7 +143,8 @@ class H800FormScreenEightState extends State<H800FormScreenEight> {
                         },
                       ),
                       RadioButtonField(
-                        label: '8.3 Insect infested/Outdated food & food unfit for human consumption',
+                        label:
+                            '8.3 Insect infested/Outdated food & food unfit for human consumption',
                         value: _insectInfested,
                         isInvalid: _isInvalid['insectInfested']!,
                         onChanged: (value) {
@@ -155,13 +166,15 @@ class H800FormScreenEightState extends State<H800FormScreenEight> {
                         },
                       ),
                       RadioButtonField(
-                        label: '8.5 Separation/Storage of food that is unwholesome/outdated to be returned',
+                        label:
+                            '8.5 Separation/Storage of food that is unwholesome/outdated to be returned',
                         value: _separationOfUnwholesomeFood,
                         isInvalid: _isInvalid['separationOfUnwholesomeFood']!,
                         onChanged: (value) {
                           setState(() {
                             _separationOfUnwholesomeFood = value;
-                            _isInvalid['separationOfUnwholesomeFood'] = value == null;
+                            _isInvalid['separationOfUnwholesomeFood'] =
+                                value == null;
                           });
                         },
                       ),
@@ -184,7 +197,11 @@ class H800FormScreenEightState extends State<H800FormScreenEight> {
                                 Navigator.pushNamed(
                                   context,
                                   '/h800_form_screen_nine',
-                                  arguments: widget.formData,
+                                  arguments: {
+                                    'formData': widget.formData,
+                                    'shopId': widget.shopId,
+                                    'phiId': widget.phiId,
+                                  },
                                 );
                               }
                             },
