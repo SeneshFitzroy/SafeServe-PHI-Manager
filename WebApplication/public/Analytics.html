@@ -4,49 +4,54 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Analytics</title>
 
-        <link rel="stylesheet" href="Navigation.css">
-        <link rel="stylesheet" href="StyleSheet5.css">
+        <link rel="stylesheet" href="css/Navigation.css">
+        <link rel="stylesheet" href="css/StyleSheet5.css">
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script type="module" src="js/firebase-config.js"></script>
+        <script type="module" src="js/session-guard.js"></script>
+        <script type="module" src="js/nav-access.js"></script>
+        <script type="module" src="js/user-info.js"></script>
 
     </head>
     <body>
         <div class="navigation">
             <div class="Logo"><img src="images/logo.png" /></div>
-            <div class="logoname"><a href="Dashboard.jsp">Safe Serve</a></div>
+            <div class="logoname">Safe Serve</div>
             
             
             <ul class="nav-menu">
-                <a href="">
+                <a href="Dashboard.html" data-page="Dashboard.html" data-icon="dashboard-icon-b.png">
                     <li class="nav-item ">
                         <img src="images/dashboard-icon-b.png" />
                         <span>Dashboard</span>
                     </li>
                 </a>
-                <a href="">
+                <a href="Calendar.html" data-page="Calendar.html" data-icon="calendar-icon-b.png">
                     <li class="nav-item">
                         <img src="images/calendar-icon-b.png" />
                         <span>Calendar</span>
                     </li>
                 </a>
-                <a href="">
+                <a href="InspectionLog.html" data-page="InspectionLog.html" data-icon="inspectionlog-icon-b.png">
                     <li class="nav-item">
                         <img src="images/inspectionlog-icon-b.png" />
                         <span>Inspection Log</span>
                     </li>
                 </a>
                 <a href="">
-                    <li class="nav-item active">
+                    <li class="nav-item active" data-page="Analytics.html" data-icon="dashboard-icon-b.png">
                         <img src="images/analytics-icon-w.png" />
                         <span>Analytics</span>
                     </li>
                 </a>
-                <a href="">
+                <a href="Registration.html" data-page="Registration.html" data-icon="registerphi-icon-b.png">
                     <li class="nav-item">
                         <img src="images/registerphi-icon-b.png" />
                         <span>Register PHI</span>
                     </li>
                 </a>
-                <a href="">
+                <a href="PHIinformation.html" data-page="PHIinformation.html" data-icon="profile-icon-b.png">
                     <li class="nav-item">
                         <img src="images/profile-icon-b.png" />
                         <span>Profile</span>
@@ -55,7 +60,7 @@
             </ul>
             <form method="post" action="">
                 <input type="hidden" name="action" value="logout" />
-                <button class="logout">
+                <button class="logout" onclick="logoutUser(event)">
                     <img src="images/logout-icon.png"/>
                     <span>Logout</span>
                 </button>
@@ -67,8 +72,8 @@
                 <img src="images/logged-user-icon.png">
             </div>
             <div class="user-info">
-                <span class="user-name">Leo Perera</span>
-                <span class="user-role">PHI</span>
+                <span class="user-name"></span>
+                <span class="user-role"></span>
             </div>
         </div>
         
@@ -96,39 +101,7 @@
                     </div>
                     <div class="content-container" >
                         <div class="content-row">
-                            <p class="element-1">13236</p>
-                            <p class="element-2">ABC Cafe & Bakery</p>
-                            <p class="element-3">Biyagama</p>
-                            <p class="element-4">2024-10-05</p>
-                            <p class="element-5">2025-01-04</p>
-                        </div>
-                        <div class="content-row">
-                            <p class="element-1">13236</p>
-                            <p class="element-2">ABC Cafe & Bakery</p>
-                            <p class="element-3">Biyagama</p>
-                            <p class="element-4">2024-10-05</p>
-                            <p class="element-5">2025-01-04</p>
-                        </div>
-                        <div class="content-row">
-                            <p class="element-1">13236</p>
-                            <p class="element-2">ABC Cafe & Bakery</p>
-                            <p class="element-3">Biyagama</p>
-                            <p class="element-4">2024-10-05</p>
-                            <p class="element-5">2025-01-04</p>
-                        </div>
-                        <div class="content-row">
-                            <p class="element-1">13236</p>
-                            <p class="element-2">ABC Cafe & Bakery</p>
-                            <p class="element-3">Biyagama</p>
-                            <p class="element-4">2024-10-05</p>
-                            <p class="element-5">2025-01-04</p>
-                        </div>
-                        <div class="content-row">
-                            <p class="element-1">13236</p>
-                            <p class="element-2">ABC Cafe & Bakery</p>
-                            <p class="element-3">Biyagama</p>
-                            <p class="element-4">2024-10-05</p>
-                            <p class="element-5">2025-01-04</p>
+                            
                         </div>
                     </div>
                 </div>
@@ -139,7 +112,7 @@
                 <div id="Total Inspections this Year" class="report-slide active">
                     <div class="chart-container">
                         <h2>Total Inspections:</h2>
-                        <div class="red-text">1500</div>
+                        <div class="red-text"></div>
                         <canvas id="YearlyInspections"></canvas>
                     </div>
                 </div>
@@ -154,10 +127,18 @@
                         <div class="filter-row">
                             <label for="shopCategory" class="filter-label">Select Shop Category</label>
                             <select id="shopCategory" class="shop-category-select">
-                                <option>Super Market</option>
-                                <option>Bakery</option>
-                                <option>Restaurant</option>
-                                <option>Grocery</option>
+                                <option >Restaurants</option>
+                                <option>Eateries</option>
+                                <option selected>Bakeries</option>
+                                <option>Hotels</option>
+                                <option>Cafés</option>
+                                <option>Mobile Food Carts</option>
+                                <option>Street Vendors</option>
+                                <option>Supermarkets</option>
+                                <option>Fast‑Food Outlets</option>
+                                <option>Catering Services</option>
+                                <option>Food Processing</option>
+                                <option>Ice‑cream Parlors</option>
                             </select>
                             <button class="search-button">Search</button>
                         </div>
@@ -177,34 +158,7 @@
                                 <!-- Table Rows Container -->
                                 <div class="shop-table-body">
                                     <div class="shop-table-row">
-                                        <p class="col-1">13236</p>
-                                        <p class="col-2">ABC Cafe & Bakery</p>
-                                        <p class="col-3">Biyagama</p>
-                                    </div>
-                                    <div class="shop-table-row">
-                                        <p class="col-1">13237</p>
-                                        <p class="col-2">Super Mart</p>
-                                        <p class="col-3">Malabe</p>
-                                    </div>
-                                    <div class="shop-table-row">
-                                        <p class="col-1">13236</p>
-                                        <p class="col-2">ABC Cafe & Bakery</p>
-                                        <p class="col-3">Biyagama</p>
-                                    </div>
-                                    <div class="shop-table-row">
-                                        <p class="col-1">13237</p>
-                                        <p class="col-2">Super Mart</p>
-                                        <p class="col-3">Malabe</p>
-                                    </div>
-                                    <div class="shop-table-row">
-                                        <p class="col-1">13236</p>
-                                        <p class="col-2">ABC Cafe & Bakery</p>
-                                        <p class="col-3">Biyagama</p>
-                                    </div>
-                                    <div class="shop-table-row">
-                                        <p class="col-1">13237</p>
-                                        <p class="col-2">Super Mart</p>
-                                        <p class="col-3">Malabe</p>
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -212,7 +166,7 @@
                             <!-- Doughnut Chart -->
                             <div class="shop-chart">
                                 <h3>Risk Levels by Shop Type</h3>
-                                <canvas id="riskLevelChart"></canvas>
+                                <canvas id="RiskLevelChart"></canvas>
                             </div>
                         </div>
                     </div>
@@ -221,115 +175,8 @@
             </div>
         </div>
 
+        <script type="module" src="js/analytics.js"></script>
                 
-                
-        
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                const navButtons = document.querySelectorAll(".report-nav button");
-                const slides = document.querySelectorAll(".report-slide"); 
-
-                // Add click event to each navigation button
-                navButtons.forEach((button) => {
-                    button.addEventListener("click", () => {
-                        const targetId = button.getAttribute("data-target");
-
-                        navButtons.forEach((btn) => btn.classList.remove("active"));
-                        button.classList.add("active");
-
-                        slides.forEach((slide) => {
-                            slide.classList.remove("active");
-                            if (slide.id === targetId) {
-                                slide.classList.add("active");
-                            }
-                        });
-                    });
-                });
-            });
-
-
-
-            const ctx = document.getElementById('YearlyInspections').getContext('2d');
-
-            const monthlyInspectionsChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: [
-                        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-                    ],
-                    datasets: [{
-                        label: 'Inspections',
-                        data: [120, 135, 160, 145, 170, 130, 90, 110, 100, 125, 115, 100],
-                        backgroundColor: '#007bff',
-                        borderRadius: 5,
-                        barPercentage: 0.6,
-                        categoryPercentage: 0.8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                precision: 0
-                            },
-                            grid: {
-                                display: false 
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false 
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-
-
-            // Doughnut Chart for Shop Category Based Risk Levels
-            const doughnutCtx = document.getElementById('riskLevelChart').getContext('2d');
-
-            const riskLevelChart = new Chart(doughnutCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['A Grade', 'B Grade', 'C Grade', 'D Grade'],
-                    datasets: [{
-                        data: [40, 25, 20, 15],
-                        backgroundColor: ['#28a745', '#fd7e14', '#ffc107', '#dc3545'], 
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                font: {
-                                    family: 'Arial',
-                                    size: 14
-                                },
-                                boxWidth: 12,
-                                boxHeight: 12,
-                                borderRadius: 2,
-                                padding: 10
-                            }
-                        }
-                    }
-
-                }
-            });
-
-        </script>
 
 </body>
 </html>

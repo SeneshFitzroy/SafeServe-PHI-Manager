@@ -1,9 +1,8 @@
-// lib/screens/h800_form/widgets/generic_dropdown.dart - for my reference
 import 'package:flutter/material.dart';
 
 class GenericDropdown extends StatelessWidget {
   final String label;
-  final String initialValue;
+  final String? initialValue; // Changed to String? for null safety
   final bool isInvalid;
   final List<String> items;
   final ValueChanged<String> onChanged;
@@ -11,7 +10,7 @@ class GenericDropdown extends StatelessWidget {
   const GenericDropdown({
     super.key,
     required this.label,
-    required this.initialValue,
+    required this.initialValue, // Can now be null
     this.isInvalid = false,
     required this.items,
     required this.onChanged,
@@ -29,7 +28,8 @@ class GenericDropdown extends StatelessWidget {
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           DropdownButtonFormField<String>(
-            value: initialValue.isEmpty ? null : initialValue,
+            value: initialValue, // Directly use initialValue (can be null)
+            hint: const Text('Select an option'), // Added hint for better UX
             items: items.map((String value) {
               return DropdownMenuItem<String>(
                 value: value,
