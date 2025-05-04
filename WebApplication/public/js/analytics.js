@@ -56,7 +56,8 @@ async function loadYearlyInspectionData(phiUid) {
 
   try {
     const formRef = collection(db, "h800_forms");
-    const q = query(formRef, where("phiId", "==", phiUid));
+    const phiRef = doc(db, "users", phiUid);  // Converts UID to a document reference
+    const q = query(formRef, where("phiId", "==", phiRef));
     const querySnapshot = await getDocs(q);
 
     let totalCount = 0;
@@ -134,18 +135,41 @@ window.monthlyInspectionsChart = new Chart(ctx, {
   }
 });
 
+const doughnutCtx = document.getElementById('RiskLevelChart').getContext('2d');
+window.riskLevelChart = new Chart(doughnutCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Grade A', 'Grade B', 'Grade C', 'Grade D'],
+    datasets: [{
+      data: [0, 0, 0, 0], // initially empty
+      backgroundColor: ['#28a745', '#ffc107', '#fd7e14', '#dc3545'], // green, yellow, orange, red
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+    cutout: '70%',
+    plugins: {
+      legend: {
+        position: 'bottom'
+      }
+    }
+  }
+});
+
+
 // Loads high-risk shops (grade C or D in assigned GN Divisions)
 async function loadHighRiskShops(phiUid) {
   try {
     const userDoc = await getDoc(doc(db, "users", phiUid));
     if (!userDoc.exists()) {
-      console.warn("⚠️ PHI user document not found");
+      console.warn(" PHI user document not found");
       return;
     }
 
     const gnDivisions = userDoc.data().gnDivisions || [];
     if (!Array.isArray(gnDivisions) || gnDivisions.length === 0) {
-      console.warn("⚠️ No GN Divisions found for PHI");
+      console.warn(" No GN Divisions found for PHI");
       return;
     }
 
@@ -185,6 +209,95 @@ async function loadHighRiskShops(phiUid) {
     });
 
   } catch (err) {
-    console.error("❌ Failed to load high-risk shops:", err);
+    console.error(" Failed to load high-risk shops:", err);
   }
 }
+
+
+
+
+document.querySelector(".search-button").addEventListener("click", async () => {
+    const selectedCategory = document.getElementById("shopCategory").value || "Bakeries";
+    const user = auth.currentUser;
+    if (!user) return;
+  
+    try {
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+      if (!userSnap.exists()) throw new Error("User profile not found");
+  
+      const assignedGN = userSnap.data().gnDivisions || [];
+      console.log("🧾 GN Divisions of PHI:", assignedGN);
+      console.log("🔎 Selected Category:", selectedCategory);
+  
+      const shopRef = collection(db, "shops");
+      const q = query(shopRef, where("typeOfTrade", "==", selectedCategory));
+      const shopSnap = await getDocs(q);
+      console.log("📦 Total shops fetched in category:", shopSnap.size);
+
+  
+      const aShops = [];
+  
+      const gradeCounts = { A: 0, B: 0, C: 0, D: 0 }; // Move this here (before forEach)
+
+    shopSnap.forEach((docSnap) => {
+    const data = docSnap.data();
+    const gn = (data.gnDivision || "").trim();
+    const grade = (data.grade || "").trim().toUpperCase();
+    const matchesGN = assignedGN.map(g => g.trim()).includes(gn);
+
+    console.log(`🧪 Shop Check: Name=${data.name}, GN="${gn}", Grade=${grade}, MatchGN=${assignedGN.includes(gn)}`);
+    console.log("🔍 Trimmed GN Match Check:", assignedGN.map(g => g.trim()));
+
+    if (matchesGN) {
+        if (gradeCounts.hasOwnProperty(grade)) {
+        gradeCounts[grade]++;
+        }
+        if (grade === "A") {
+        aShops.push({
+            referenceNo: data.referenceNo || "-",
+            name: data.name || "-",
+            gnDivision: gn
+        });
+        }
+    }
+    });
+
+  
+      updateShopTable(aShops);
+      updateDoughnutChart(gradeCounts);
+
+  
+    } catch (err) {
+      console.error("❌ Shop category analytics error (Table Only):", err);
+    }
+  });
+  
+  function updateShopTable(shops) {
+    const container = document.querySelector(".shop-table-body");
+    container.innerHTML = "";
+  
+    shops.forEach((shop) => {
+      const row = document.createElement("div");
+      row.classList.add("shop-table-row");
+      row.innerHTML = `
+        <p class="col-1">${shop.referenceNo}</p>
+        <p class="col-2">${shop.name}</p>
+        <p class="col-3">${shop.gnDivision}</p>
+      `;
+      container.appendChild(row);
+    });
+  }
+  
+  function updateDoughnutChart(counts) {
+    if (window.riskLevelChart) {
+      window.riskLevelChart.data.datasets[0].data = [
+        counts.A,
+        counts.B,
+        counts.C,
+        counts.D
+      ];
+      window.riskLevelChart.update();
+    }
+  }
+  
