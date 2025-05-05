@@ -154,9 +154,9 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
             CustomNavBarIcon(
                 icon: Icons.dashboard,
                 label: 'Dashboard',
-                navItem: NavItem.dashboard),
+                navItem: NavItem.map),
             CustomNavBarIcon(
-                icon: Icons.description, label: 'Form', navItem: NavItem.form),
+                icon: Icons.description, label: 'Form', navItem: NavItem.map),
             CustomNavBarIcon(
                 icon: Icons.map, label: 'Map', navItem: NavItem.map),
           ],

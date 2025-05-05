@@ -212,14 +212,14 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
               navItem: NavItem.dashboard,
             ),
             CustomNavBarIcon(
-              icon: Icons.description,
+              icon: Icons.map,
               label: 'Form',
-              navItem: NavItem.form,
+              navItem: NavItem.map,
             ),
             CustomNavBarIcon(
-              icon: Icons.notifications,
+              icon: Icons.assessment,
               label: 'Notifications',
-              navItem: NavItem.notifications,
+              navItem: NavItem.Report,
             ),
           ],
         ),

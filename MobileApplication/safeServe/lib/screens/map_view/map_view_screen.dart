@@ -8,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/safe_serve_appbar.dart';
 import '../../widgets/custom_nav_bar_icon.dart' show CustomNavBarIcon, NavItem;
+import '../../widgets/safe_serve_drawer.dart';
 
 /// grade → pin colour
 const _gradeColors = {
@@ -94,10 +95,12 @@ class _MapViewScreenState extends State<MapViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: SafeServeAppBar(
         height: 70,
         onMenuPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
       ),
+      endDrawer: const SafeServeDrawer(),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : FlutterMap(
@@ -153,7 +156,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
         CustomNavBarIcon(
             icon: Icons.map, label: 'Map', navItem: NavItem.map, selected: true),
         CustomNavBarIcon(
-            icon: Icons.notifications, label: 'Notifications', navItem: NavItem.notifications),
+            icon: Icons.assessment, label: 'Notifications', navItem: NavItem.Report),
       ],
     ),
   );
