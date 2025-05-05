@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ShopImage extends StatelessWidget {
   final String imagePath;
-  const ShopImage({Key? key, required this.imagePath}) : super(key: key);
+  const ShopImage({super.key, required this.imagePath});
 
   @override
   Widget build(BuildContext context) {

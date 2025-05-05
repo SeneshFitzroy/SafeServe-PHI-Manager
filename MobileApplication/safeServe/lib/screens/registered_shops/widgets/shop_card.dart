@@ -12,14 +12,14 @@ class ShopCard extends StatelessWidget {
   final VoidCallback onDetailsTap;
 
   const ShopCard({
-    Key? key,
+    super.key,
     required this.name,
     required this.address,
     required this.lastInspection,
     required this.grade,
     required this.imagePath,
     required this.onDetailsTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

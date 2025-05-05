@@ -5,13 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../widgets/safe_serve_appbar.dart';
 import '../../../widgets/safe_serve_drawer.dart';
 import '../../../widgets/custom_nav_bar_icon.dart';
-import '../../../widgets/custom_nav_bar_icon.dart' show NavItem;
 import '../register_shop/register_shop_form_data.dart';
 import '../register_shop/screen_one/register_shop_screen_one.dart';
 import 'widgets/shop_card.dart';
 
 class RegisteredShopsScreen extends StatefulWidget {
-  const RegisteredShopsScreen({Key? key}) : super(key: key);
+  const RegisteredShopsScreen({super.key});
 
   @override
   State<RegisteredShopsScreen> createState() => _RegisteredShopsScreenState();
