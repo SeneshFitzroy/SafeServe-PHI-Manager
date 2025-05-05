@@ -101,7 +101,7 @@ window.monthlyInspectionsChart = new Chart(ctx, {
     ],
     datasets: [{
       label: 'Inspections',
-      data: Array(12).fill(0), 
+      data: Array(12).fill(0),
       backgroundColor: '#007bff',
       borderRadius: 5,
       barPercentage: 0.6,
@@ -112,28 +112,31 @@ window.monthlyInspectionsChart = new Chart(ctx, {
     responsive: true,
     maintainAspectRatio: false,
     scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          precision: 0
-        },
-        grid: {
-          display: false
-        }
-      },
       x: {
-        grid: {
-          display: false
-        }
+        title: {
+          display: true,
+          text: 'Month',
+          font: { size: 14 }
+        },
+        grid: { display: false }
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Inspections',
+          font: { size: 14 }
+        },
+        beginAtZero: true,
+        ticks: { precision: 0 },
+        grid: { display: false }
       }
     },
     plugins: {
-      legend: {
-        display: false
-      }
+      legend: { display: false }
     }
   }
 });
+
 
 const doughnutCtx = document.getElementById('RiskLevelChart').getContext('2d');
 window.riskLevelChart = new Chart(doughnutCtx, {
