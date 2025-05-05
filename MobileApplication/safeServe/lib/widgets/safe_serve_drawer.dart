@@ -6,6 +6,8 @@ import 'package:safeserve/screens/calendar/calendar_screen.dart';
 import 'package:safeserve/screens/login_screen/login_screen.dart';
 import 'package:safeserve/services/logout_service.dart';
 
+import '../screens/Reports_Analytics.dart/Reports.dart';
+
 class SafeServeDrawer extends StatelessWidget {
   final String profileImageUrl;
   final String userName;
@@ -69,8 +71,9 @@ class SafeServeDrawer extends StatelessWidget {
                     icon: Icons.assessment,
                     label: 'Reports',
                     onTap: () {
-                      Navigator.pop(context); // Close drawer
-                      Navigator.pushNamed(context, '/reports'); // Navigate to Reports page
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => const Reports()),
+                      );
                     },
                   ),
                   _buildDrawerItem(icon: Icons.settings, label: 'Settings', onTap: () {}),
