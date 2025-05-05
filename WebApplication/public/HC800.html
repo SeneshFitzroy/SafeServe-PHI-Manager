@@ -12,8 +12,6 @@
         <script type="module" src="js/user-info.js"></script>
 
 
-
-
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
     </head>
@@ -80,54 +78,37 @@
             </div>
         </div>
         
-        <a href="InspectionLog.jsp" class="back-button">
+        <a href="InspectionLog.html" class="back-button">
             <img src="images/back-aarrow.png"></i>
         </a>
 
-        <div class="header">ABC Cafe & Bakery</div>
+        <div class="header"></div>
 
+        
         <div class="inspection-container">
             <table class="inspection-table">
                 <thead>
-                    <tr>
-                        <th colspan="1" style="background-color: transparent;border: none;"></th>
-                        <th>2024-03-08</th>
-                        <th>2024-09-05</th>
-                        <th>2025-02-01</th>
-                    </tr>
+                  <tr>
+                    <th></th> <!-- replaced with dates -->
+                  </tr>
                 </thead>
                 <tbody>
-                    <!-- Part 1 -->
-                    <tr class="section-header"><td colspan="4">Part 1 - Location & Environment</td></tr>
-                    <tr><td>1.1 Suitability for the business</td><td>Unsuitable</td><td>Suitable</td><td>Suitable</td></tr>
-                    <tr><td>1.2 General cleanliness & tidiness</td><td>Satisfactory</td><td>Satisfactory</td><td>Satisfactory</td></tr>
-                    <tr><td>1.3 Polluting conditions</td><td>Yes</td><td>Yes</td><td>No</td></tr>
-                    <tr><td>1.4 Dogs/Cats/Other animals</td><td>No</td><td>Yes</td><td>Yes</td></tr>
-                    <tr><td>1.5 Smoke or other adverse effects</td><td>Yes</td><td>No</td><td>Yes</td></tr>
-        
-                    <!-- Part 2 -->
-                    <tr class="section-header"><td colspan="4">Part 2 - Building</td></tr>
-                    <tr><td>2.1 Nature of the building</td><td>Permanent</td><td>Permanent</td><td>Permanent</td></tr>
-                    <tr><td>2.2 Space</td><td>Adequate</td><td>Adequate</td><td>Inadequate</td></tr>
-                    <tr><td>2.3 Light and ventilation</td><td>Inadequate</td><td>Adequate</td><td>Inadequate</td></tr>
-                    <tr><td>2.4 Condition of the floor</td><td>Good</td><td>Good</td><td>Satisfactory</td></tr>
-                    <tr><td>2.5 Condition of the wall</td><td>Good</td><td>Satisfactory</td><td>Good</td></tr>
-                    <tr><td>2.6 Condition of the ceiling</td><td>Good</td><td>Good</td><td>Satisfactory</td></tr>
-                    <tr><td>2.7 Hazards to employees/customers</td><td>Satisfactory</td><td>Suitable</td><td>Satisfactory</td></tr>
-        
-                    <!-- Add more parts as needed... -->
-                     
+                  <!-- dynamically rendered -->
                 </tbody>
-            </table>
+              </table>
+              
         </div>
 
         <script>
             function logoutUser(e) {
-                e.preventDefault(); // prevent form reload
+                e.preventDefault(); 
                 sessionStorage.clear();
-                window.location.href = "login.html"; // or your login page name
+                window.location.href = "login.html"; 
             }
         </script>
+
+        <script type="module" src="js/hc800.js"></script>
+
         
 
 </body>
