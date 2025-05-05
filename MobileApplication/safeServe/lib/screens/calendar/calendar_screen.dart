@@ -17,6 +17,7 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final CollectionReference<Map<String, dynamic>> _tasksRef =
   FirebaseFirestore.instance.collection('tasks');
   final CollectionReference<Map<String, dynamic>> _shopsRef =
@@ -115,14 +116,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: SafeServeAppBar(
         height: 70,
-        onMenuPressed: () => Scaffold.of(context).openEndDrawer(),
+        onMenuPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
       ),
       endDrawer: const SafeServeDrawer(
         profileImageUrl: '',
-        userName: 'Kamal Rathanasighe',
-        userPost: 'PHI',
+        userName: '',
+        userPost: '',
       ),
       body: Stack(children: [
         Container(
