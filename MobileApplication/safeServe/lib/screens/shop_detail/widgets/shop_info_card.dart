@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ShopInfoCard extends StatelessWidget {
   final Map<String, dynamic> shopData;
-  const ShopInfoCard({Key? key, required this.shopData}) : super(key: key);
+  const ShopInfoCard({super.key, required this.shopData});
 
   @override
   Widget build(BuildContext context) {

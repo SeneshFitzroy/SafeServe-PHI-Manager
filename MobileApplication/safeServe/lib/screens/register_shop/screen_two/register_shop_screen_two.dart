@@ -15,7 +15,7 @@ import 'widgets/bottom_buttons.dart';
 
 class RegisterShopScreenTwo extends StatefulWidget {
   final RegisterShopFormData formData;
-  const RegisterShopScreenTwo({Key? key, required this.formData}) : super(key: key);
+  const RegisterShopScreenTwo({super.key, required this.formData});
 
   @override
   State<RegisterShopScreenTwo> createState() => _RegisterShopScreenTwoState();

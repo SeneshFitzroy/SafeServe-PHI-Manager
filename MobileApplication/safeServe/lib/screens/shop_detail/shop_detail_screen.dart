@@ -113,7 +113,7 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
       ),
       const SizedBox(height: 15),
-      const FormButtons(),
+      FormButtons(shopId: widget.shopId),
       const SizedBox(height: 40),
 
       // Inspection history

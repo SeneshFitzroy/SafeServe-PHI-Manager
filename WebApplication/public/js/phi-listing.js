@@ -32,7 +32,7 @@ export async function fetchAndRenderPHIs() {
     }
 
     const spData = spDoc.data();
-    const spGNDivisions = spData.gn_divisions || [];
+    const spGNDivisions = spData.gn_divisions ?? spData.gnDivisions ?? [];
 
     const q = query(collection(db, 'users'), where('role', '==', 'PHI'));
     const querySnapshot = await getDocs(q);
@@ -258,7 +258,7 @@ export async function showEditSlider(uid) {
     }
 
     const spData = spDoc.data();
-    const spGNDivisions = spData.gn_divisions || [];
+    const spGNDivisions = spData.gn_divisions ?? spData.gnDivisions ?? [];
 
     gnDropdown.innerHTML = '';
     spGNDivisions.forEach(gn => {

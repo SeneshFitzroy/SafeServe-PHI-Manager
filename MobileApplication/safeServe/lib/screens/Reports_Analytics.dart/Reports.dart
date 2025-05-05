@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../widgets/safe_serve_appbar.dart';
 import '../../widgets/custom_nav_bar_icon.dart';
 import '../../widgets/safe_serve_drawer.dart';
@@ -24,365 +25,437 @@ class _ReportsState extends State<Reports> {
         ][DateTime.now().month - 1]
       : 'March';
 
-  final Map<String, int> inspectionsPerMonth = {
-    'January': 12,
-    'February': 18,
-    'March': 25,
-    'April': 20,
-    'May': 16,
-    'June': 22,
-    'July': 19,
-    'August': 23,
-    'September': 21,
-    'October': 17,
-    'November': 14,
-    'December': 20,
+  Map<String, int> inspectionsPerMonth = {};
+  Map<String, double> gradingDistribution = {};
+  Map<String, double> shopTypeDistribution = {};
+  Map<String, Color> shopTypeColors = {};
+  Map<String, Color> gradeColors = {
+    'A': Colors.green,
+    'B': Colors.blue,
+    'C': Colors.orange,
+    'D': Colors.red,
+    'Unknown': Colors.grey,
   };
 
-  final Map<String, double> gradingDistribution = {
-    'A': 40,
-    'B': 30,
-    'C': 20,
-    'D': 10,
-  };
+  Stream<QuerySnapshot>? formsStream;
+  Stream<QuerySnapshot>? shopsStream;
+  bool _hasShownError = false;
 
-  final Map<String, double> shopTypeDistribution = {
-    'Restaurants': 35,
-    'Grocery': 25,
-    'Bakery': 20,
-    'Hotels': 20,
-  };
+  // List of colors to assign dynamically to shop types
+  final List<Color> typeColors = [
+    Colors.purple,
+    Colors.teal,
+    Colors.brown,
+    Colors.indigo,
+    Colors.orange,
+    Colors.pink,
+    Colors.cyan,
+    Colors.amber,
+    Colors.grey, // Fallback for unknown
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    formsStream = FirebaseFirestore.instance.collection('h800_forms').snapshots();
+    shopsStream = FirebaseFirestore.instance.collection('shops').snapshots();
+  }
+
+  void _updateDataFromFirestore(QuerySnapshot formsSnapshot, QuerySnapshot shopsSnapshot) {
+    try {
+      // Inspections per Month
+      Map<String, int> inspections = {};
+      for (var month in months) {
+        inspections[month] = 0;
+      }
+      for (var doc in formsSnapshot.docs) {
+        Timestamp timestamp = doc['timestamp'] ?? Timestamp.now();
+        DateTime date = timestamp.toDate();
+        String monthName = months[date.month - 1];
+        inspections[monthName] = (inspections[monthName] ?? 0) + 1;
+      }
+
+      // Shop Grading Distribution
+      Map<String, int> gradesCount = {'A': 0, 'B': 0, 'C': 0, 'D': 0};
+      for (var doc in formsSnapshot.docs) {
+        String grade = doc['grade'] ?? 'C';
+        if (gradesCount.containsKey(grade)) {
+          gradesCount[grade] = (gradesCount[grade] ?? 0) + 1;
+        }
+      }
+      int totalForms = formsSnapshot.docs.length;
+      Map<String, double> gradesDist = {};
+      gradesCount.forEach((grade, count) {
+        if (totalForms > 0) {
+          gradesDist[grade] = (count / totalForms) * 100;
+        } else {
+          gradesDist[grade] = 0;
+        }
+      });
+
+      // Dynamically fetch Shop Types from Firestore
+      Map<String, int> shopTypesCount = {};
+      for (var doc in shopsSnapshot.docs) {
+        String type = doc['typeOfTrade']?.toString().trim() ?? 'Unknown';
+        shopTypesCount[type] = (shopTypesCount[type] ?? 0) + 1;
+      }
+      int totalShops = shopsSnapshot.docs.length;
+      Map<String, double> typesDist = {};
+      Map<String, Color> typeColorMap = {};
+      int colorIndex = 0;
+      shopTypesCount.forEach((type, count) {
+        if (totalShops > 0) {
+          typesDist[type] = (count / totalShops) * 100;
+        } else {
+          typesDist[type] = 0;
+        }
+        // Assign a color dynamically
+        typeColorMap[type] = typeColors[colorIndex % typeColors.length];
+        colorIndex++;
+      });
+
+      setState(() {
+        inspectionsPerMonth = inspections;
+        gradingDistribution = gradesDist;
+        shopTypeDistribution = typesDist;
+        shopTypeColors = typeColorMap;
+        _hasShownError = false;
+      });
+    } catch (e) {
+      if (!_hasShownError) {
+        _hasShownError = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error fetching data: $e')),
+          );
+        });
+      }
+    }
+  }
 
   void _onMenuPressed() {
     _scaffoldKey.currentState?.openDrawer();
   }
 
-  void _onViewOutput() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('View Output Pressed')),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final double chartWidth = MediaQuery.of(context).size.width - 50; // margin 25 left/right
-    return Scaffold(
-      key: _scaffoldKey,
-      drawer: SafeServeDrawer(
-        profileImageUrl: '',
-        userName: 'John Doe',
-        userPost: 'Health Inspector',
-      ),
-      appBar: SafeServeAppBar(
-        height: 70,
-        onMenuPressed: _onMenuPressed,
-      ),
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment(0.50, -0.00),
-            end: Alignment(0.50, 1.00),
-            colors: [Color(0xFFE6F5FE), Color(0xFFF5ECF9)],
-          ),
-        ),
-        child: Stack(
-          children: [
-            ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 18),
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Reports & Analytics',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 25,
-                        fontFamily: 'Roboto',
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 25),
-                // No of Inspections per Month with Bar Chart
-                Container(
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x3F000000),
-                        blurRadius: 4,
-                        offset: Offset(0, 4),
-                      )
-                    ],
+    final double chartWidth = MediaQuery.of(context).size.width - 50;
+    return StreamBuilder<QuerySnapshot>(
+      stream: formsStream,
+      builder: (context, formsSnapshot) {
+        return StreamBuilder<QuerySnapshot>(
+          stream: shopsStream,
+          builder: (context, shopsSnapshot) {
+            if (formsSnapshot.connectionState == ConnectionState.waiting ||
+                shopsSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (formsSnapshot.hasError || shopsSnapshot.hasError) {
+              return const Center(child: Text('Error loading data'));
+            }
+            if (!formsSnapshot.hasData || !shopsSnapshot.hasData) {
+              return const Center(child: Text('No data available'));
+            }
+
+            _updateDataFromFirestore(formsSnapshot.data!, shopsSnapshot.data!);
+
+            return Scaffold(
+              key: _scaffoldKey,
+              drawer: const SafeServeDrawer(
+                profileImageUrl: '',
+                userName: 'Health Inspector',
+                userPost: 'Health Inspector',
+              ),
+              appBar: SafeServeAppBar(
+                height: 70,
+                onMenuPressed: _onMenuPressed,
+              ),
+              body: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment(0.50, -0.00),
+                    end: Alignment(0.50, 1.00),
+                    colors: [Color(0xFFE6F5FE), Color(0xFFF5ECF9)],
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'No of Inspections per Month',
-                        style: TextStyle(
-                          color: Color(0xFF1F41BB),
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
+                ),
+                child: inspectionsPerMonth.isEmpty
+                    ? const Center(child: CircularProgressIndicator())
+                    : Stack(
                         children: [
-                          const Text(
-                            'Month:',
-                            style: TextStyle(fontSize: 16),
+                          ListView(
+                            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 18),
+                            children: [
+                              const Text(
+                                'Reports & Analytics',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 25,
+                                  fontFamily: 'Roboto',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 25),
+                              // Inspections per Month
+                              Container(
+                                padding: const EdgeInsets.all(18),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color(0x3F000000),
+                                      blurRadius: 4,
+                                      offset: Offset(0, 4),
+                                    )
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'No of Inspections per Month',
+                                      style: TextStyle(
+                                        color: Color(0xFF1F41BB),
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          'Month:',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        DropdownButton<String>(
+                                          value: selectedMonth,
+                                          items: months.map((month) {
+                                            return DropdownMenuItem(
+                                              value: month,
+                                              child: Text(month),
+                                            );
+                                          }).toList(),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              selectedMonth = value!;
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    SizedBox(
+                                      width: chartWidth,
+                                      height: 200,
+                                      child: BarChart(
+                                        data: inspectionsPerMonth,
+                                        selectedMonth: selectedMonth,
+                                        barColor: const Color(0xFF1F41BB),
+                                        highlightColor: const Color(0xFFCDE6FE),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 25),
+                              // Shop Grading Distribution
+                              Container(
+                                padding: const EdgeInsets.all(18),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color(0x3F000000),
+                                      blurRadius: 4,
+                                      offset: Offset(0, 4),
+                                    )
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Shop Grading Distribution',
+                                      style: TextStyle(
+                                        color: Color(0xFF1F41BB),
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Center(
+                                      child: SizedBox(
+                                        height: 180, // Increased from 150 to 180
+                                        width: 180, // Increased from 150 to 180
+                                        child: CustomPaint(
+                                          painter: PieChartPainter(gradingDistribution, gradeColors),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Wrap(
+                                      alignment: WrapAlignment.center,
+                                      spacing: 16,
+                                      runSpacing: 8,
+                                      children: gradingDistribution.entries.map((e) {
+                                        return Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Container(
+                                              width: 12,
+                                              height: 12,
+                                              margin: const EdgeInsets.only(right: 6),
+                                              decoration: BoxDecoration(
+                                                color: gradeColors[e.key] ?? Colors.grey,
+                                                shape: BoxShape.circle,
+                                              ),
+                                            ),
+                                            Text('${e.key} Grade: ${e.value.toStringAsFixed(1)}%'),
+                                          ],
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 25),
+                              // Shop Types Distribution
+                              Container(
+                                padding: const EdgeInsets.all(18),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color(0x3F000000),
+                                      blurRadius: 4,
+                                      offset: Offset(0, 4),
+                                    )
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Shop Types Distribution',
+                                      style: TextStyle(
+                                        color: Color(0xFF1F41BB),
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Center(
+                                      child: SizedBox(
+                                        height: 180, // Increased from 150 to 180
+                                        width: 180, // Increased from 150 to 180
+                                        child: CustomPaint(
+                                          painter: PieChartPainter(shopTypeDistribution, shopTypeColors),
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Wrap(
+                                      alignment: WrapAlignment.center,
+                                      spacing: 16,
+                                      runSpacing: 8,
+                                      children: shopTypeDistribution.entries.map((e) {
+                                        return Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Container(
+                                              width: 12,
+                                              height: 12,
+                                              margin: const EdgeInsets.only(right: 6),
+                                              decoration: BoxDecoration(
+                                                color: shopTypeColors[e.key] ?? Colors.grey,
+                                                shape: BoxShape.circle,
+                                              ),
+                                            ),
+                                            Text('${e.key}: ${e.value.toStringAsFixed(1)}%'),
+                                          ],
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 30),
+                            ],
                           ),
-                          const SizedBox(width: 10),
-                          DropdownButton<String>(
-                            value: selectedMonth,
-                            items: months.map((month) {
-                              return DropdownMenuItem(
-                                value: month,
-                                child: Text(month),
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedMonth = value!;
-                              });
-                            },
+                          Positioned(
+                            left: 25,
+                            right: 25,
+                            bottom: 20,
+                            child: Material(
+                              elevation: 8,
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.transparent,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(30),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.08),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    CustomNavBarIcon(
+                                      icon: Icons.calendar_month,
+                                      label: 'Calendar',
+                                      navItem: NavItem.calendar,
+                                      selected: false,
+                                    ),
+                                    CustomNavBarIcon(
+                                      icon: Icons.store,
+                                      label: 'Shops',
+                                      navItem: NavItem.shops,
+                                      selected: false,
+                                    ),
+                                    CustomNavBarIcon(
+                                      icon: Icons.dashboard,
+                                      label: 'Dashboard',
+                                      navItem: NavItem.dashboard,
+                                      selected: true,
+                                    ),
+                                    CustomNavBarIcon(
+                                      icon: Icons.assignment,
+                                      label: 'Form',
+                                      navItem: NavItem.form,
+                                      selected: false,
+                                    ),
+                                    CustomNavBarIcon(
+                                      icon: Icons.notifications,
+                                      label: 'Notifications',
+                                      navItem: NavItem.notifications,
+                                      selected: false,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
-                      SizedBox(
-                        width: chartWidth,
-                        height: 200,
-                        child: BarChart(
-                          data: inspectionsPerMonth,
-                          selectedMonth: selectedMonth,
-                          barColor: const Color(0xFF1F41BB),
-                          highlightColor: const Color(0xFFCDE6FE),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 25),
-                // Shop Grading Distribution
-                Container(
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x3F000000),
-                        blurRadius: 4,
-                        offset: Offset(0, 4),
-                      )
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Shop Grading Distribution',
-                        style: TextStyle(
-                          color: Color(0xFF1F41BB),
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Center(
-                        child: SizedBox(
-                          height: 120,
-                          width: 120,
-                          child: CustomPaint(
-                            painter: PieChartPainter(gradingDistribution),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 16,
-                        runSpacing: 8,
-                        children: gradingDistribution.entries.map((e) {
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 12,
-                                height: 12,
-                                margin: const EdgeInsets.only(right: 6),
-                                decoration: BoxDecoration(
-                                  color: _gradeColor(e.key),
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              Text('${e.key} Grade: ${e.value.toInt()}%'),
-                            ],
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 25),
-                // Shop Types Distribution
-                Container(
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x3F000000),
-                        blurRadius: 4,
-                        offset: Offset(0, 4),
-                      )
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Shop Types Distribution',
-                        style: TextStyle(
-                          color: Color(0xFF1F41BB),
-                          fontSize: 22,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Center(
-                        child: SizedBox(
-                          height: 120,
-                          width: 120,
-                          child: CustomPaint(
-                            painter: PieChartPainter(shopTypeDistribution),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 16,
-                        runSpacing: 8,
-                        children: shopTypeDistribution.entries.map((e) {
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 12,
-                                height: 12,
-                                margin: const EdgeInsets.only(right: 6),
-                                decoration: BoxDecoration(
-                                  color: _shopTypeColor(e.key),
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              Text('${e.key}: ${e.value.toInt()}%'),
-                            ],
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 30),
-              ],
-            ),
-            Positioned(
-              left: 25,
-              right: 25,
-              bottom: 20,
-              child: Material(
-                elevation: 8,
-                borderRadius: BorderRadius.circular(30),
-                color: Colors.transparent,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.08),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      CustomNavBarIcon(
-                        icon: Icons.calendar_month,
-                        label: 'Calendar',
-                        navItem: NavItem.calendar,
-                        selected: false,
-                      ),
-                      CustomNavBarIcon(
-                        icon: Icons.store,
-                        label: 'Shops',
-                        navItem: NavItem.shops,
-                        selected: false,
-                      ),
-                      CustomNavBarIcon(
-                        icon: Icons.dashboard,
-                        label: 'Dashboard',
-                        navItem: NavItem.dashboard,
-                        selected: true,
-                      ),
-                      CustomNavBarIcon(
-                        icon: Icons.assignment,
-                        label: 'Form',
-                        navItem: NavItem.form,
-                        selected: false,
-                      ),
-                      CustomNavBarIcon(
-                        icon: Icons.notifications,
-                        label: 'Notifications',
-                        navItem: NavItem.notifications,
-                        selected: false,
-                      ),
-                    ],
-                  ),
-                ),
               ),
-            ),
-          ],
-        ),
-      ),
+            );
+          },
+        );
+      },
     );
-  }
-
-  Color _gradeColor(String grade) {
-    switch (grade) {
-      case 'A': return Colors.green;
-      case 'B': return Colors.blue;
-      case 'C': return Colors.orange;
-      case 'D': return Colors.red;
-      default: return Colors.grey;
-    }
-  }
-
-  Color _shopTypeColor(String type) {
-    switch (type) {
-      case 'Restaurants': return Colors.purple;
-      case 'Grocery': return Colors.teal;
-      case 'Bakery': return Colors.brown;
-      case 'Hotels': return Colors.indigo;
-      default: return Colors.grey;
-    }
   }
 }
 
-// Bar Chart for Inspections per Month
 class BarChart extends StatelessWidget {
   final Map<String, int> data;
   final String selectedMonth;
@@ -399,7 +472,7 @@ class BarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final maxVal = data.values.reduce((a, b) => a > b ? a : b);
+    final maxVal = data.values.isEmpty ? 1 : data.values.reduce((a, b) => a > b ? a : b);
     final barCount = data.length;
     final barSpacing = 4.0;
     final barWidth = ((MediaQuery.of(context).size.width - 90) / barCount).clamp(10.0, 30.0);
@@ -452,14 +525,16 @@ class BarChart extends StatelessWidget {
   }
 }
 
-// Simple Pie Chart Painter for demonstration
 class PieChartPainter extends CustomPainter {
   final Map<String, double> dataMap;
-  PieChartPainter(this.dataMap);
+  final Map<String, Color> colorMap;
+
+  PieChartPainter(this.dataMap, this.colorMap);
 
   @override
   void paint(Canvas canvas, Size size) {
     double total = dataMap.values.fold(0, (a, b) => a + b);
+    if (total == 0) total = 1;
     double startRadian = -3.14 / 2;
     final radius = size.width / 3;
     final center = Offset(size.width / 2, size.height / 2);
@@ -467,30 +542,13 @@ class PieChartPainter extends CustomPainter {
     dataMap.forEach((key, value) {
       final sweepRadian = (value / total) * 3.14 * 2;
       final paint = Paint()
-        ..color = key == 'A'
-            ? Colors.green
-            : key == 'B'
-                ? Colors.blue
-                : key == 'C'
-                    ? Colors.orange
-                    : key == 'D'
-                        ? Colors.red
-                        : key == 'Restaurants'
-                            ? Colors.purple
-                            : key == 'Grocery'
-                                ? Colors.teal
-                                : key == 'Bakery'
-                                    ? Colors.brown
-                                    : key == 'Hotels'
-                                        ? Colors.indigo
-                                        : Colors.grey
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 28;
+        ..color = colorMap[key] ?? Colors.grey
+        ..style = PaintingStyle.fill;
       canvas.drawArc(
         Rect.fromCircle(center: center, radius: radius),
         startRadian,
         sweepRadian,
-        false,
+        true,
         paint,
       );
       startRadian += sweepRadian;
@@ -498,5 +556,5 @@ class PieChartPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

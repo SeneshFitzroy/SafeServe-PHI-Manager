@@ -4,8 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class InspectionHistory extends StatelessWidget {
   final List<Timestamp> inspectionTimestamps;
-  const InspectionHistory({Key? key, required this.inspectionTimestamps})
-      : super(key: key);
+  const InspectionHistory({super.key, required this.inspectionTimestamps});
 
   @override
   Widget build(BuildContext ctx) {

@@ -8,13 +8,13 @@ class FormTextField extends StatelessWidget {
   final ValueChanged<String> onChanged;
 
   const FormTextField({
-    Key? key,
+    super.key,
     required this.label,
     required this.isInvalid,
     required this.initialValue,
     required this.onChanged,
     this.inputType = TextInputType.text, int? maxLength,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
