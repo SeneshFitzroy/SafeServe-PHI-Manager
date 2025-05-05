@@ -1,8 +1,6 @@
-// js/hc800.js
 import { db } from "./firebase-config.js";
 import { doc, getDoc, collection, query, where, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-// Utility: extract shopId from query string
 function getShopIdFromURL() {
     const params = new URLSearchParams(window.location.search);
     return params.get("shopId");
@@ -30,17 +28,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
         const formSnaps = await getDocs(q);
         
-        // Collect and sort manually
         let inspections = [];
         formSnaps.forEach(doc => inspections.push(doc.data()));
         
-        // Sort by submittedAt DESC
         inspections.sort((a, b) => b.submittedAt.toDate() - a.submittedAt.toDate());
         
-        // Get latest 3 and reverse (oldest first)
         inspections = inspections.slice(0, 3).reverse();
 
-        renderInspectionTable(inspections); // ← This is missing
+        renderInspectionTable(inspections); 
 
 
     } catch (err) {
@@ -48,16 +43,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// Fixed inspection fields mapping
 const inspectionFields = [
-    // Part 1
     { part: "Part 1 - Location & Environment", label: "1.1 Suitability for the business", key: "suitabilityForBusiness" },
     { part: "Part 1 - Location & Environment", label: "1.2 General cleanliness & tidiness", key: "generalCleanliness" },
     { part: "Part 1 - Location & Environment", label: "1.3 Polluting conditions", key: "hasPollutingConditions" },
     { part: "Part 1 - Location & Environment", label: "1.4 Dogs/Cats/Other animals", key: "hasAnimals" },
     { part: "Part 1 - Location & Environment", label: "1.5 Smoke or other adverse effects", key: "hasSmokeOrAdverseEffects" },
   
-    // Part 2
     { part: "Part 2 - Building", label: "2.1 Nature of the building", key: "natureOfBuilding" },
     { part: "Part 2 - Building", label: "2.2 Space", key: "space" },
     { part: "Part 2 - Building", label: "2.3 Light and ventilation", key: "lightAndVentilation" },
@@ -66,7 +58,6 @@ const inspectionFields = [
     { part: "Part 2 - Building", label: "2.6 Condition of the ceiling", key: "conditionOfCeiling" },
     { part: "Part 2 - Building", label: "2.7 Hazards to employees/customers", key: "hasHazards" },
 
-    // Part 3
     { part: "Part 3 - Area of Food Preparation / Serving / Display / Storage", label: "3.1 General cleanliness", key: "generalCleanlinessPart3" },
     { part: "Part 3 - Area of Food Preparation / Serving / Display / Storage", label: "3.2 Safety measures for cleanliness", key: "safetyMeasuresForCleanliness" },
     { part: "Part 3 - Area of Food Preparation / Serving / Display / Storage", label: "3.3 Flies", key: "hasFlies" },
@@ -91,7 +82,6 @@ const inspectionFields = [
     { part: "Part 3 - Area of Food Preparation / Serving / Display / Storage", label: "3.22 Suitable water supply", key: "waterSupplySuitable" },
     { part: "Part 3 - Area of Food Preparation / Serving / Display / Storage", label: "3.23 Safe food handling practices", key: "safeFoodHandling" },
 
-    // Part 4
     { part: "Part 4 - Equipment & Furniture", label: "4.1 Equipment/utensils for food handling", key: "equipmentForFoodHandling" },
     { part: "Part 4 - Equipment & Furniture", label: "4.2 Condition of the equipment/utensils", key: "conditionOfEquipment" },
     { part: "Part 4 - Equipment & Furniture", label: "4.3 Cleanliness of the equipment/utensils", key: "cleanOfEquipment" },
@@ -103,7 +93,6 @@ const inspectionFields = [
     { part: "Part 4 - Equipment & Furniture", label: "4.9 Temperature maintenance in refrigerators", key: "maintenanceOfRefrigerators" },
     { part: "Part 4 - Equipment & Furniture", label: "4.10 Cleanliness/maintenance of refrigerators", key: "cleanandMaintenanceOfRefrigerators" },
 
-    // Part 5
     { part: "Part 5 - Storage", label: "5.1 Storage facilities and housekeeping", key: "storageFacilities" },
     { part: "Part 5 - Storage", label: "5.2 Storage of raw materials", key: "storageOfRawMaterials" },
     { part: "Part 5 - Storage", label: "5.3 Storage of cooked / prepared food", key: "storageOfCookedFood" },
@@ -111,13 +100,11 @@ const inspectionFields = [
     { part: "Part 5 - Storage", label: "5.5 Storage of food in refrigerator / deep freezer", key: "storageInRefrigerator" },
     { part: "Part 5 - Storage", label: "5.6 Measures to prevent contamination", key: "measuresToPreventContamination" },
 
-    // Part 6 - Water Supply
     { part: "Part 6 - Water Supply", label: "6.1 Water source", key: "waterSource" },
     { part: "Part 6 - Water Supply", label: "6.2 Water storage method", key: "waterStorageMethod" },
     { part: "Part 6 - Water Supply", label: "6.3 Water dispensed through taps", key: "waterDispensedThroughTaps" },
     { part: "Part 6 - Water Supply", label: "6.4 Safety of water certified by analytical reports", key: "waterSafetyCertified" },
 
-    // Part 7 - Waste Management
     { part: "Part 7 - Waste Management", label: "7.1 Adequate number of bins with lids", key: "numberofBinswithLids" },
     { part: "Part 7 - Waste Management", label: "7.2 Lids of the bins closed", key: "lidsOfBinsClosed" },
     { part: "Part 7 - Waste Management", label: "7.3 Cleanliness and maintenance of waste bins", key: "cleanlinessOfWasteBins" },
@@ -129,14 +116,12 @@ const inspectionFields = [
     { part: "Part 7 - Waste Management", label: "7.9 Cleanliness and maintenance of toilets and urinals", key: "cleanlinessOfToilets" },
     { part: "Part 7 - Waste Management", label: "7.10 Septic tank / soakage pit condition", key: "septicTankCondition" },
 
-    // Part 8 - Condition, Standard & Cleanliness of Food
     { part: "Part 8 - Condition, Standard & Cleanliness of Food", label: "8.1 Condition of food / raw materials", key: "conditionOfFood" },
     { part: "Part 8 - Condition, Standard & Cleanliness of Food", label: "8.2 Display / packaging for sale / delivery", key: "displayPackaging" },
     { part: "Part 8 - Condition, Standard & Cleanliness of Food", label: "8.3 Insect infested / outdated food unfit for consumption", key: "insectInfested" },
     { part: "Part 8 - Condition, Standard & Cleanliness of Food", label: "8.4 Violation of labeling regulations", key: "violationOfLabeling" },
     { part: "Part 8 - Condition, Standard & Cleanliness of Food", label: "8.5 Separation / storage of unwholesome food", key: "separationOfUnwholesomeFood" },
 
-    // Part 9 - Health Status and Training of Food Handlers
     { part: "Part 9 - Health Status and Training of Food Handlers", label: "9.1 Personal hygiene", key: "personalHygiene" },
     { part: "Part 9 - Health Status and Training of Food Handlers", label: "9.2 Wearing of protective clothing", key: "wearingProtectiveClothing" },
     { part: "Part 9 - Health Status and Training of Food Handlers", label: "9.3 Communicable diseases / skin diseases", key: "communicableDiseases" },
@@ -144,7 +129,6 @@ const inspectionFields = [
     { part: "Part 9 - Health Status and Training of Food Handlers", label: "9.5 Maintenance of health records", key: "healthRecords" },
     { part: "Part 9 - Health Status and Training of Food Handlers", label: "9.6 Maintenance of training records", key: "trainingRecords" },
 
-    // Part 10 - Display of Health Instructions, Record Keeping & Certification
     { part: "Part 10 - Display of Health Instructions, Record Keeping & Certification", label: "10.1 Display of instruction and health messages", key: "displayHealthInstructions" },
     { part: "Part 10 - Display of Health Instructions, Record Keeping & Certification", label: "10.2 Entertains complaints and suggestions", key: "entertainsComplaints" },
     { part: "Part 10 - Display of Health Instructions, Record Keeping & Certification", label: "10.3 Prevent smoking within the premises", key: "preventSmoking" },
@@ -157,7 +141,6 @@ const inspectionFields = [
 function renderInspectionTable(forms) {
     const table = document.querySelector(".inspection-table");
   
-    // Set column headers
     const thead = table.querySelector("thead tr");
     for (let form of forms) {
       const th = document.createElement("th");
@@ -166,11 +149,9 @@ function renderInspectionTable(forms) {
       thead.appendChild(th);
     }
   
-    // Clear tbody
     const tbody = table.querySelector("tbody");
     tbody.innerHTML = "";
   
-    // Group questions by part
     let currentPart = "";
     for (let field of inspectionFields) {
       if (field.part !== currentPart) {
