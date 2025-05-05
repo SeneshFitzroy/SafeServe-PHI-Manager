@@ -109,7 +109,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                             <div class="view" data-id="${docSnap.id}">
                                 <img src="images/view-icon.png">
                             </div>
-                            <a href="FormHistory.html">
+                            <a href="HC800.html?shopId=${docSnap.id}">
                                 <div class="edit">
                                     <img src="images/log-icon.png" alt="Edit">
                                 </div>

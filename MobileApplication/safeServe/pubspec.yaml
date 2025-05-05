@@ -1,5 +1,5 @@
-name: safe_serve
-description: A Flutter application for SafeServe
+name: safeserve
+description: "Safe Serve is a food safety inspections mobile application for Public Health Inspectors (PHIs)"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -33,9 +33,7 @@ dependencies:
   material_design_icons_flutter: ^5.0.6595
   image_picker: ^1.0.7
   intl: ^0.18.1
-  flutter_map: ^4.0.0  # Replace google_maps_flutter
-  latlong2: ^0.8.2     # Required for LatLng coordinates with flutter_map
-
+  google_maps_flutter: ^2.5.0
   firebase_core: ^2.27.0
   firebase_auth: ^4.17.0
   cloud_firestore: ^4.15.0
@@ -47,6 +45,8 @@ dependencies:
   connectivity_plus: ^5.0.2
   flutter_secure_storage: ^9.0.0
   table_calendar: ^3.0.9
+  uuid: ^4.0.0
+  pin_code_fields: ^8.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -55,7 +55,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -72,6 +78,7 @@ flutter:
   assets:
     - assets/images/other/
     - assets/images/shop/
+    - assets/images/other/profile_placeholder.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

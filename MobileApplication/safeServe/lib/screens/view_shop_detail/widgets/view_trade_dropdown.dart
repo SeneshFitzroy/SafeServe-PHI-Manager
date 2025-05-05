@@ -4,10 +4,10 @@ class ViewTradeDropdown extends StatelessWidget {
   final String label;
   final String value;
   const ViewTradeDropdown({
-    Key? key,
+    super.key,
     required this.label,
     required this.value,
-  }) : super(key: key);
+  });
 
   static const _options = <String>[
     'Restaurants',
