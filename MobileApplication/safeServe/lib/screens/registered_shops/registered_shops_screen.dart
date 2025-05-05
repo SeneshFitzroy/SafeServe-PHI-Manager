@@ -59,11 +59,7 @@ class _RegisteredShopsScreenState extends State<RegisteredShopsScreen> {
         height: 70,
         onMenuPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
       ),
-      endDrawer: const SafeServeDrawer(
-        profileImageUrl: '',
-        userName: 'Kamal Rathanasighe',
-        userPost: 'PHI',
-      ),
+      endDrawer: const SafeServeDrawer(),
       body: Stack(
         children: [
           // Background gradient
