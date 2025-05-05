@@ -105,11 +105,7 @@ class _SearchPageState extends State<SearchPage> {
         height: 70,
         onMenuPressed: () => Scaffold.of(context).openEndDrawer(),
       ),
-      endDrawer: const SafeServeDrawer(
-        profileImageUrl: '',
-        userName: '',
-        userPost: '',
-      ),
+      endDrawer: const SafeServeDrawer(),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,

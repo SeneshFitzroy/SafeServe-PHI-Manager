@@ -78,11 +78,7 @@ class _NoteEditScreenState extends State<NoteEditScreen> {
           height: 70,
           onMenuPressed: () => Scaffold.of(context).openEndDrawer(),
         ),
-        endDrawer: const SafeServeDrawer(
-          profileImageUrl: '',
-          userName: 'Note',
-          userPost: '',
-        ),
+        endDrawer: const SafeServeDrawer(),
         body: Stack(
           children: [
             // Gradient background

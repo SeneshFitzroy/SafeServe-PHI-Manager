@@ -121,11 +121,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         height: 70,
         onMenuPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
       ),
-      endDrawer: const SafeServeDrawer(
-        profileImageUrl: '',
-        userName: '',
-        userPost: '',
-      ),
+      endDrawer: const SafeServeDrawer(),
       body: Stack(children: [
         Container(
           decoration: const BoxDecoration(

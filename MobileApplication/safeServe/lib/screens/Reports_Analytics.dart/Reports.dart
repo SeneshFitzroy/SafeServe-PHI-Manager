@@ -161,11 +161,7 @@ class _ReportsState extends State<Reports> {
 
             return Scaffold(
               key: _scaffoldKey,
-              drawer: const SafeServeDrawer(
-                profileImageUrl: '',
-                userName: 'Health Inspector',
-                userPost: 'Health Inspector',
-              ),
+              drawer: const SafeServeDrawer(),
               appBar: SafeServeAppBar(
                 height: 70,
                 onMenuPressed: _onMenuPressed,

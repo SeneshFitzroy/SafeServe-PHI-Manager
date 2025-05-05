@@ -61,9 +61,6 @@ class _ShopDetailScreenState extends State<ShopDetailScreen> {
         onMenuPressed: () => Scaffold.of(context).openEndDrawer(),
       ),
       endDrawer: const SafeServeDrawer(
-        profileImageUrl: '',
-        userName: 'Kamal Rathanasighe',
-        userPost: 'PHI',
       ),
       body: Stack(children: [
         Container(

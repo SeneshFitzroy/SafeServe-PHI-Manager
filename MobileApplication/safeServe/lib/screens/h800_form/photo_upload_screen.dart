@@ -62,11 +62,7 @@ class _H800PhotoUploadScreenState extends State<H800PhotoUploadScreen> {
         onMenuPressed: () =>
             Scaffold.of(context).openEndDrawer(), // optional drawer
       ),
-      endDrawer: const SafeServeDrawer(
-        profileImageUrl: '',
-        userName: 'PHI Username',
-        userPost: 'PHI',
-      ),
+      endDrawer: const SafeServeDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
