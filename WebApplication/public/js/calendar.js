@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       selectable: true,
       events: [],
   
-      /* --------------------- ADD TASK --------------------- */
+      //ADD TASK
       dateClick: async (info) => {
         const { value } = await Swal.fire({
           title: "Add New Task",
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (value) saveNewTask(info.dateStr, value.title, value.notes);
       },
   
-      /* ------------- VIEW / EDIT / DELETE ------------- */
+      //VIEW / EDIT / DELETE 
       eventClick: async (info) => {
         const type = info.event.extendedProps.type ?? "manual";
   
@@ -132,7 +132,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   calendar.render();
 
-  /* initial load */
   auth.onAuthStateChanged(async (user) => {
     if (!user) return (window.location.href = "login.html");
     const manual   = await loadTasks(user.uid);
@@ -141,7 +140,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 });
 
-/* ---------------------- LOAD TASKS --------------------- */
+// LOAD TASKS 
 async function loadTasks(uid) {
   const events = [];
 
@@ -149,9 +148,7 @@ async function loadTasks(uid) {
     const tasksRef = collection(db, "tasks");
     const uidRef   = doc(db, "users", uid);
 
-    /* string‑based docs */
     const snap1 = await getDocs(query(tasksRef, where("phiId", "==", uid)));
-    /* reference‑based legacy docs */
     const snap2 = await getDocs(query(tasksRef, where("phiId", "==", uidRef)));
 
     [...snap1.docs, ...snap2.docs].forEach((d) => {
@@ -173,7 +170,7 @@ async function loadTasks(uid) {
   return events;
 }
 
-/* ------------------- LOAD INSPECTIONS ------------------ */
+//LOAD INSPECTIONS
 async function loadInspections(uid) {
   const events = [];
   try {
@@ -203,7 +200,7 @@ async function loadInspections(uid) {
   return events;
 }
 
-/* ---------------------- ADD TASK ----------------------- */
+// ADD TASK 
 async function saveNewTask(dateStr, title, notes) {
   try {
     const user = auth.currentUser;
@@ -223,7 +220,7 @@ async function saveNewTask(dateStr, title, notes) {
   }
 }
 
-/* --------------------- UPDATE TASK --------------------- */
+// UPDATE TASK 
 async function updateTask(event, newTitle, newDate, newNotes) {
   try {
     const docId   = event.id;
@@ -251,7 +248,7 @@ async function updateTask(event, newTitle, newDate, newNotes) {
   }
 }
 
-/* --------------------- DELETE TASK -------------------- */
+// DELETE TASK 
 async function deleteTask(event) {
   try {
     await deleteDoc(doc(db, "tasks", event.id));

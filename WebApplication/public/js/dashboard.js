@@ -126,10 +126,10 @@ function renderRiskLevelChart(data = [60, 20, 10, 10]) {
       datasets: [{
         data: data,
         backgroundColor: [
-          "rgba(61, 185, 82, 1)",   // A
-          "rgba(241, 215, 48, 1)",  // B
-          "rgba(255, 133, 20, 1)",  // C
-          "rgba(187, 31, 34, 1)"    // D
+          "rgba(61, 185, 82, 1)",   
+          "rgba(241, 215, 48, 1)", 
+          "rgba(255, 133, 20, 1)",  
+          "rgba(187, 31, 34, 1)"    
         ],
         borderColor: [
           "rgba(61, 185, 82, 1)",

@@ -32,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Event listener for "Update" button
   document.getElementById("save-profile-btn").addEventListener("click", async () => {
     if (!currentUserId) return;
 
@@ -103,7 +102,6 @@ document.getElementById("change-password-btn").addEventListener("click", async (
     const newPassword = document.getElementById("new-password").value.trim();
     const confirmPassword = document.getElementById("confirm-password").value.trim();
   
-    // Clear previous errors
     document.getElementById("old-password-error").innerText = "";
     document.getElementById("new-password-error").innerText = "";
     document.getElementById("confirm-password-error").innerText = "";

@@ -1,13 +1,11 @@
-// inspection-log.js
 import { auth, db } from './firebase-config.js';
 import { doc, getDoc, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 
-// Make functions visible to HTML
 window.logoutUser = function (e) {
-    e.preventDefault(); // prevent form reload
+    e.preventDefault(); 
     sessionStorage.clear();
-    window.location.href = "login.html"; // redirect to login
+    window.location.href = "login.html"; 
 }
 
 window.showViewSlider = function () {
@@ -18,7 +16,6 @@ window.hideViewSlider = function () {
     document.getElementById('viewSlider').classList.remove('active');
 }
 
-// Color the ranking grades
 export function colorGrades() {
     const rankings = document.querySelectorAll('.element-4');
   
@@ -59,14 +56,12 @@ export function colorGrades() {
 }
 
 
-// Step 2: Fetch GN Divisions and then fetch shops
 window.addEventListener("DOMContentLoaded", async () => {
     try {
         const user = auth.currentUser;
 
-        // Wait for auth state
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
-            unsubscribe(); // stop listener after we get user
+            unsubscribe(); 
             if (!user) {
                 window.location.href = "login.html";
                 return;
@@ -88,11 +83,10 @@ window.addEventListener("DOMContentLoaded", async () => {
                 return;
             }
 
-            // Fetch all shops in any of the GN divisions
             const shopsRef = collection(db, "shops");
             const querySnapshot = await getDocs(shopsRef);
             const container = document.querySelector(".content-container");
-            container.innerHTML = ""; // Clear existing static rows
+            container.innerHTML = ""; 
 
             querySnapshot.forEach((docSnap) => {
                 const shop = docSnap.data();
@@ -124,7 +118,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 
             colorGrades();
 
-            // Add event listeners to view buttons
             document.querySelectorAll('.view').forEach((btn) => {
                 btn.addEventListener('click', () => {
                     showViewSlider(); 
@@ -139,7 +132,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
 
 
-// Load and display shop details inside the View Slider
 async function loadShopDetails(shopId) {
     try {
         const shopRef = doc(db, "shops", shopId);
@@ -152,7 +144,6 @@ async function loadShopDetails(shopId) {
 
         const shop = shopSnap.data();
 
-        // Fill the form fields
         const formFields = document.querySelectorAll(".form-text");
         if (formFields.length >= 15) {
             formFields[0].value = shop.referenceNo || '';
