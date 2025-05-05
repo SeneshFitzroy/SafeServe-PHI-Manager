@@ -106,11 +106,7 @@ class _NotesListScreenState extends State<NotesListScreen> {
         height: 70,
         onMenuPressed: () => Scaffold.of(context).openEndDrawer(),
       ),
-      endDrawer: const SafeServeDrawer(
-        profileImageUrl: '',
-        userName: 'My Notes',
-        userPost: '',
-      ),
+      endDrawer: const SafeServeDrawer(),
       body: Stack(children: [
         Container(
           decoration: const BoxDecoration(

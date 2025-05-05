@@ -52,7 +52,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           .doc(_uid)
           .get();
       final userData = userSnap.data()!;
-      _fullName   = userData['fullName'] as String? ?? 'Unnamed PHI';
+      _fullName   = userData['full_name'] as String? ?? 'Unnamed PHI';
       _profileUrl = userData['profilePicture'] as String?;
 
       // Load the rest
@@ -149,11 +149,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         height: 70,
         onMenuPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
       ),
-      endDrawer: const SafeServeDrawer(
-        profileImageUrl: '',
-        userName: '',
-        userPost: '',
-      ),
+      endDrawer: const SafeServeDrawer(),
       body: Stack(children: [
         const _DashboardGradient(),
         if (_loading)
