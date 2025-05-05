@@ -7,7 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../services/auth_service.dart';        // cached UID
-import '../../widgets/safe_serve_appbar.dart';    // your common AppBar
+import '../../widgets/safe_serve_appbar.dart';
+import '../../widgets/safe_serve_drawer.dart';    // your common AppBar
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key, required String uid}) : super(key: key);
@@ -122,10 +123,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final gn = List<String>.from(data!['gnDivisions'] ?? []);
 
     return Scaffold(
+      key: _scaffoldKey, // attach the key here
       appBar: SafeServeAppBar(
         height: 70,
         onMenuPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
       ),
+      endDrawer: const SafeServeDrawer(),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(

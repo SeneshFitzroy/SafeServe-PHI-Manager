@@ -232,7 +232,6 @@ class _NotesListScreenState extends State<NotesListScreen> {
           ),
         ]),
 
-        _bottomNav(context),
       ]),
       floatingActionButton: FloatingActionButton(
         backgroundColor: isSel ? Colors.red : Colors.grey[300],
@@ -333,50 +332,5 @@ class _NotesListScreenState extends State<NotesListScreen> {
 
   String _two(int n) => n.toString().padLeft(2, '0');
 
-  Widget _bottomNav(BuildContext ctx) {
-    final w = MediaQuery.of(ctx).size.width * 0.8;
-    return AnimatedPositioned(
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-      bottom: _navVisible ? 30 : -100,
-      left: (MediaQuery.of(ctx).size.width - w) / 2,
-      width: w,
-      child: Container(
-        height: 60,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.15), blurRadius: 6)
-          ],
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            CustomNavBarIcon(
-                icon: Icons.event,
-                label: 'Calendar',
-                navItem: NavItem.calendar),
-            CustomNavBarIcon(
-                icon: Icons.store,
-                label: 'Shops',
-                navItem: NavItem.shops),
-            CustomNavBarIcon(
-                icon: Icons.dashboard,
-                label: 'Dashboard',
-                navItem: NavItem.dashboard),
-            CustomNavBarIcon(
-                icon: Icons.description,
-                label: 'Form',
-                navItem: NavItem.form),
-            CustomNavBarIcon(
-              icon: Icons.notifications,
-              label: 'Notifications',
-              navItem: NavItem.notifications,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 }

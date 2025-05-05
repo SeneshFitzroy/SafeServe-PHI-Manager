@@ -394,8 +394,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             CustomNavBarIcon(icon: Icons.event, label: 'Calendar', navItem: NavItem.calendar),
             CustomNavBarIcon(icon: Icons.store, label: 'Shops', navItem: NavItem.shops),
             CustomNavBarIcon(icon: Icons.dashboard, label: 'Dashboard', navItem: NavItem.dashboard, selected: true),
-            CustomNavBarIcon(icon: Icons.description, label: 'Form', navItem: NavItem.form),
-            CustomNavBarIcon(icon: Icons.notifications, label: 'Notifications', navItem: NavItem.notifications),
+            CustomNavBarIcon(icon: Icons.map, label: 'Form', navItem: NavItem.map),
+            CustomNavBarIcon(icon: Icons.assessment, label: 'Report', navItem: NavItem.Report),
           ],
         ),
       ),
@@ -448,11 +448,11 @@ class _ProfileAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     const placeholder = 'assets/images/other/profile_placeholder.jpg';
     return Container(
-      width: 50,
-      height: 50,
+      width: 70,
+      height: 70,
       decoration: BoxDecoration(
         color: const Color(0xFFE6F5FE),
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(50),
         border: Border.all(color: const Color(0xFF1F41BB), width: 2),
       ),
       child: ClipOval(

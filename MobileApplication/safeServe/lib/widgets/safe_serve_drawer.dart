@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:safeserve/screens/dashboard/dashboard_screen.dart';
 
 import '../screens/profilepage/Profile.dart';
+import '../screens/registered_shops/registered_shops_screen.dart';
 import '../services/auth_service.dart';
 import '../services/logout_service.dart';
 
@@ -44,13 +46,18 @@ class SafeServeDrawer extends StatelessWidget {
                 child: ListView(
                   padding: EdgeInsets.zero,
                   children: [
-                    _item(context, Icons.dashboard,   'Dashboard',       () {}),
+                    _item(context, Icons.dashboard,   'Dashboard',       () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (_) => const DashboardScreen()));
+                    }),
                     _item(context, Icons.calendar_today,'Calendar',       () {
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (_) => const CalendarScreen()));
                     }),
-                    _item(context, Icons.store,       'Shops',           () {}),
-                    _item(context, Icons.description, 'Forms',           () {}),
+                    _item(context, Icons.store,       'Shops',           () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (_) => const RegisteredShopsScreen()));
+                    }),
                     _item(context, Icons.note,        'Notes',           () {
                       Navigator.pop(context);
                       Navigator.pushNamed(context, '/notes');

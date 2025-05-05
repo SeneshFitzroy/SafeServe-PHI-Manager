@@ -395,9 +395,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 icon: Icons.dashboard, label: 'Dashboard', navItem: NavItem.dashboard),
             CustomNavBarIcon(icon: Icons.map, label: 'Map', navItem: NavItem.map),
             CustomNavBarIcon(
-                icon: Icons.notifications,
+                icon: Icons.assessment,
                 label: 'Notifications',
-                navItem: NavItem.notifications),
+                navItem: NavItem.Report),
           ],
         ),
       ),

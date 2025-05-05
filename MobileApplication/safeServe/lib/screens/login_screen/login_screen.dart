@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:safeserve/screens/dashboard/dashboard_screen.dart';
 import '../../services/auth_service.dart';
-import '../registered_shops/registered_shops_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => const RegisteredShopsScreen(),
+          builder: (_) => const DashboardScreen(),
         ),
       );
     }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/Reports_Analytics.dart/Reports.dart';
 import '../screens/calendar/calendar_screen.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import '../screens/registered_shops/registered_shops_screen.dart';
@@ -9,9 +10,8 @@ enum NavItem {
   calendar,
   shops,
   dashboard,
-  form,
-  map, 
-  notifications,
+  map,
+  Report,
 }
 
 class CustomNavBarIcon extends StatelessWidget {
@@ -54,20 +54,16 @@ class CustomNavBarIcon extends StatelessWidget {
               MaterialPageRoute(builder: (_) =>  DashboardScreen()),
             );
             break;
-          case NavItem.form:
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Form placeholder')),
-            );
-            break;
           case NavItem.map:
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (_) => const MapViewScreen()),
             );
             break;
-          case NavItem.notifications:
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Notifications placeholder')),
+          case NavItem.Report:
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const Reports()),
             );
             break;
         }

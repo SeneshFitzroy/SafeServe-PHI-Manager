@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:safeserve/screens/dashboard/dashboard_screen.dart';
 import '../../widgets/safe_serve_appbar.dart';
-import '../registered_shops/registered_shops_screen.dart';
 
 class H800SuccessScreen extends StatelessWidget {
   const H800SuccessScreen({super.key});
@@ -50,7 +50,7 @@ class H800SuccessScreen extends StatelessWidget {
                   onPressed: () => Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => const RegisteredShopsScreen()),
+                          builder: (_) => const DashboardScreen()),
                           (r) => false),
                   child: const Text('Go to Dashboard',
                       style:
