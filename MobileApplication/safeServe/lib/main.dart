@@ -14,6 +14,7 @@ import 'package:safeserve/screens/h800_form/h800_form_screen.dart';
 import 'package:safeserve/screens/h800_form/h800_form_screen_two.dart';
 import 'package:safeserve/screens/view_shop_detail/view_shop_detail_screen.dart';
 import 'package:safeserve/screens/edit_shop_detail/edit_shop_detail_screen.dart';
+import 'package:safeserve/screens/Reports_Analytics.dart/Reports.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,12 +67,21 @@ class SafeServeApp extends StatelessWidget {
         },
         '/h800_form_screen': (context) {
           final formData = ModalRoute.of(context)?.settings.arguments as H800FormData?;
-          return H800FormScreen(formData: formData ?? H800FormData(), shopId: '',, phiId: '',);
+          return H800FormScreen(
+            formData: formData ?? H800FormData(),
+            shopId: '',
+            phiId: '',
+          );
         },
         '/h800_form_screen_two': (context) {
           final formData = ModalRoute.of(context)?.settings.arguments as H800FormData?;
-          return H800FormScreenTwo(formData: formData ?? H800FormData(), shopId: '',, phiId: '',);
+          return H800FormScreenTwo(
+            formData: formData ?? H800FormData(),
+            shopId: '',
+            phiId: '',
+          );
         },
+        '/reports': (_) => const Reports(), // Added route for Reports page
       },
     );
   }
