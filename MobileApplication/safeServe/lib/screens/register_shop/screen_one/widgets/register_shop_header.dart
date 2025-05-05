@@ -6,10 +6,10 @@ class RegisterShopHeader extends StatelessWidget {
   final VoidCallback onArrowPressed;
 
   const RegisterShopHeader({
-    Key? key,
+    super.key,
     required this.title,
     required this.onArrowPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

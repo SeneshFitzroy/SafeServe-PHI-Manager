@@ -1,23 +1,23 @@
-// lib/screens/register_shop/register_shop_form_data.dart
-
 class RegisterShopFormData {
-  String referenceNo = '';
-  String phiArea = '';
-  String typeOfTrade = '';
-  String ownerName = '';
-  String privateAddress = '';
-  String nicNumber = '';
-  String telephoneNo = '';
-  String establishmentName = '';
+  // Screen 1
+  String referenceNo        = '';
+  String businessRegNumber  = '';
+  String establishmentName  = '';
   String establishmentAddress = '';
-  String licenseNumber = '';
-  // We'll store a full date now (yyyy-MM-dd)
-  String licensedDate = '';
-  String businessRegNumber = '';
-  String numberOfEmployees = '';
+  String district           = '';
+  String gnDivision         = '';
+  String licenseNumber      = '';
+  String licensedDate       = '';
+  String typeOfTrade        = '';
+  String numberOfEmployees  = '';
+  String ownerName          = '';
+  String nicNumber          = '';
+  String privateAddress     = '';
+  String telephone          = '';
 
-  // Photo
   String? photoPath;
+  double? lat;
+  double? lng;
 
-  RegisterShopFormData();
+  String? photoUrl;
 }
