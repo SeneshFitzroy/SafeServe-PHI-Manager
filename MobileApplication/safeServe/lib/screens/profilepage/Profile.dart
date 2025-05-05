@@ -225,24 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     .toList()),
 
             const SizedBox(height: 30),
-            SizedBox(
-              width: double.infinity,
-              height: 55,
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  side:
-                  const BorderSide(color: Color(0xFF1F41BB), width: 2),
-                  backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                onPressed: () {/* TODO password flow */},
-                child: const Text('Change Password',
-                    style: TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w700)),
-              ),
-            ),
-            const SizedBox(height: 40),
+
           ]),
         ),
       ),
