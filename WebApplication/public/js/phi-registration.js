@@ -29,10 +29,10 @@ auth.onAuthStateChanged(async (user) => {
         console.log("Logged-in SPHI data:", data);
 
         // Populate District
-        districtField.value = data.district || '';
+        districtField.value = data.district ?? data.District ?? '';
 
         // Populate GN Divisions
-        const gnList = data.gn_divisions || [];
+        const gnList = data.gn_divisions ?? data.gnDivisions ?? [];
         gnDropdown.innerHTML = '';
         gnList.forEach((gn) => {
           const option = document.createElement('option');
