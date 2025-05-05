@@ -31,13 +31,14 @@ class _SearchPageState extends State<SearchPage> {
     if (query.isEmpty) return;
 
     try {
-      // Fetch all shops and filter locally
-      final snapshot = await FirebaseFirestore.instance.collection('shops').get();
+      final snapshot =
+      await FirebaseFirestore.instance.collection('shops').get();
       final lowercaseQuery = query.toLowerCase();
       setState(() {
         searchResults = snapshot.docs
             .map((doc) => {'id': doc.id, ...doc.data()})
-            .where((shop) => (shop['name'] ?? '').toLowerCase().contains(lowercaseQuery))
+            .where((shop) =>
+            (shop['name'] ?? '').toString().toLowerCase().contains(lowercaseQuery))
             .toList();
       });
     } catch (e) {
@@ -108,20 +109,15 @@ class _SearchPageState extends State<SearchPage> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              decoration: BoxDecoration(
-                color: const Color(0xFF4964C7),
-              ),
+              decoration: const BoxDecoration(color: Color(0xFF4964C7)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
                     'assets/images/other/logo.png',
                     height: 60,
-                    errorBuilder: (context, error, stackTrace) => const Icon(
-                      Icons.shield,
-                      color: Colors.white,
-                      size: 60,
-                    ),
+                    errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.shield, color: Colors.white, size: 60),
                   ),
                   const SizedBox(height: 10),
                   const Text(
@@ -187,6 +183,7 @@ class _SearchPageState extends State<SearchPage> {
         ),
         child: Column(
           children: [
+            // Back, Title, Settings row
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
               child: Row(
@@ -199,7 +196,8 @@ class _SearchPageState extends State<SearchPage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Color(0xFF4964C7)),
+                      icon: const Icon(Icons.arrow_back,
+                          color: Color(0xFF4964C7)),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),
@@ -222,7 +220,8 @@ class _SearchPageState extends State<SearchPage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: IconButton(
-                      icon: const Icon(Icons.tune, color: Color(0xFF4964C7)),
+                      icon: const Icon(Icons.tune,
+                          color: Color(0xFF4964C7)),
                       onPressed: () => _showSettingsMenu(context),
                       tooltip: 'Search Settings',
                     ),
@@ -230,6 +229,8 @@ class _SearchPageState extends State<SearchPage> {
                 ],
               ),
             ),
+
+            // Search field
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Container(
@@ -250,97 +251,148 @@ class _SearchPageState extends State<SearchPage> {
                       color: Color(0xFF828282),
                       fontSize: 18,
                     ),
-                    prefixIcon: const Icon(Icons.search, color: Color(0xFF4964C7)),
+                    prefixIcon: const Icon(Icons.search,
+                        color: Color(0xFF4964C7)),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
-                            icon: const Icon(Icons.clear, color: Color(0xFF4964C7)),
-                            onPressed: () {
-                              _searchController.clear();
-                              performSearch('');
-                            },
-                          )
+                      icon: const Icon(Icons.clear,
+                          color: Color(0xFF4964C7)),
+                      onPressed: () {
+                        _searchController.clear();
+                        performSearch('');
+                      },
+                    )
                         : null,
                     border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                    contentPadding:
+                    const EdgeInsets.symmetric(vertical: 15),
                   ),
                 ),
               ),
             ),
             const SizedBox(height: 20),
+
+            // Results list
             Expanded(
               child: isSearching && searchResults.isEmpty && !hasError
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
+                  ? const Center(child: CircularProgressIndicator())
                   : hasError
-                      ? const Center(
-                          child: Text(
-                            'Error fetching results',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.red,
-                            ),
+                  ? const Center(
+                child: Text(
+                  'Error fetching results',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.red,
+                  ),
+                ),
+              )
+                  : !isSearching
+                  ? const Center(
+                child: Text(
+                  'Start typing to search',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey,
+                  ),
+                ),
+              )
+                  : searchResults.isEmpty
+                  ? const Center(
+                child: Text(
+                  'No results found',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey,
+                  ),
+                ),
+              )
+                  : ListView.builder(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: 8),
+                itemCount: searchResults.length,
+                itemBuilder: (context, index) {
+                  final shop = searchResults[index];
+                  return Card(
+                    margin:
+                    const EdgeInsets.only(bottom: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.circular(15),
+                    ),
+                    elevation: 3,
+                    child: SizedBox(
+                      height: 100, // ↑ taller card
+                      child: ListTile(
+                        isThreeLine: true,
+                        contentPadding:
+                        const EdgeInsets.all(12),
+                        leading: shop['image'] != null
+                            ? ClipRRect(
+                          borderRadius:
+                          BorderRadius.circular(
+                              10),
+                          child: Image.network(
+                            shop['image'],
+                            width: 70,
+                            height: 70,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context,
+                                error,
+                                stackTrace) =>
+                            const Icon(
+                                Icons.store,
+                                size: 70),
                           ),
                         )
-                      : !isSearching
-                          ? const Center(
-                              child: Text(
-                                'Start typing to search',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.grey,
-                                ),
+                            : const Icon(Icons.store,
+                            size: 70),
+                        title: Text(
+                          shop['name'] ?? 'Unknown Shop',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 4),
+                            Text(
+                              shop['address'] ??
+                                  'No address',
+                              maxLines: 1,
+                              overflow:
+                              TextOverflow.ellipsis,
+                            ),
+                            if (shop['typeOfTrade'] !=
+                                null) ...[
+                              const SizedBox(height: 2),
+                              Text(
+                                shop['typeOfTrade'],
+                                style: const TextStyle(
+                                    fontStyle:
+                                    FontStyle.italic),
                               ),
-                            )
-                          : searchResults.isEmpty
-                              ? const Center(
-                                  child: Text(
-                                    'No results found',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                )
-                              : ListView.builder(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                                  itemCount: searchResults.length,
-                                  itemBuilder: (context, index) {
-                                    final shop = searchResults[index];
-                                    return Card(
-                                      margin: const EdgeInsets.only(bottom: 10),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      elevation: 2,
-                                      child: ListTile(
-                                        leading: shop['image'] != null
-                                            ? ClipRRect(
-                                                borderRadius: BorderRadius.circular(8),
-                                                child: Image.network(
-                                                  shop['image'],
-                                                  width: 50,
-                                                  height: 50,
-                                                  fit: BoxFit.cover,
-                                                  errorBuilder: (context, error, stackTrace) =>
-                                                      const Icon(Icons.store, size: 50),
-                                                ),
-                                              )
-                                            : const Icon(Icons.store, size: 50),
-                                        title: Text(shop['name'] ?? 'Unknown Shop'),
-                                        subtitle: Text(shop['address'] ?? 'No address'),
-                                        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                                        onTap: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            '/shop_detail',
-                                            arguments: shop['id'],
-                                          );
-                                        },
-                                      ),
-                                    );
-                                  },
-                                ),
+                            ],
+                          ],
+                        ),
+                        trailing: const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                        ),
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/shop_detail',
+                            arguments: shop['id'],
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
