@@ -66,7 +66,6 @@ class SafeServeDrawer extends StatelessWidget {
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (_) => const MapViewScreen()));
                     }),
-                    _item(context, Icons.notifications,'Notifications',  () {}),
                     _item(context, Icons.assessment,  'Reports',         () {
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(builder: (_) => const Reports()));
