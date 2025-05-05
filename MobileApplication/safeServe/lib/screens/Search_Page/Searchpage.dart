@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../widgets/safe_serve_appbar.dart';
+import '../../widgets/safe_serve_drawer.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -101,8 +102,13 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: SafeServeAppBar(
-        height: 80,
-        onMenuPressed: null,
+        height: 70,
+        onMenuPressed: () => Scaffold.of(context).openEndDrawer(),
+      ),
+      endDrawer: const SafeServeDrawer(
+        profileImageUrl: '',
+        userName: '',
+        userPost: '',
       ),
       drawer: Drawer(
         child: ListView(

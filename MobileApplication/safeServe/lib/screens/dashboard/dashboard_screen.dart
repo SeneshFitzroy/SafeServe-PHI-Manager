@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../../services/auth_service.dart';
 import '../../widgets/safe_serve_appbar.dart';
 import '../../widgets/custom_nav_bar_icon.dart' show CustomNavBarIcon, NavItem;
+import '../../widgets/safe_serve_drawer.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -16,6 +17,8 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late String _uid;
   late List<String> _gnDivisions;
 
@@ -141,7 +144,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: SafeServeAppBar(height: 70, onMenuPressed: () {}),
+      key: _scaffoldKey,
+      appBar: SafeServeAppBar(
+        height: 70,
+        onMenuPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
+      ),
+      endDrawer: const SafeServeDrawer(
+        profileImageUrl: '',
+        userName: '',
+        userPost: '',
+      ),
       body: Stack(children: [
         const _DashboardGradient(),
         if (_loading)
