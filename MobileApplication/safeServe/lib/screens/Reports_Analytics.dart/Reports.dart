@@ -28,9 +28,31 @@ class _ReportsState extends State<Reports> {
   Map<String, int> inspectionsPerMonth = {};
   Map<String, double> gradingDistribution = {};
   Map<String, double> shopTypeDistribution = {};
+  Map<String, Color> shopTypeColors = {};
+  Map<String, Color> gradeColors = {
+    'A': Colors.green,
+    'B': Colors.blue,
+    'C': Colors.orange,
+    'D': Colors.red,
+    'Unknown': Colors.grey,
+  };
 
   Stream<QuerySnapshot>? formsStream;
   Stream<QuerySnapshot>? shopsStream;
+  bool _hasShownError = false;
+
+  // List of colors to assign dynamically to shop types
+  final List<Color> typeColors = [
+    Colors.purple,
+    Colors.teal,
+    Colors.brown,
+    Colors.indigo,
+    Colors.orange,
+    Colors.pink,
+    Colors.cyan,
+    Colors.amber,
+    Colors.grey, // Fallback for unknown
+  ];
 
   @override
   void initState() {
@@ -71,44 +93,43 @@ class _ReportsState extends State<Reports> {
         }
       });
 
-      // Shop Type Distribution
-      Map<String, int> shopTypesCount = {
-        'Restaurants': 0,
-        'Grocery': 0,
-        'Bakery': 0,
-        'Hotels': 0,
-        'Unknown': 0, // Fallback for missing or invalid types
-      };
+      // Dynamically fetch Shop Types from Firestore
+      Map<String, int> shopTypesCount = {};
       for (var doc in shopsSnapshot.docs) {
-        String type = doc['typeOfTrade'] ?? 'Unknown';
-        if (shopTypesCount.containsKey(type)) {
-          shopTypesCount[type] = (shopTypesCount[type] ?? 0) + 1;
-        } else {
-          shopTypesCount['Unknown'] = (shopTypesCount['Unknown'] ?? 0) + 1;
-        }
+        String type = doc['typeOfTrade']?.toString().trim() ?? 'Unknown';
+        shopTypesCount[type] = (shopTypesCount[type] ?? 0) + 1;
       }
       int totalShops = shopsSnapshot.docs.length;
       Map<String, double> typesDist = {};
+      Map<String, Color> typeColorMap = {};
+      int colorIndex = 0;
       shopTypesCount.forEach((type, count) {
         if (totalShops > 0) {
           typesDist[type] = (count / totalShops) * 100;
         } else {
           typesDist[type] = 0;
         }
+        // Assign a color dynamically
+        typeColorMap[type] = typeColors[colorIndex % typeColors.length];
+        colorIndex++;
       });
 
       setState(() {
         inspectionsPerMonth = inspections;
         gradingDistribution = gradesDist;
         shopTypeDistribution = typesDist;
+        shopTypeColors = typeColorMap;
+        _hasShownError = false;
       });
     } catch (e) {
-      // Defer showing the snackbar until after the build phase
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error fetching data: $e')),
-        );
-      });
+      if (!_hasShownError) {
+        _hasShownError = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error fetching data: $e')),
+          );
+        });
+      }
     }
   }
 
@@ -267,10 +288,10 @@ class _ReportsState extends State<Reports> {
                                     const SizedBox(height: 16),
                                     Center(
                                       child: SizedBox(
-                                        height: 120,
-                                        width: 120,
+                                        height: 180, // Increased from 150 to 180
+                                        width: 180, // Increased from 150 to 180
                                         child: CustomPaint(
-                                          painter: PieChartPainter(gradingDistribution),
+                                          painter: PieChartPainter(gradingDistribution, gradeColors),
                                         ),
                                       ),
                                     ),
@@ -288,7 +309,7 @@ class _ReportsState extends State<Reports> {
                                               height: 12,
                                               margin: const EdgeInsets.only(right: 6),
                                               decoration: BoxDecoration(
-                                                color: _gradeColor(e.key),
+                                                color: gradeColors[e.key] ?? Colors.grey,
                                                 shape: BoxShape.circle,
                                               ),
                                             ),
@@ -329,10 +350,10 @@ class _ReportsState extends State<Reports> {
                                     const SizedBox(height: 16),
                                     Center(
                                       child: SizedBox(
-                                        height: 120,
-                                        width: 120,
+                                        height: 180, // Increased from 150 to 180
+                                        width: 180, // Increased from 150 to 180
                                         child: CustomPaint(
-                                          painter: PieChartPainter(shopTypeDistribution),
+                                          painter: PieChartPainter(shopTypeDistribution, shopTypeColors),
                                         ),
                                       ),
                                     ),
@@ -350,7 +371,7 @@ class _ReportsState extends State<Reports> {
                                               height: 12,
                                               margin: const EdgeInsets.only(right: 6),
                                               decoration: BoxDecoration(
-                                                color: _shopTypeColor(e.key),
+                                                color: shopTypeColors[e.key] ?? Colors.grey,
                                                 shape: BoxShape.circle,
                                               ),
                                             ),
@@ -433,27 +454,6 @@ class _ReportsState extends State<Reports> {
       },
     );
   }
-
-  Color _gradeColor(String grade) {
-    switch (grade) {
-      case 'A': return Colors.green;
-      case 'B': return Colors.blue;
-      case 'C': return Colors.orange;
-      case 'D': return Colors.red;
-      default: return Colors.grey;
-    }
-  }
-
-  Color _shopTypeColor(String type) {
-    switch (type) {
-      case 'Restaurants': return Colors.purple;
-      case 'Grocery': return Colors.teal;
-      case 'Bakery': return Colors.brown;
-      case 'Hotels': return Colors.indigo;
-      case 'Unknown': return Colors.grey;
-      default: return Colors.grey;
-    }
-  }
 }
 
 class BarChart extends StatelessWidget {
@@ -527,7 +527,9 @@ class BarChart extends StatelessWidget {
 
 class PieChartPainter extends CustomPainter {
   final Map<String, double> dataMap;
-  PieChartPainter(this.dataMap);
+  final Map<String, Color> colorMap;
+
+  PieChartPainter(this.dataMap, this.colorMap);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -540,23 +542,7 @@ class PieChartPainter extends CustomPainter {
     dataMap.forEach((key, value) {
       final sweepRadian = (value / total) * 3.14 * 2;
       final paint = Paint()
-        ..color = key == 'A'
-            ? Colors.green
-            : key == 'B'
-                ? Colors.blue
-                : key == 'C'
-                    ? Colors.orange
-                    : key == 'D'
-                        ? Colors.red
-                        : key == 'Restaurants'
-                            ? Colors.purple
-                            : key == 'Grocery'
-                                ? Colors.teal
-                                : key == 'Bakery'
-                                    ? Colors.brown
-                                    : key == 'Hotels'
-                                        ? Colors.indigo
-                                        : Colors.grey
+        ..color = colorMap[key] ?? Colors.grey
         ..style = PaintingStyle.fill;
       canvas.drawArc(
         Rect.fromCircle(center: center, radius: radius),
