@@ -206,12 +206,13 @@ async function loadInspections(uid) {
 /* ---------------------- ADD TASK ----------------------- */
 async function saveNewTask(dateStr, title, notes) {
   try {
-    const { uid } = auth.currentUser;
+    const user = auth.currentUser;
+    const userRef = doc(db, "users", user.uid);
     await addDoc(collection(db, "tasks"), {
       title,
       notes,
       date: new Date(dateStr),
-      phiId: uid            // store UID string
+      phiId: userRef
     });
 
     calendar.addEvent({ title, start: dateStr, color: "#3788d8" });
@@ -228,11 +229,13 @@ async function updateTask(event, newTitle, newDate, newNotes) {
     const docId   = event.id;
     const oldDate = event.start.toISOString().split("T")[0];
 
+    const userRef = doc(db, "users", auth.currentUser.uid);
     const data = {
-      title: newTitle,
-      notes: newNotes,
-      phiId: auth.currentUser.uid    // migrate legacy docs
-    };
+    title: newTitle,
+    notes: newNotes,
+    phiId: userRef                  
+   };
+  
     if (newDate !== oldDate) data.date = new Date(`${newDate}T00:00:00`);
 
     await updateDoc(doc(db, "tasks", docId), data);
