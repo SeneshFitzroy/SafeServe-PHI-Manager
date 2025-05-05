@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:safeserve/screens/Search_Page/Searchpage.dart';
 import 'package:safeserve/screens/dashboard/dashboard_screen.dart';
 
 // ─── Firebase & project options ────────────────────────────────────────────────
@@ -131,6 +132,7 @@ class SafeServeApp extends StatelessWidget {
         '/edit_shop_detail': (_) => const EditShopDetailScreen(),
 
         '/dashboard': (_) => const DashboardScreen(),
+        '/search':(ctx) => const SearchPage(),
       },
     );
   }
