@@ -244,7 +244,7 @@ See our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
 Got questions or ideas? Reach out:
 - **GitHub Issues**: [SafeServe Issues](https://github.com/SeneshFitzroy/SafeServe-PHI-Manager/issues)
-- **Email**: [safeserve.support@example.com](mailto:safeserve.support@example.com)
+- **Email**: [safeserve.info@gmail.com](mailto:safeserve.info@gmail.com)
 
 ---
 
