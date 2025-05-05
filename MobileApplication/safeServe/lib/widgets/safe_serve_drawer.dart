@@ -1,12 +1,12 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
-import 'package:safeserve/screens/map_view/map_view_screen.dart'; // Use only this import for map view
+import 'package:safeserve/screens/map_view/map_view_screen.dart';
+import 'package:safeserve/screens/calendar/calendar_screen.dart';
+import 'package:safeserve/screens/login_screen/login_screen.dart';
+import 'package:safeserve/services/logout_service.dart';
 
-import '../screens/calendar/calendar_screen.dart';
-import '../screens/login_screen/login_screen.dart';
-import '../services/logout_service.dart'; 
-
+import '../screens/Reports_Analytics.dart/Reports.dart';
 
 class SafeServeDrawer extends StatelessWidget {
   final String profileImageUrl;
@@ -40,7 +40,7 @@ class SafeServeDrawer extends StatelessWidget {
                     icon: Icons.calendar_today,
                     label: 'Calendar',
                     onTap: () {
-                      Navigator.pop(context);              // close drawer
+                      Navigator.pop(context);
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (_) => const CalendarScreen()),
@@ -53,24 +53,27 @@ class SafeServeDrawer extends StatelessWidget {
                     icon: Icons.note,
                     label: 'Notes',
                     onTap: () {
-                      Navigator.of(context).pop();          // close drawer
+                      Navigator.of(context).pop();
                       Navigator.of(context).pushNamed('/notes');
                     },
                   ),
                   _buildDrawerItem(
-                    icon: Icons.map, 
-                    label: 'Map View', 
+                    icon: Icons.map,
+                    label: 'Map View',
                     onTap: () {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (_) => const MapViewScreen()),
                       );
-                    }
+                    },
                   ),
                   _buildDrawerItem(icon: Icons.notifications, label: 'Notifications', onTap: () {}),
                   _buildDrawerItem(
                     icon: Icons.assessment,
                     label: 'Reports',
                     onTap: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => const Reports()),
+                      );
                     },
                   ),
                   _buildDrawerItem(icon: Icons.settings, label: 'Settings', onTap: () {}),
@@ -80,10 +83,9 @@ class SafeServeDrawer extends StatelessWidget {
                     label: 'Logout',
                     onTap: () async {
                       await LogoutService.instance.signOut();
-
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(builder: (_) => const LoginScreen()),
-                            (route) => false,
+                        (route) => false,
                       );
                     },
                   ),
@@ -130,7 +132,7 @@ class SafeServeDrawer extends StatelessWidget {
           IconButton(
             onPressed: () {},
             icon: const Icon(Icons.arrow_forward_ios, color: Color(0xFF1F41BB)),
-          )
+          ),
         ],
       ),
     );
